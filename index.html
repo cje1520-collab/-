@@ -592,7 +592,7 @@ body {
     <div class="page-card" style="margin:12px;padding:0">
       <div class="intro-hero">
         <div class="intro-badge" id="intro-badge">✦ 엘리하이 상담왕 퀴즈</div>
-        <h1 class="intro-title" id="intro-title">안녕하세요!<br><em>선생님</em> 👋</h1>
+        <h1 class="intro-title" id="intro-title">안녕하세요!<br><em class="mgr-title">선생님</em> 👋</h1>
         <p class="intro-sub" id="intro-sub">
           상담 퀴즈를 풀며<br>
           <strong style="color:var(--text)">상담력도 기르고 포인트도 모아요!</strong>
@@ -661,7 +661,7 @@ body {
     <div class="page-card" style="margin:12px;padding:0">
       <div class="dash-header">
         <div class="dash-greeting">반갑습니다!</div>
-        <div class="dash-name" id="d-name">선생님 👋</div>
+        <div class="dash-name" id="d-name"><span class="mgr-title">선생님</span> 👋</div>
         <div class="char-circle" id="d-char"></div>
         <div class="rank-pill" id="d-rank">
           <span id="d-rank-emoji">😰</span>
@@ -837,6 +837,7 @@ var GT = {
   intro_badge:'✦ 엘리하이 상담왕 퀴즈',
   intro_title:'안녕하세요!\n선생님',
   intro_sub:'상담 퀴즈를 풀며\n상담력도 기르고 포인트도 모아요!',
+  manager_title:'선생님',
   feat_1_icon:'📚', feat_1_title:'퀴즈로 상담 지식 UP',         feat_1_desc:'가격·상품·앱·문제집 50문항 도전!',
   feat_2_icon:'💰', feat_2_title:'정답 맞추면 포인트 적립',      feat_2_desc:'알수록 상담이 달라지고, 계약률이 올라가요',
   feat_3_icon:'👑', feat_3_title:'캐릭터가 함께 성장해요',        feat_3_desc:'신입 → 열공 → 여유 → 베테랑 → 전설의 상담왕',
@@ -878,6 +879,10 @@ async function loadGameSettings(){
 }
 
 function applyTexts(){
+  // 호칭 전역 적용
+  if(GT.manager_title){
+    document.querySelectorAll('.mgr-title').forEach(el=>el.textContent=GT.manager_title);
+  }
   // 인트로
   const badge=document.getElementById('intro-badge'); if(badge) badge.textContent=GT.intro_badge;
   const tit=document.getElementById('intro-title'); if(tit) tit.innerHTML=GT.intro_title.replace('\n','<br>')+' 👋';
@@ -924,16 +929,44 @@ function startReviewFromDash(){
 ═══════════════════════════════ */
 const BGM = {
   ctx: null, gain: null, playing: false, muted: true, loopTimer: null,
-  // 업비트 펜타토닉 멜로디 (C 장조, 원곡)
+  // 부드러운 펜타토닉 멜로디 (C장조, ~68초)
   MELODY: [
-    [784,0.2],[659,0.2],[784,0.2],[880,0.2],  // G5 E5 G5 A5
-    [1047,0.4],[880,0.2],[784,0.2],            // C6 A5 G5
-    [784,0.2],[659,0.2],[523,0.2],[659,0.2],  // G5 E5 C5 E5
-    [784,0.5],[0,0.1],                         // G5 hold
-    [880,0.2],[1047,0.2],[880,0.2],[784,0.2], // A5 C6 A5 G5
-    [659,0.4],[523,0.2],[587,0.2],             // E5 C5 D5
-    [659,0.2],[784,0.2],[659,0.2],[523,0.2],  // E5 G5 E5 C5
-    [587,0.2],[659,0.2],[523,0.5],[0,0.1],    // D5 E5 C5
+    // ── 섹션 A ──
+    [523,0.3],[659,0.3],[784,0.3],[659,0.3],[523,0.6],[0,0.2],
+    [784,0.3],[880,0.3],[784,0.3],[659,0.3],[523,0.6],[0,0.2],
+    [659,0.3],[784,0.3],[880,0.3],[784,0.3],[659,0.6],[523,0.2],
+    [880,0.3],[1047,0.3],[880,0.3],[784,0.3],[659,0.8],[0,0.2],
+    [523,0.3],[659,0.3],[784,0.3],[659,0.3],[784,0.3],[880,0.3],[784,0.4],
+    [659,0.3],[784,0.3],[659,0.3],[523,0.3],[587,0.6],[0,0.2],
+    [659,0.3],[587,0.3],[523,0.3],[440,0.3],[523,0.6],[0,0.2],
+    [784,0.3],[659,0.3],[523,0.3],[440,0.3],[523,1.0],[0,0.2],
+    // ── 섹션 B ──
+    [880,0.3],[1047,0.3],[880,0.3],[784,0.3],[659,0.6],[0,0.2],
+    [1047,0.3],[1175,0.3],[1047,0.3],[880,0.3],[784,0.6],[0,0.2],
+    [880,0.3],[784,0.3],[659,0.3],[784,0.3],[880,0.6],[784,0.2],
+    [659,0.3],[784,0.3],[659,0.3],[523,0.3],[659,0.8],[0,0.2],
+    [1047,0.4],[880,0.2],[784,0.3],[659,0.3],[784,0.6],[0,0.2],
+    [880,0.3],[784,0.3],[659,0.3],[587,0.3],[659,0.6],[0,0.2],
+    [784,0.3],[659,0.3],[587,0.3],[523,0.3],[587,0.6],[523,0.2],
+    [659,0.3],[587,0.3],[523,0.3],[440,0.3],[523,1.0],[0,0.2],
+    // ── 섹션 C (클라이막스) ──
+    [1047,0.3],[1175,0.3],[1047,0.3],[880,0.3],[784,0.4],[659,0.4],
+    [880,0.3],[1047,0.3],[1175,0.3],[1047,0.3],[880,0.6],[0,0.2],
+    [784,0.3],[880,0.3],[1047,0.3],[880,0.3],[784,0.6],[659,0.2],
+    [1175,0.4],[1047,0.2],[880,0.3],[784,0.3],[659,0.8],[0,0.2],
+    [880,0.3],[784,0.3],[659,0.3],[784,0.3],[880,0.3],[1047,0.3],[880,0.4],
+    [784,0.3],[659,0.3],[523,0.3],[659,0.3],[784,0.6],[0,0.2],
+    [659,0.3],[784,0.3],[659,0.3],[523,0.3],[587,0.6],[523,0.2],
+    [784,0.3],[659,0.3],[587,0.3],[523,0.3],[523,1.2],[0,0.3],
+    // ── 섹션 D (아웃트로) ──
+    [523,0.3],[659,0.3],[784,0.3],[659,0.3],[523,0.6],[0,0.2],
+    [784,0.3],[880,0.3],[784,0.3],[659,0.3],[523,0.6],[0,0.2],
+    [659,0.3],[784,0.3],[880,0.3],[784,0.3],[659,0.6],[523,0.2],
+    [880,0.3],[784,0.3],[659,0.3],[523,0.3],[659,0.8],[0,0.2],
+    [784,0.4],[659,0.3],[523,0.3],[440,0.3],[523,0.6],[0,0.2],
+    [659,0.3],[587,0.3],[523,0.3],[440,0.3],[523,0.6],[440,0.2],
+    [523,0.3],[587,0.3],[659,0.3],[784,0.3],[659,0.6],[523,0.2],
+    [784,0.3],[659,0.3],[523,0.3],[440,0.3],[392,0.3],[440,0.3],[523,0.5],[523,1.5],[0,0.5],
   ],
   init(){
     this.ctx=new (window.AudioContext||window.webkitAudioContext)();
@@ -943,15 +976,26 @@ const BGM = {
   },
   note(freq,start,dur){
     if(!freq) return;
+    // 메인 멜로디 (sine - 부드러운 음색)
     const osc=this.ctx.createOscillator();
     const env=this.ctx.createGain();
     osc.connect(env); env.connect(this.gain);
-    osc.type='square'; osc.frequency.value=freq;
+    osc.type='sine'; osc.frequency.value=freq;
     env.gain.setValueAtTime(0,start);
-    env.gain.linearRampToValueAtTime(0.4,start+0.01);
-    env.gain.setValueAtTime(0.4,start+dur*0.75);
+    env.gain.linearRampToValueAtTime(0.35,start+0.02);
+    env.gain.setValueAtTime(0.35,start+dur*0.7);
     env.gain.linearRampToValueAtTime(0,start+dur);
     osc.start(start); osc.stop(start+dur+0.05);
+    // 베이스 하모닉 (triangle - 한 옥타브 아래, 은은한 울림)
+    const bass=this.ctx.createOscillator();
+    const benv=this.ctx.createGain();
+    bass.connect(benv); benv.connect(this.gain);
+    bass.type='triangle'; bass.frequency.value=freq/2;
+    benv.gain.setValueAtTime(0,start);
+    benv.gain.linearRampToValueAtTime(0.12,start+0.03);
+    benv.gain.setValueAtTime(0.12,start+dur*0.5);
+    benv.gain.linearRampToValueAtTime(0,start+dur);
+    bass.start(start); bass.stop(start+dur+0.05);
   },
   loop(){
     if(!this.playing||this.muted) return;
@@ -997,9 +1041,24 @@ const HDR = { 'Content-Type':'application/json', 'apikey':SB_KEY, 'Authorization
 
 async function sbInsert(row){ return fetch(`${SB_URL}/rest/v1/quiz_results`,{method:'POST',headers:{...HDR,'Prefer':'return=minimal'},body:JSON.stringify(row)}); }
 async function sbTotal(phone){ const r=await fetch(`${SB_URL}/rest/v1/quiz_results?phone=eq.${encodeURIComponent(phone)}&select=points`,{headers:HDR}); const d=await r.json(); return Array.isArray(d)?d.reduce((s,x)=>s+(x.points||0),0):0; }
-async function sbDone(phone){ const r=await fetch(`${SB_URL}/rest/v1/quiz_results?phone=eq.${encodeURIComponent(phone)}&select=question_id`,{headers:HDR}); const d=await r.json(); return new Set(Array.isArray(d)?d.map(x=>x.question_id):[]); }
+// question_id별 정답 횟수 Map 반환
+async function sbDoneMap(phone){
+  const r=await fetch(`${SB_URL}/rest/v1/quiz_results?phone=eq.${encodeURIComponent(phone)}&select=question_id`,{headers:HDR});
+  const d=await r.json();
+  const map={};
+  if(Array.isArray(d)) d.forEach(x=>{ map[x.question_id]=(map[x.question_id]||0)+1; });
+  return map;
+}
 async function sbQuestions(){ const r=await fetch(`${SB_URL}/rest/v1/questions?active=eq.true&order=sort_order.asc,id.asc`,{headers:HDR}); return r.json(); }
-async function sbTop5(){ const r=await fetch(`${SB_URL}/rest/v1/quiz_results?select=name,phone,points`,{headers:HDR}); const rows=await r.json(); if(!Array.isArray(rows)) return []; const m={}; rows.forEach(r=>{ if(!m[r.phone]) m[r.phone]={name:r.name,pts:0}; m[r.phone].pts+=(r.points||0); }); return Object.values(m).sort((a,b)=>b.pts-a.pts).slice(0,5); }
+// 전체 랭킹 반환
+async function sbAllRanking(){
+  const r=await fetch(`${SB_URL}/rest/v1/quiz_results?select=name,phone,points`,{headers:HDR});
+  const rows=await r.json();
+  if(!Array.isArray(rows)) return [];
+  const m={};
+  rows.forEach(r=>{ if(!m[r.phone]) m[r.phone]={name:r.name,phone:r.phone,pts:0}; m[r.phone].pts+=(r.points||0); });
+  return Object.values(m).sort((a,b)=>b.pts-a.pts);
+}
 async function sbNotice(){ try{ const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.notice&select=value,updated_at`,{headers:HDR}); const d=await r.json(); return Array.isArray(d)&&d[0]?d[0]:null; }catch(e){ return null; } }
 async function sbGameConfig(){ try{ const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.game_config&select=value`,{headers:HDR}); const d=await r.json(); return Array.isArray(d)&&d[0]?JSON.parse(d[0].value):{}; }catch(e){ return {}; } }
 
@@ -1063,8 +1122,36 @@ function makeChar(pts, size=120, mood='normal'){
 var userName='', userPhone='';
 var current=0, sessionScore=0, correct=0, streak=0;
 var hintUsed=false, answered=false;
-var shuffled=[], allQuestions=[], doneSet=new Set(), totalPts=0, prevRank=null;
+var shuffled=[], allQuestions=[], doneMap={}, totalPts=0, prevRank=null;
 var wrongAnswers=[], reviewIndex=0;
+var dailyLimit=10, todayAttempts=0;
+
+// 일일 제한 헬퍼
+function getDailyKey(ph){ return 'daily_'+ph+'_'+new Date().toISOString().slice(0,10); }
+function loadTodayAttempts(ph){ return parseInt(localStorage.getItem(getDailyKey(ph))||'0'); }
+function incTodayAttempts(ph){ const k=getDailyKey(ph); localStorage.setItem(k,(parseInt(localStorage.getItem(k)||'0')+1).toString()); todayAttempts++; }
+
+// 반복학습 셔플: 신규 문제 10개마다 기존 문제 1개 삽입
+function buildShuffled(allQ, doneM){
+  const fresh=[...allQ].filter(q=>!(q.id in doneM)).sort(()=>Math.random()-0.5);
+  // 적게 틀린(= 적게 맞춘) 순으로 반복 삽입
+  const repeat=[...allQ].filter(q=>q.id in doneM).sort((a,b)=>(doneM[a.id]||0)-(doneM[b.id]||0));
+  const result=[];
+  let fi=0, ri=0;
+  while(fi<fresh.length||ri<repeat.length){
+    for(let i=0;i<10&&fi<fresh.length;i++) result.push(fresh[fi++]);
+    if(ri<repeat.length) result.push(repeat[ri++]);
+  }
+  return result;
+}
+
+// 포인트 계산: 1회차 20pts, 2·3회차 10pts, 4회차+ 5pts
+function calcPts(q){
+  const times=doneMap[q.id]||0;
+  if(times===0) return 20;
+  if(times<=2)  return 10;
+  return 5;
+}
 
 function norm(s){ return s.replace(/[\s\-,]/g,'').toLowerCase(); }
 function isConsonant(h){ return /^[ㄱ-ㅎ\s]+$/.test((h||'').trim()); }
@@ -1101,8 +1188,11 @@ async function loginUser(){
   btn.disabled=true; btn.textContent='불러오는 중...';
   showLoading('내 기록 불러오는 중...');
   try{
-    [doneSet, totalPts, allQuestions] = await Promise.all([sbDone(userPhone), sbTotal(userPhone), sbQuestions()]);
-  }catch(e){ doneSet=new Set(); totalPts=0; allQuestions=[]; }
+    const [dm, tp, aq, cfg] = await Promise.all([sbDoneMap(userPhone), sbTotal(userPhone), sbQuestions(), sbGameConfig()]);
+    doneMap=dm; totalPts=tp; allQuestions=aq;
+    if(cfg.daily_limit!==undefined) dailyLimit=cfg.daily_limit;
+  }catch(e){ doneMap={}; totalPts=0; allQuestions=[]; }
+  todayAttempts=loadTodayAttempts(userPhone);
   hideLoading();
   btn.disabled=false; btn.textContent='🚀 내 기록 불러오기';
   prevRank=getRank(totalPts);
@@ -1115,7 +1205,7 @@ async function loginUser(){
 async function showDashboard(){
   const rank=getRank(totalPts);
   const g=calcGauge(totalPts);
-  document.getElementById('d-name').innerHTML=`<span>${userName}</span> 선생님 👋`;
+  document.getElementById('d-name').innerHTML=`<span>${userName}</span> <span class="mgr-title">${GT.manager_title||'선생님'}</span> 👋`;
   document.getElementById('d-char').innerHTML=makeChar(totalPts,100,'happy');
   document.getElementById('d-rank-emoji').textContent=rank.emoji;
   document.getElementById('d-rank-txt').textContent=rank.title;
@@ -1145,12 +1235,15 @@ async function showDashboard(){
 async function renderTop5Dashboard(){
   const list=document.getElementById('d-top5');
   try{
-    const top=await sbTop5();
-    if(!top.length){ list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px">아직 참여자가 없어요 😊</div>'; return; }
+    const all=await sbAllRanking();
+    if(!all.length){ list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px">아직 참여자가 없어요 😊</div>'; return; }
     const medals=['🥇','🥈','🥉','4','5'];
-    list.innerHTML=top.map((u,i)=>{
+    const top5=all.slice(0,5);
+    const myIdx=all.findIndex(u=>u.phone===userPhone);
+    const inTop5=myIdx>=0&&myIdx<5;
+    let html=top5.map((u,i)=>{
       const r=getRank(u.pts);
-      const isMe=u.phone===userPhone||u.name===userName;
+      const isMe=u.phone===userPhone;
       return `<div class="top5-row${isMe?' top5-me':''}">
         <span class="top5-rank">${medals[i]}</span>
         <span class="top5-name">${u.name}${isMe?' 👈':''}</span>
@@ -1158,6 +1251,19 @@ async function renderTop5Dashboard(){
         <span class="top5-pts">${u.pts.toLocaleString()}</span>
       </div>`;
     }).join('');
+    // 내가 6위 이하면 구분선 + 내 순위 표시
+    if(!inTop5&&myIdx>=0){
+      const me=all[myIdx];
+      const mr=getRank(me.pts);
+      html+=`<div style="text-align:center;font-size:11px;color:var(--muted);padding:4px 0;border-top:1px dashed #FFD699;margin-top:4px">···</div>
+      <div class="top5-row top5-me">
+        <span class="top5-rank" style="font-size:13px">${myIdx+1}위</span>
+        <span class="top5-name">${me.name} 👈</span>
+        <span class="top5-rank-tag">${mr.emoji}</span>
+        <span class="top5-pts">${me.pts.toLocaleString()}</span>
+      </div>`;
+    }
+    list.innerHTML=html;
   }catch(e){ list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:13px">랭킹 불러오기 실패</div>'; }
 }
 
@@ -1210,6 +1316,11 @@ function showGrowth(){
    퀴즈 시작
 ═══════════════════════════════ */
 async function startQuiz(){
+  todayAttempts=loadTodayAttempts(userPhone);
+  if(dailyLimit>0&&todayAttempts>=dailyLimit){
+    alert(`오늘은 ${dailyLimit}문제를 모두 풀었어요! 🌙\n내일 다시 도전해보세요!`);
+    return;
+  }
   if(!allQuestions.length){
     showLoading('문제 불러오는 중...');
     try{ allQuestions=await sbQuestions(); }catch(e){ allQuestions=[]; }
@@ -1218,7 +1329,12 @@ async function startQuiz(){
   }
   current=0; sessionScore=0; correct=0; streak=0; wrongAnswers=[];
   prevRank=getRank(totalPts);
-  shuffled=[...allQuestions].sort(()=>Math.random()-0.5);
+  shuffled=buildShuffled(allQuestions, doneMap);
+  // 일일 제한 적용
+  if(dailyLimit>0){
+    const remaining=dailyLimit-todayAttempts;
+    shuffled=shuffled.slice(0,remaining);
+  }
   showScreen('s-quiz');
   renderQ();
 }
@@ -1286,30 +1402,31 @@ async function submitAnswer(){
   answered=true;
   document.getElementById('btn-submit').disabled=true; inp.disabled=true;
   const isOk=norm(val)===norm(q.answer);
-  const alreadyDone=doneSet.has(q.id);
-  const pts=q.points||200;
+  const pts=calcPts(q); // 회차별 포인트
   const fbOk=q.fb_ok||`✅ 정답! 정답은 '${q.answer}'입니다.`;
   const fbNg=q.fb_ng||`❌ 오답! 정답은 '${q.answer}'이에요.`;
   const fb=document.getElementById('feedback');
   const mot=document.getElementById('motivate');
+  // 문제 제출 카운트 (정답 여부 무관)
+  incTodayAttempts(userPhone);
 
   if(isOk){
     inp.className='ans-input ok'; correct++; streak++;
-    if(!alreadyDone){
-      showLoading('포인트 적립 중...');
-      try{ await sbInsert({name:userName,phone:userPhone,question_id:q.id,points:pts}); doneSet.add(q.id); sessionScore+=pts; totalPts+=pts; }catch(e){}
-      hideLoading();
-      launchCoins(pts);
-      document.getElementById('pts-badge').textContent=`⭐ ${sessionScore} pts`;
-      fb.className='feedback ok show';
-      fb.innerHTML=fbOk+`<br><span style="color:var(--gold)">+${pts} pts 획득! 🎉</span>`;
-      // 레벨업 체크
-      const newRank=getRank(totalPts);
-      if(prevRank&&newRank.title!==prevRank.title){ await showLevelUp(newRank); prevRank=newRank; }
-    } else {
-      fb.className='feedback ok show';
-      fb.innerHTML=fbOk+`<br><span style="color:var(--muted)">(이미 적립된 문제예요)</span>`;
-    }
+    showLoading('포인트 적립 중...');
+    try{
+      await sbInsert({name:userName,phone:userPhone,question_id:q.id,points:pts});
+      doneMap[q.id]=(doneMap[q.id]||0)+1;
+      sessionScore+=pts; totalPts+=pts;
+    }catch(e){}
+    hideLoading();
+    launchCoins(pts);
+    document.getElementById('pts-badge').textContent=`⭐ ${sessionScore} pts`;
+    const timesLabel=(doneMap[q.id]||1)>1?` (${doneMap[q.id]}회차 복습)`:'';
+    fb.className='feedback ok show';
+    fb.innerHTML=fbOk+`<br><span style="color:var(--gold)">+${pts} pts 획득! 🎉${timesLabel}</span>`;
+    // 레벨업 체크
+    const newRank=getRank(totalPts);
+    if(prevRank&&newRank.title!==prevRank.title){ await showLevelUp(newRank); prevRank=newRank; }
     const stk=document.getElementById('streak-tag');
     if(streak>=3){ stk.style.display=''; stk.textContent=STREAK_MSG[streak]||(streak+'연속! 🔥'); } else { stk.style.display='none'; }
     mot.textContent=rand(MOT_OK[q.cat]||['💰 이 지식이 계약률을 높여줘요!']);
@@ -1343,7 +1460,7 @@ function showResult(){
   const tot=shuffled.length, rate=Math.round(correct/tot*100);
   const rank=getRank(totalPts);
   document.getElementById('r-char').innerHTML=makeChar(totalPts,120,'happy');
-  document.getElementById('r-name').textContent=userName+' 선생님';
+  document.getElementById('r-name').textContent=userName+' '+(GT.manager_title||'선생님');
   document.getElementById('r-rank').textContent=rank.emoji+' '+rank.title;
   document.getElementById('r-pts').innerHTML=`+${sessionScore}<span>pts</span>`;
   document.getElementById('r-total').innerHTML=`누적 포인트 <strong>${totalPts.toLocaleString()} pts</strong>`;
@@ -1395,9 +1512,15 @@ function computeBadges(rate, maxStreak, pts, gained){
 }
 
 function retryGame(){
+  todayAttempts=loadTodayAttempts(userPhone);
+  if(dailyLimit>0&&todayAttempts>=dailyLimit){
+    alert(`오늘 문항을 모두 풀었어요! 🌙\n내일 다시 도전해보세요!`);
+    showDashboard(); return;
+  }
   current=0; sessionScore=0; correct=0; streak=0; wrongAnswers=[];
   prevRank=getRank(totalPts);
-  shuffled=[...allQuestions].sort(()=>Math.random()-0.5);
+  shuffled=buildShuffled(allQuestions, doneMap);
+  if(dailyLimit>0) shuffled=shuffled.slice(0,dailyLimit-todayAttempts);
   showScreen('s-quiz'); renderQ();
 }
 

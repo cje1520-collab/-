@@ -518,6 +518,13 @@ body {
       <div class="section-title">📊 직급별 분포</div>
       <div id="rank-dist"></div>
     </div>
+    <div class="section">
+      <div class="section-title">
+        📋 문제별 정답 통계
+        <button class="btn-sm" style="margin-left:auto" onclick="loadQuestionStats()">🔄 불러오기</button>
+      </div>
+      <div id="q-stats-list"><div class="empty" style="padding:16px;font-size:13px">위 버튼을 눌러 통계를 불러오세요</div></div>
+    </div>
   </div>
 
   <!-- ▶ 탭 2: 문제 관리 -->
@@ -578,9 +585,12 @@ body {
   <!-- ▶ 탭 3: 랭킹 -->
   <div class="tab-pane" id="tab-ranking">
     <div class="section">
-      <div class="section-title">🏆 전체 포인트 랭킹 <span class="badge" id="rank-count-badge">0명</span></div>
+      <div class="section-title">
+        🏆 전체 포인트 랭킹 <span class="badge" id="rank-count-badge">0명</span>
+        <button class="btn-sm" style="margin-left:auto;background:rgba(239,68,68,0.1);color:#EF4444;border-color:rgba(239,68,68,0.3)" onclick="resetRanking()">🔃 랭킹 리셋</button>
+      </div>
       <table class="rank-table">
-        <thead><tr><th>순위</th><th>이름</th><th>직급</th><th>누적 포인트</th></tr></thead>
+        <thead><tr><th>순위</th><th>이름</th><th>직급</th><th>누적 포인트</th><th>삭제</th></tr></thead>
         <tbody id="rank-tbody"></tbody>
       </table>
     </div>
@@ -610,6 +620,14 @@ body {
         아래 내용을 수정하고 <strong style="color:var(--primary)">💾 저장하기</strong>를 누르면 게임에 바로 반영돼요.<br>
         ※ Supabase settings 테이블이 필요해요 (미생성 시 공지 탭 참고).
       </p>
+
+      <!-- 호칭 -->
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border)">🏷️ 매니저 호칭</div>
+      <div class="form-group" style="margin-bottom:16px">
+        <label class="q-edit-label">선생님 대신 표시할 호칭</label>
+        <input class="q-edit-input" id="t-manager-title" value="선생님" placeholder="예) 선생님, 매니저, 상담사">
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">인트로·대시보드·결과 화면 등 '선생님' 위치에 표시됩니다</div>
+      </div>
 
       <!-- 인트로 화면 -->
       <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border)">📱 인트로 화면</div>
@@ -674,6 +692,11 @@ body {
         <label class="q-edit-label">상품권 지급 기준 포인트</label>
         <input type="number" class="q-edit-input" id="cfg-gift" value="10000" min="1000" step="500">
         <div style="font-size:11px;color:var(--muted);margin-top:4px">현재: 10,000pts 달성 시 상품권 지급</div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="q-edit-label">⏱️ 일일 최대 문항 수 (0 = 무제한)</label>
+        <input type="number" class="q-edit-input" id="cfg-daily" value="10" min="0" step="5">
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">하루에 풀 수 있는 최대 문항 수 (기본 10문항)</div>
       </div>
       <div class="form-group" style="margin-bottom:12px">
         <label class="q-edit-label">1회 출제 문제 수 (0 = 전체)</label>
@@ -921,11 +944,13 @@ async function loadTexts(){
       }
     }
     buildTextFields(gt);
+    if(gt&&gt.manager_title) document.getElementById('t-manager-title').value=gt.manager_title;
   }catch(e){ buildTextFields(null); }
 }
 
 async function saveTexts(){
   const gt={
+    manager_title: document.getElementById('t-manager-title').value.trim()||'선생님',
     intro_badge: document.getElementById('t-badge').value.trim(),
     intro_title: document.getElementById('t-intro-title').value.trim(),
     intro_sub:   document.getElementById('t-intro-sub').value.trim(),
@@ -968,6 +993,7 @@ async function loadConfig(){
     if(Array.isArray(d)&&d[0]){
       const c=JSON.parse(d[0].value);
       if(c.gift_threshold) document.getElementById('cfg-gift').value=c.gift_threshold;
+      if(c.daily_limit!==undefined) document.getElementById('cfg-daily').value=c.daily_limit;
       if(c.questions_per_session!==undefined) document.getElementById('cfg-qcount').value=c.questions_per_session;
     }
   }catch(e){}
@@ -976,6 +1002,7 @@ async function loadConfig(){
 async function saveConfig(){
   const cfg={
     gift_threshold: parseInt(document.getElementById('cfg-gift').value)||10000,
+    daily_limit: parseInt(document.getElementById('cfg-daily').value)||0,
     questions_per_session: parseInt(document.getElementById('cfg-qcount').value)||0,
   };
   try{
@@ -1090,16 +1117,17 @@ async function loadStats(){
   document.getElementById('rank-count-badge').textContent=users.length+'명';
   const tbody2=document.getElementById('rank-tbody');
   tbody2.innerHTML='';
-  if(!users.length){ tbody2.innerHTML='<tr><td colspan="4" class="empty">아직 참여자가 없어요 😊</td></tr>'; }
+  if(!users.length){ tbody2.innerHTML='<tr><td colspan="5" class="empty">아직 참여자가 없어요 😊</td></tr>'; }
   else {
     users.forEach((u,i)=>{
       const rank=getRank(u.pts);
       const tr=document.createElement('tr');
       tr.innerHTML=`
         <td class="rank-num ${['gold','silver','bronze'][i]||''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</td>
-        <td><span class="user-name">${u.name}</span></td>
+        <td><span class="user-name">${u.name}</span><div style="font-size:11px;color:var(--muted)">${maskPhone(u.phone)}</div></td>
         <td><span style="font-size:12px;font-weight:800;color:${rank.color}">${rank.emoji} ${rank.title}</span></td>
-        <td class="pts-val">${u.pts.toLocaleString()} pts</td>`;
+        <td class="pts-val">${u.pts.toLocaleString()} pts</td>
+        <td><button class="btn-del" style="white-space:nowrap" onclick="deleteUser('${u.phone}','${u.name.replace(/'/g,"\\'")}')">🗑️ 삭제</button></td>`;
       tbody2.appendChild(tr);
     });
   }
@@ -1273,6 +1301,67 @@ async function deleteQuestion(id){
     await loadQuestions();
     toast('🗑️ 문제가 삭제됐어요');
   } catch(e){ alert('삭제 실패'); }
+}
+
+/* ── 유저 삭제 ── */
+async function deleteUser(phone, name){
+  if(!confirm(`'${name}' 선생님의 모든 기록을 삭제할까요?\n삭제하면 포인트와 랭킹이 모두 사라져요.`)) return;
+  showLoading('삭제 중...');
+  try{
+    await fetch(`${SB_URL}/rest/v1/quiz_results?phone=eq.${encodeURIComponent(phone)}`,{method:'DELETE',headers:HDR});
+    toast('🗑️ 삭제됐어요!');
+    await loadAll();
+  }catch(e){ alert('삭제 실패: '+e.message); }
+  hideLoading();
+}
+
+/* ── 랭킹 리셋 ── */
+async function resetRanking(){
+  const ans=prompt('랭킹을 전체 리셋할까요?\n\n⚠️ 모든 포인트와 기록이 삭제됩니다.\n확인하려면 "리셋" 이라고 입력해주세요.');
+  if(ans!=='리셋') return;
+  showLoading('랭킹 리셋 중...');
+  try{
+    await fetch(`${SB_URL}/rest/v1/quiz_results`,{method:'DELETE',headers:{...HDR,'Prefer':'return=minimal'}});
+    toast('🔃 랭킹이 리셋됐어요!');
+    await loadAll();
+  }catch(e){ alert('리셋 실패: '+e.message); }
+  hideLoading();
+}
+
+/* ── 문제별 정답 통계 ── */
+async function loadQuestionStats(){
+  const el=document.getElementById('q-stats-list');
+  el.innerHTML='<div class="empty">불러오는 중...</div>';
+  try{
+    // 모든 정답 기록 가져오기
+    const res=await fetch(`${SB_URL}/rest/v1/quiz_results?select=question_id,points`,{headers:HDR});
+    const rows=await res.json();
+    if(!Array.isArray(rows)||!allQ.length){ el.innerHTML='<div class="empty">데이터 없음</div>'; return; }
+    // 참여자 수
+    const userRes=await fetch(`${SB_URL}/rest/v1/quiz_results?select=phone`,{headers:HDR});
+    const uRows=await userRes.json();
+    const totalUsers=Array.isArray(uRows)?new Set(uRows.map(r=>r.phone)).size:1;
+    // question_id별 정답 횟수 집계
+    const cntMap={};
+    rows.forEach(r=>{ cntMap[r.question_id]=(cntMap[r.question_id]||0)+1; });
+    // 정답률 = 정답 횟수 / 전체 참여자 수 (근사치)
+    const sorted=[...allQ].sort((a,b)=>(cntMap[b.id]||0)-(cntMap[a.id]||0));
+    el.innerHTML=`<table class="rank-table" style="font-size:12px">
+      <thead><tr><th>#</th><th>문제</th><th>카테고리</th><th>정답 횟수</th><th>정답률(근사)</th></tr></thead>
+      <tbody>${sorted.map((q,i)=>{
+        const cnt=cntMap[q.id]||0;
+        const rate=totalUsers?Math.min(100,Math.round(cnt/totalUsers*100)):0;
+        const bar=`<div style="height:4px;background:#FFE0B2;border-radius:99px;margin-top:3px"><div style="height:100%;width:${rate}%;background:var(--primary);border-radius:99px"></div></div>`;
+        return `<tr>
+          <td style="color:var(--muted);width:28px">${i+1}</td>
+          <td style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${q.q}</td>
+          <td><span class="q-cat-tag" style="background:var(--primary-light);color:var(--primary);border:none">${q.cat}</span></td>
+          <td style="font-weight:800;color:var(--primary);text-align:center">${cnt}회</td>
+          <td style="min-width:80px">${rate}%${bar}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>`;
+  }catch(e){ el.innerHTML='<div class="empty">불러오기 실패: '+e.message+'</div>'; }
 }
 
 /* ── 엑셀 내보내기 ── */
