@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>상담왕 등극기 🏆</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -582,6 +586,63 @@ body {
   animation:spin 0.7s linear infinite;
 }
 @keyframes spin { to{transform:rotate(360deg)} }
+
+/* ════ 강화된 퀴즈 UI ════ */
+.quiz-nav {
+  background: linear-gradient(135deg,rgba(255,107,53,0.08),rgba(255,217,61,0.07));
+  border-radius: 0 0 24px 24px;
+  padding: 14px 14px 12px;
+}
+.q-pill {
+  background: linear-gradient(135deg,#FF6B35,#FF9F1C) !important;
+  color: white !important; border: none !important;
+  font-size: 15px !important; font-weight: 900 !important;
+  box-shadow: 0 3px 14px rgba(255,107,53,0.4) !important;
+  letter-spacing: 0.5px;
+}
+.pts-pill {
+  background: linear-gradient(135deg,#F59E0B,#FCD34D) !important;
+  color: white !important; border: none !important;
+  font-size: 15px !important; font-weight: 900 !important;
+  animation: goldGlow 2s ease-in-out infinite;
+}
+@keyframes goldGlow {
+  0%,100%{ box-shadow:0 3px 14px rgba(245,158,11,0.45); }
+  50%{ box-shadow:0 3px 28px rgba(245,158,11,0.8),0 0 32px rgba(252,211,77,0.5); }
+}
+.quiz-progress { height:10px !important; margin:6px 12px !important; }
+.quiz-progress-fill {
+  background:linear-gradient(90deg,#FF6B35,#FFD93D,#06D6A0) !important;
+  box-shadow:0 0 8px rgba(255,107,53,0.45) !important;
+  position:relative; overflow:hidden;
+}
+.quiz-progress-fill::after {
+  content:''; position:absolute; top:0; left:-100%; width:55%; height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.55),transparent);
+  animation:shimmer 2s infinite;
+}
+@keyframes shimmer { to{ left:150%; } }
+.streak-tag {
+  font-size:14px !important; padding:7px 16px !important;
+  background:linear-gradient(135deg,#FF4500,#FF8C00) !important;
+  box-shadow:0 3px 16px rgba(255,69,0,0.55) !important;
+  animation:streakIn 0.4s ease, firePulse 0.7s ease-in-out infinite alternate !important;
+}
+@keyframes firePulse {
+  from{ transform:scale(1); }
+  to{ transform:scale(1.07); box-shadow:0 3px 22px rgba(255,69,0,0.8) !important; }
+}
+.char-bar {
+  background:linear-gradient(135deg,rgba(255,249,240,0.95),rgba(255,243,224,0.95)) !important;
+  border:2px solid var(--border) !important;
+  box-shadow:0 2px 12px rgba(255,107,53,0.1) !important;
+}
+.quiz-card {
+  border:2px solid rgba(255,159,28,0.4) !important;
+  box-shadow:0 6px 28px rgba(255,107,53,0.14) !important;
+}
+.q-text { font-size:18px !important; }
+.ans-input { font-size:24px !important; }
 </style>
 </head>
 <body>
@@ -687,7 +748,7 @@ body {
     <button class="btn-ghost" id="btn-dash-review" onclick="startReviewFromDash()" style="display:none">📖 오답노트 보기</button>
     <div class="section-card">
       <div class="top5-card">
-        <div class="top5-title">🏆 TOP 5 랭킹 <span style="font-size:11px;color:var(--muted);font-weight:700">실시간</span></div>
+        <div class="top5-title">🏆 이번 달 TOP 5 <span style="font-size:11px;color:var(--muted);font-weight:700">매월 자동 리셋</span></div>
         <div id="d-top5"><div style="text-align:center;color:var(--muted);font-size:13px;padding:8px">불러오는 중...</div></div>
       </div>
     </div>
@@ -1050,7 +1111,19 @@ async function sbDoneMap(phone){
   return map;
 }
 async function sbQuestions(){ const r=await fetch(`${SB_URL}/rest/v1/questions?active=eq.true&order=sort_order.asc,id.asc`,{headers:HDR}); return r.json(); }
-// 전체 랭킹 반환
+// 이번 달 랭킹 반환 (TOP5 대시보드용)
+async function sbMonthlyRanking(){
+  const now=new Date();
+  const firstDay=new Date(now.getFullYear(),now.getMonth(),1).toISOString();
+  const r=await fetch(`${SB_URL}/rest/v1/quiz_results?select=name,phone,points&created_at=gte.${encodeURIComponent(firstDay)}`,{headers:HDR});
+  const rows=await r.json();
+  if(!Array.isArray(rows)) return [];
+  const m={};
+  rows.forEach(r=>{ if(!m[r.phone]) m[r.phone]={name:r.name,phone:r.phone,pts:0}; m[r.phone].pts+=(r.points||0); });
+  return Object.values(m).sort((a,b)=>b.pts-a.pts);
+}
+
+// 전체 누적 랭킹 반환
 async function sbAllRanking(){
   const r=await fetch(`${SB_URL}/rest/v1/quiz_results?select=name,phone,points`,{headers:HDR});
   const rows=await r.json();
@@ -1089,31 +1162,205 @@ const MONEY_MSGS = ['💰 제품을 잘 알수록 학부모 신뢰가 높아지�
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
 /* ═══════════════════════════════
-   캐릭터 SVG
+   캐릭터 SVG (3D 그라디언트)
 ═══════════════════════════════ */
+let _cid=0;
 function makeChar(pts, size=120, mood='normal'){
-  const r=getRank(pts);
-  const f={
-    normal:{ e:'<circle cx="51" cy="47" r="4" fill="#2D2D2D"/><circle cx="69" cy="47" r="4" fill="#2D2D2D"/><circle cx="52" cy="46" r="1.5" fill="white"/><circle cx="70" cy="46" r="1.5" fill="white"/>', m:'<path d="M53 60 Q60 66 67 60" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/>' },
-    happy: { e:'<path d="M47 45 Q51 41 55 45" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M65 45 Q69 41 73 45" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/>', m:'<path d="M50 59 Q60 70 70 59" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="46" cy="55" r="5" fill="#FCA5A5" opacity="0.5"/><circle cx="74" cy="55" r="5" fill="#FCA5A5" opacity="0.5"/>' },
-    sad:   { e:'<path d="M47 42 Q51 46 55 42" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M65 42 Q69 46 73 42" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="51" cy="47" r="3" fill="#2D2D2D"/><circle cx="69" cy="47" r="3" fill="#2D2D2D"/>', m:'<path d="M53 64 Q60 59 67 64" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/>' },
-  }[mood]||{e:'',m:''};
-  const b={
-    '😰':{ fc:'#FBBF24', bd:'#93C5FD', bg:'#FFF3E0', ri:'#FFD699', acc:`<polygon points="60,76 55,80 58,96 60,98 62,96 65,80" fill="#EF4444"/><rect x="70" y="82" width="14" height="18" rx="3" fill="white" stroke="#FFD699" stroke-width="1.5"/><rect x="73" y="80" width="8" height="4" rx="2" fill="#FFD699"/>` },
-    '📚':{ fc:'#FCA5A5', bd:'#60A5FA', bg:'#EFF6FF', ri:'#93C5FD', acc:`<circle cx="51" cy="48" r="8" fill="none" stroke="#374151" stroke-width="2"/><circle cx="69" cy="48" r="8" fill="none" stroke="#374151" stroke-width="2"/><line x1="59" y1="48" x2="61" y2="48" stroke="#374151" stroke-width="2"/><rect x="30" y="82" width="20" height="22" rx="3" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.5"/>` },
-    '☕':{ fc:'#F9A8D4', bd:'#A78BFA', bg:'#FAF5FF', ri:'#C4B5FD', acc:`<rect x="68" y="82" width="16" height="14" rx="3" fill="white" stroke="#D1D5DB" stroke-width="1.5"/><path d="M84 86 Q90 88 84 92" stroke="#D1D5DB" stroke-width="1.5" fill="none"/><path d="M72 80 Q73 76 72 72" stroke="#D1D5DB" stroke-width="1.5" fill="none" stroke-linecap="round"/>` },
-    '🏅':{ fc:'#FDE68A', bd:'#F59E0B', bg:'#FFFBEB', ri:'#FCD34D', acc:`<circle cx="60" cy="82" r="9" fill="#FCD34D" stroke="#F59E0B" stroke-width="2"/><polygon points="60,76 61.5,80 66,80 62.5,82.5 63.5,87 60,84.5 56.5,87 57.5,82.5 54,80 58.5,80" fill="#F59E0B"/><rect x="58" y="72" width="4" height="7" rx="1" fill="#EF4444"/>` },
-    '👑':{ fc:'#FCA5A5', bd:'#EF4444', bg:'#FFF1F2', ri:'#FCA5A5', acc:`<path d="M36,44 L44,54 L60,38 L76,54 L84,44 L82,58 L38,58 Z" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.5"/><circle cx="60" cy="38" r="4" fill="#EF4444"/><circle cx="36" cy="44" r="3" fill="#3B82F6"/><circle cx="84" cy="44" r="3" fill="#3B82F6"/><circle cx="52" cy="86" r="4" fill="#FCD34D"/><circle cx="60" cy="84" r="4" fill="#FCD34D"/><circle cx="68" cy="86" r="4" fill="#FCD34D"/>` },
-  }[r.emoji]||{fc:'#FBBF24',bd:'#93C5FD',bg:'#FFF3E0',ri:'#FFD699',acc:''};
-  const hasGlasses = r.emoji==='📚';
+  const rk=getRank(pts);
+  const uid='c'+(++_cid);
+
+  const CHARS={
+    '😰':{
+      bgA:'#E8F5FF',bgB:'#C5DCFF',ring:'#93C5FD',
+      faceA:'#FFF8C0',faceB:'#FBBF24',
+      bodyA:'#93C5FD',bodyB:'#2563EB',
+      cheek:true,
+      eyes:(m)=>m==='happy'
+        ?`<path d="M46 46 Q51 40 56 46" stroke="#1A1A2E" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <path d="M64 46 Q69 40 74 46" stroke="#1A1A2E" stroke-width="2.8" fill="none" stroke-linecap="round"/>`
+        :m==='sad'
+        ?`<circle cx="51" cy="48" r="4.5" fill="#1A1A2E"/><circle cx="69" cy="48" r="4.5" fill="#1A1A2E"/>
+          <circle cx="53" cy="46.5" r="1.5" fill="white"/><circle cx="71" cy="46.5" r="1.5" fill="white"/>
+          <path d="M46 43 Q51 48 56 43" stroke="#1A1A2E" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M64 43 Q69 48 74 43" stroke="#1A1A2E" stroke-width="2" fill="none" stroke-linecap="round"/>`
+        :`<circle cx="51" cy="47" r="5" fill="#1A1A2E"/><circle cx="69" cy="47" r="5" fill="#1A1A2E"/>
+          <circle cx="53" cy="45.2" r="2" fill="white"/><circle cx="71" cy="45.2" r="2" fill="white"/>
+          <circle cx="55" cy="49" r="1" fill="white" opacity="0.7"/><circle cx="73" cy="49" r="1" fill="white" opacity="0.7"/>`,
+      acc:`<rect x="68" y="76" width="17" height="20" rx="5" fill="#BFDBFE" stroke="#93C5FD" stroke-width="1.5"/>
+           <rect x="72" y="74" width="9" height="4" rx="2" fill="#60A5FA"/>
+           <line x1="71" y1="83" x2="83" y2="83" stroke="#93C5FD" stroke-width="1.2"/>
+           <rect x="28" y="78" width="15" height="19" rx="3" fill="#FEF9C3" stroke="#FCD34D" stroke-width="1.5"/>
+           <line x1="31" y1="83" x2="40" y2="83" stroke="#FCD34D" stroke-width="1.2"/>
+           <line x1="31" y1="87" x2="40" y2="87" stroke="#FCD34D" stroke-width="1.2"/>
+           <line x1="31" y1="91" x2="40" y2="91" stroke="#FCD34D" stroke-width="1.2"/>`,
+    },
+    '📚':{
+      bgA:'#EFF6FF',bgB:'#DBEAFE',ring:'#60A5FA',
+      faceA:'#FFE8E8',faceB:'#FCA5A5',
+      bodyA:'#60A5FA',bodyB:'#1D4ED8',
+      cheek:true,
+      eyes:(m)=>`
+        <circle cx="51" cy="48" r="10" fill="rgba(255,255,255,0.55)" stroke="#374151" stroke-width="2.3"/>
+        <circle cx="69" cy="48" r="10" fill="rgba(255,255,255,0.55)" stroke="#374151" stroke-width="2.3"/>
+        <path d="M59.5 48 Q60 47 60.5 48" stroke="#374151" stroke-width="2" fill="none"/>
+        <line x1="41" y1="46" x2="37" y2="44" stroke="#374151" stroke-width="1.8"/>
+        <line x1="79" y1="46" x2="83" y2="44" stroke="#374151" stroke-width="1.8"/>
+        ${m==='happy'
+          ?`<path d="M46 47 Q51 42 56 47" stroke="#374151" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <path d="M64 47 Q69 42 74 47" stroke="#374151" stroke-width="2.2" fill="none" stroke-linecap="round"/>`
+          :m==='sad'
+          ?`<circle cx="51" cy="48" r="4.5" fill="#374151"/><circle cx="69" cy="48" r="4.5" fill="#374151"/>
+            <path d="M46 44 Q51 49 56 44" stroke="#374151" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M64 44 Q69 49 74 44" stroke="#374151" stroke-width="2" fill="none" stroke-linecap="round"/>`
+          :`<circle cx="51" cy="48" r="4.5" fill="#374151"/><circle cx="69" cy="48" r="4.5" fill="#374151"/>
+            <circle cx="53" cy="46.5" r="1.5" fill="white"/><circle cx="71" cy="46.5" r="1.5" fill="white"/>`}`,
+      acc:`<rect x="27" y="77" width="18" height="23" rx="3" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.5"/>
+           <rect x="29" y="77" width="3" height="23" rx="1.5" fill="#F59E0B"/>
+           <line x1="33" y1="83" x2="42" y2="83" stroke="#F59E0B" stroke-width="1.1"/>
+           <line x1="33" y1="87" x2="42" y2="87" stroke="#F59E0B" stroke-width="1.1"/>
+           <line x1="33" y1="91" x2="42" y2="91" stroke="#F59E0B" stroke-width="1.1"/>`,
+    },
+    '☕':{
+      bgA:'#FAF5FF',bgB:'#EDE9FE',ring:'#A78BFA',
+      faceA:'#FECDD3',faceB:'#F472B6',
+      bodyA:'#A78BFA',bodyB:'#6D28D9',
+      cheek:false,
+      eyes:(m)=>m==='sad'
+        ?`<circle cx="51" cy="48" r="4.5" fill="#4C1D95"/><circle cx="69" cy="48" r="4.5" fill="#4C1D95"/>
+          <path d="M46 44 Q51 49 56 44" stroke="#4C1D95" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M64 44 Q69 49 74 44" stroke="#4C1D95" stroke-width="2" fill="none" stroke-linecap="round"/>`
+        :m==='happy'
+        ?`<path d="M46 47 Q51 41 56 47" stroke="#4C1D95" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <path d="M64 47 Q69 41 74 47" stroke="#4C1D95" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <circle cx="44" cy="55" r="6" fill="#F9A8D4" opacity="0.5"/>
+          <circle cx="76" cy="55" r="6" fill="#F9A8D4" opacity="0.5"/>`
+        :`<path d="M46 47 Q51 44 56 47" stroke="#4C1D95" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M46 50 Q51 53 56 50" stroke="#4C1D95" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M64 47 Q69 44 74 47" stroke="#4C1D95" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M64 50 Q69 53 74 50" stroke="#4C1D95" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+      acc:`<rect x="67" y="80" width="19" height="16" rx="4" fill="white" stroke="#E9D5FF" stroke-width="1.5"/>
+           <path d="M86 85 Q94 87 86 91" stroke="#C4B5FD" stroke-width="2" fill="none" stroke-linecap="round"/>
+           <rect x="69" y="84" width="15" height="4.5" rx="2" fill="#D97706" opacity="0.45"/>
+           <path d="M71 78 Q73 73 71 67" stroke="#C4B5FD" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+           <path d="M75 77 Q77 72 75 66" stroke="#C4B5FD" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+           <circle cx="44" cy="55" r="6" fill="#F9A8D4" opacity="0.45"/>
+           <circle cx="76" cy="55" r="6" fill="#F9A8D4" opacity="0.45"/>`,
+    },
+    '🏅':{
+      bgA:'#FFFBEB',bgB:'#FEF3C7',ring:'#FCD34D',
+      faceA:'#FEF3C7',faceB:'#F59E0B',
+      bodyA:'#FBBF24',bodyB:'#92400E',
+      cheek:false,
+      eyes:(m)=>m==='sad'
+        ?`<circle cx="51" cy="48" r="4.5" fill="#78350F"/><circle cx="69" cy="48" r="4.5" fill="#78350F"/>
+          <path d="M46 44 Q51 49 56 44" stroke="#78350F" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M64 44 Q69 49 74 44" stroke="#78350F" stroke-width="2" fill="none" stroke-linecap="round"/>`
+        :m==='happy'
+        ?`<path d="M46 47 Q51 41 56 47" stroke="#78350F" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <path d="M64 47 Q69 41 74 47" stroke="#78350F" stroke-width="2.8" fill="none" stroke-linecap="round"/>`
+        :`<path d="M45 49 L57 46" stroke="#78350F" stroke-width="2.2" stroke-linecap="round"/>
+          <ellipse cx="51" cy="48.5" rx="5" ry="4" fill="#78350F"/>
+          <circle cx="53" cy="47" r="1.8" fill="white"/>
+          <path d="M63 49 L75 46" stroke="#78350F" stroke-width="2.2" stroke-linecap="round"/>
+          <ellipse cx="69" cy="48.5" rx="5" ry="4" fill="#78350F"/>
+          <circle cx="71" cy="47" r="1.8" fill="white"/>`,
+      acc:`<line x1="60" y1="75" x2="60" y2="84" stroke="#EF4444" stroke-width="4.5" stroke-linecap="round"/>
+           <circle cx="60" cy="92" r="11" fill="#FCD34D" stroke="#F59E0B" stroke-width="2.5"/>
+           <ellipse cx="57" cy="89" rx="4" ry="2.5" fill="white" opacity="0.35"/>
+           <polygon points="60,85 61.8,89.5 66.8,89.5 62.8,92.2 64.2,97.2 60,94.5 55.8,97.2 57.2,92.2 53.2,89.5 58.2,89.5" fill="#F59E0B"/>
+           <circle cx="37" cy="82" r="6.5" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.8"/>
+           <text x="34" y="86.5" font-size="8.5" fill="#92400E" font-weight="900">★</text>
+           <circle cx="83" cy="82" r="6.5" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.8"/>
+           <text x="80" y="86.5" font-size="8.5" fill="#92400E" font-weight="900">★</text>`,
+    },
+    '👑':{
+      bgA:'#FFF0F0',bgB:'#FECACA',ring:'#F87171',
+      faceA:'#FECACA',faceB:'#EF4444',
+      bodyA:'#F87171',bodyB:'#7F1D1D',
+      cheek:true,
+      eyes:(m)=>m==='sad'
+        ?`<circle cx="51" cy="49" r="4.5" fill="#450A0A"/><circle cx="69" cy="49" r="4.5" fill="#450A0A"/>
+          <path d="M46 44 Q51 49 56 44" stroke="#450A0A" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M64 44 Q69 49 74 44" stroke="#450A0A" stroke-width="2" fill="none" stroke-linecap="round"/>`
+        :m==='happy'
+        ?`<path d="M46 48 Q51 42 56 48" stroke="#450A0A" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <path d="M64 48 Q69 42 74 48" stroke="#450A0A" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <circle cx="44" cy="56" r="7" fill="#FCA5A5" opacity="0.6"/>
+          <circle cx="76" cy="56" r="7" fill="#FCA5A5" opacity="0.6"/>`
+        :`<path d="M45 51 L57 47" stroke="#450A0A" stroke-width="2.3" stroke-linecap="round"/>
+          <path d="M45 54 Q51 59 57 54" stroke="#450A0A" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <ellipse cx="51" cy="51.5" rx="5.5" ry="3.8" fill="#450A0A"/>
+          <circle cx="53.5" cy="49.5" r="1.8" fill="white"/>
+          <path d="M63 51 L75 47" stroke="#450A0A" stroke-width="2.3" stroke-linecap="round"/>
+          <path d="M63 54 Q69 59 75 54" stroke="#450A0A" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+          <ellipse cx="69" cy="51.5" rx="5.5" ry="3.8" fill="#450A0A"/>
+          <circle cx="71.5" cy="49.5" r="1.8" fill="white"/>`,
+      acc:`<path d="M33,48 L43,59 L60,36 L77,59 L87,48 L85,63 L35,63 Z" fill="#FCD34D" stroke="#F59E0B" stroke-width="2"/>
+           <path d="M43 52 Q60 47 77 52" fill="none" stroke="white" stroke-width="2" opacity="0.45"/>
+           <circle cx="60" cy="36" r="6" fill="#EF4444" stroke="#FCA5A5" stroke-width="1.5"/>
+           <circle cx="60" cy="36" r="3" fill="white" opacity="0.4"/>
+           <circle cx="33" cy="48" r="5" fill="#60A5FA" stroke="#BFDBFE" stroke-width="1.2"/>
+           <circle cx="87" cy="48" r="5" fill="#60A5FA" stroke="#BFDBFE" stroke-width="1.2"/>
+           <circle cx="47" cy="55" r="3.5" fill="#A78BFA"/>
+           <circle cx="73" cy="55" r="3.5" fill="#A78BFA"/>
+           <rect x="35" y="97" width="50" height="5" rx="2.5" fill="#FCD34D" opacity="0.9"/>
+           <ellipse cx="43" cy="99.5" rx="3" ry="2.5" fill="white" opacity="0.3"/>`,
+    },
+  };
+
+  const ch=CHARS[rk.emoji]||CHARS['😰'];
+  const mouth={
+    normal:`<path d="M53 62 Q60 68 67 62" stroke="#1A1A2E" stroke-width="2.8" fill="none" stroke-linecap="round"/>`,
+    happy: `<path d="M49 60 Q60 73 71 60" stroke="#1A1A2E" stroke-width="2.8" fill="none" stroke-linecap="round"/>`,
+    sad:   `<path d="M53 66 Q60 60 67 66" stroke="#1A1A2E" stroke-width="2.8" fill="none" stroke-linecap="round"/>`,
+  }[mood];
+  const cheeks=ch.cheek
+    ?`<circle cx="44" cy="57" r="7.5" fill="#FFB3C1" opacity="0.5"/>
+      <circle cx="76" cy="57" r="7.5" fill="#FFB3C1" opacity="0.5"/>`:'';
+
   return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="60" cy="60" r="54" fill="${b.bg}" stroke="${b.ri}" stroke-width="3"/>
-    <circle cx="60" cy="50" r="26" fill="${b.fc}"/>
-    ${b.acc}
-    ${hasGlasses?'':f.e}
-    ${f.m}
-    <rect x="36" y="76" width="48" height="30" rx="14" fill="${b.bd}"/>
-  </svg>`;
+<defs>
+  <radialGradient id="bg${uid}" cx="50%" cy="45%" r="55%">
+    <stop offset="0%" stop-color="${ch.bgA}"/>
+    <stop offset="100%" stop-color="${ch.bgB}"/>
+  </radialGradient>
+  <radialGradient id="fc${uid}" cx="36%" cy="30%" r="68%">
+    <stop offset="0%" stop-color="${ch.faceA}"/>
+    <stop offset="80%" stop-color="${ch.faceB}"/>
+  </radialGradient>
+  <linearGradient id="bd${uid}" x1="15%" y1="0%" x2="40%" y2="100%">
+    <stop offset="0%" stop-color="${ch.bodyA}"/>
+    <stop offset="100%" stop-color="${ch.bodyB}"/>
+  </linearGradient>
+  <filter id="sh${uid}" x="-15%" y="-15%" width="130%" height="140%">
+    <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.13)"/>
+  </filter>
+  <filter id="fs${uid}" x="-10%" y="-10%" width="120%" height="130%">
+    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.1)"/>
+  </filter>
+</defs>
+<!-- 배경 -->
+<circle cx="60" cy="60" r="54" fill="url(#bg${uid})" stroke="${ch.ring}" stroke-width="3" filter="url(#sh${uid})"/>
+<!-- 지면 그림자 -->
+<ellipse cx="60" cy="110" rx="26" ry="5" fill="rgba(0,0,0,0.08)"/>
+<!-- 몸통 -->
+<rect x="33" y="74" width="54" height="36" rx="16" fill="url(#bd${uid})" filter="url(#fs${uid})"/>
+<!-- 몸통 광택 -->
+<ellipse cx="50" cy="80" rx="13" ry="6" fill="white" opacity="0.22"/>
+<!-- 악세서리 -->
+${ch.acc}
+<!-- 얼굴 -->
+<circle cx="60" cy="48" r="28" fill="url(#fc${uid})" filter="url(#fs${uid})"/>
+<!-- 얼굴 3D 하이라이트 -->
+<ellipse cx="50" cy="37" rx="10" ry="8" fill="white" opacity="0.35"/>
+<ellipse cx="48" cy="36" rx="5" ry="4" fill="white" opacity="0.25"/>
+<!-- 볼터치 -->
+${cheeks}
+<!-- 눈 -->
+${ch.eyes(mood)}
+<!-- 입 -->
+${mouth}
+</svg>`;
 }
 
 /* ═══════════════════════════════
@@ -1235,7 +1482,7 @@ async function showDashboard(){
 async function renderTop5Dashboard(){
   const list=document.getElementById('d-top5');
   try{
-    const all=await sbAllRanking();
+    const all=await sbMonthlyRanking(); // 이번 달 기준
     if(!all.length){ list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px">아직 참여자가 없어요 😊</div>'; return; }
     const medals=['🥇','🥈','🥉','4','5'];
     const top5=all.slice(0,5);
@@ -1552,16 +1799,38 @@ function nextReview(){ reviewIndex++; renderReview(); }
 /* ═══════════════════════════════
    공유
 ═══════════════════════════════ */
-function shareResult(){
-  const rank=getRank(totalPts);
-  const tot=shuffled.length, rate=Math.round(correct/tot*100);
-  const text=`📊 ${userName} 선생님의 상담왕 퀴즈 결과\n\n🎯 정답률: ${rate}%\n⭐ 이번 획득: +${sessionScore}pts\n🏆 누적 포인트: ${totalPts.toLocaleString()}pts\n👤 현재 직급: ${rank.emoji} ${rank.title}\n\n💪 상담왕 등극기에 도전해보세요!`;
-  if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>showShareToast()); }
-  else { const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showShareToast(); }
+async function shareResult(){
+  const resultEl=document.getElementById('s-result');
+  try{
+    showLoading('📸 이미지 생성 중...');
+    const canvas=await html2canvas(resultEl,{
+      backgroundColor:'#FFF9F0', scale:2, useCORS:true, allowTaint:true,
+      scrollY:-window.scrollY, windowWidth:480
+    });
+    hideLoading();
+    canvas.toBlob(async(blob)=>{
+      const file=new File([blob],'상담왕퀴즈결과.png',{type:'image/png'});
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+        await navigator.share({files:[file], title:`${userName}의 상담왕 퀴즈 결과`});
+      } else {
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');
+        a.href=url; a.download=`상담왕퀴즈_${userName}_${new Date().toISOString().slice(0,10)}.png`;
+        a.click(); URL.revokeObjectURL(url);
+        showShareToast('📥 이미지가 저장됐어요!');
+      }
+    },'image/png');
+  }catch(e){
+    hideLoading();
+    // fallback: 텍스트 복사
+    const rank=getRank(totalPts); const tot=shuffled.length, rate=Math.round(correct/tot*100);
+    const text=`📊 ${userName} ${GT.manager_title||'선생님'}의 상담왕 퀴즈 결과\n🎯 정답률: ${rate}%\n⭐ +${sessionScore}pts\n🏆 누적: ${totalPts.toLocaleString()}pts\n👤 ${rank.emoji} ${rank.title}`;
+    if(navigator.clipboard) navigator.clipboard.writeText(text).then(()=>showShareToast());
+  }
 }
-function showShareToast(){
+function showShareToast(msg='📋 클립보드에 복사됐어요!'){
   const t=document.getElementById('share-toast');
-  t.classList.add('show');
+  t.textContent=msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 
