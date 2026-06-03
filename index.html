@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -1171,366 +1171,260 @@ function makeChar(pts, size=120, mood='normal'){
   const rk=getRank(pts);
   const uid='c'+(++_cid);
 
-  // ── 공통 헬퍼 ──
+  // ── 헬퍼 ──
   const H=mood==='happy', S=mood==='sad';
-  // 눈 (무드별)
-  const EY=(x,y,r)=>H
-    ?`<path d="M${x-r} ${y+1} Q${x} ${y-r*1.6} ${x+r} ${y+1}" stroke="#222" stroke-width="${r*0.7}" fill="none" stroke-linecap="round"/>`
-    :S
-    ?`<circle cx="${x}" cy="${y}" r="${r}" fill="#222"/>
-      <circle cx="${x+r*0.45}" cy="${y-r*0.42}" r="${r*0.38}" fill="white"/>
-      <path d="M${x-r*0.9} ${y-r*0.6} Q${x} ${y-r*1.6} ${x+r*0.9} ${y-r*0.6}" stroke="#666" stroke-width="1.2" fill="none"/>`
-    :`<circle cx="${x}" cy="${y}" r="${r}" fill="#222"/>
-      <circle cx="${x+r*0.45}" cy="${y-r*0.42}" r="${r*0.38}" fill="white"/>`;
-  // 입 (무드별)
-  const MO=(x,y,w)=>H
-    ?`<path d="M${x-w} ${y} Q${x} ${y+w*0.9} ${x+w} ${y}" stroke="#222" stroke-width="2.4" fill="none" stroke-linecap="round"/>`
-    :S
-    ?`<path d="M${x-w} ${y+3.5} Q${x} ${y} ${x+w} ${y+3.5}" stroke="#222" stroke-width="2.4" fill="none" stroke-linecap="round"/>`
-    :`<path d="M${x-w} ${y} Q${x} ${y+w*0.52} ${x+w} ${y}" stroke="#222" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
-  // 볼터치
-  const BL=(x,y,r)=>`<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r*0.75}" fill="#FF9EC8" opacity="0.62"/>`;
-  const SW=2.5; // 기본 stroke-width
-  const BG_R=54; // 배경 원 반지름
 
-  // ════ 신입: 아기처럼 작고 순수 (흰색, 50% 크기) ════
+  // 다마고치형 큰 눈 (흰자+동공+광택)
+  const EYE=(cx,cy,r,col='#222')=>H
+    ?`<circle cx="${cx}" cy="${cy}" r="${r}" fill="white" stroke="${col}" stroke-width="2.2"/>
+      <path d="M${cx-r+1} ${cy+1} Q${cx} ${cy-r*1.9} ${cx+r-1} ${cy+1}" fill="${col}" stroke="${col}" stroke-width="1" stroke-linecap="round"/>
+      <circle cx="${cx+r*0.28}" cy="${cy-r*0.9}" r="${r*0.32}" fill="white"/>`
+    :S
+    ?`<circle cx="${cx}" cy="${cy}" r="${r}" fill="white" stroke="${col}" stroke-width="2.2"/>
+      <circle cx="${cx}" cy="${cy+1}" r="${r-2.5}" fill="${col}"/>
+      <circle cx="${cx+r*0.4}" cy="${cy-r*0.4+1}" r="${r*0.38}" fill="white"/>
+      <path d="M${cx-r-1} ${cy-r+1} Q${cx} ${cy-r*3} ${cx+r+1} ${cy-r+1}" stroke="#AAA" stroke-width="1.4" fill="none"/>`
+    :`<circle cx="${cx}" cy="${cy}" r="${r}" fill="white" stroke="${col}" stroke-width="2.2"/>
+      <circle cx="${cx}" cy="${cy}" r="${r-2.5}" fill="${col}"/>
+      <circle cx="${cx+r*0.42}" cy="${cy-r*0.42}" r="${r*0.4}" fill="white"/>
+      <circle cx="${cx+r*0.8}" cy="${cy-r*0.8}" r="${r*0.18}" fill="white"/>`;
+
+  const MO=(cx,cy,w)=>H
+    ?`<path d="M${cx-w} ${cy} Q${cx} ${cy+w*1.1} ${cx+w} ${cy}" stroke="#333" stroke-width="2.8" fill="none" stroke-linecap="round"/>`
+    :S
+    ?`<path d="M${cx-w} ${cy+4} Q${cx} ${cy} ${cx+w} ${cy+4}" stroke="#555" stroke-width="2.8" fill="none" stroke-linecap="round"/>`
+    :`<path d="M${cx-w} ${cy} Q${cx} ${cy+w*0.65} ${cx+w} ${cy}" stroke="#333" stroke-width="2.8" fill="none" stroke-linecap="round"/>`;
+
+  const BL=(cx,cy)=>`<ellipse cx="${cx}" cy="${cy}" rx="7" ry="5" fill="#FF9EC8" opacity="0.7"/>`;
+
+  // ════════════════════════
+  //  신입 🥚 — 알 형태
+  // ════════════════════════
   if(rk.emoji==='😰') return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="60" cy="60" r="${BG_R}" fill="#FFF5FA" stroke="#FFC0DC" stroke-width="3"/>
-    <ellipse cx="60" cy="106" rx="19" ry="5" fill="rgba(0,0,0,0.07)"/>
-    <!-- 몸통 -->
-    <ellipse cx="60" cy="76" rx="15" ry="13" fill="white" stroke="#333" stroke-width="${SW}"/>
-    <!-- 팔 -->
-    <ellipse cx="42" cy="73" rx="5" ry="3.5" fill="white" stroke="#333" stroke-width="2" transform="rotate(-30 42 73)"/>
-    <ellipse cx="78" cy="73" rx="5" ry="3.5" fill="white" stroke="#333" stroke-width="2" transform="rotate(30 78 73)"/>
-    <!-- 발 -->
-    <ellipse cx="51" cy="88" rx="8" ry="5" fill="white" stroke="#333" stroke-width="2.2"/>
-    <ellipse cx="69" cy="88" rx="8" ry="5" fill="white" stroke="#333" stroke-width="2.2"/>
-    <!-- 머리 (작게) -->
-    <circle cx="60" cy="54" r="21" fill="white" stroke="#333" stroke-width="${SW}"/>
-    ${BL(47,59,5)}${BL(73,59,5)}
-    ${EY(53,51,4.2)}${EY(67,51,4.2)}
-    ${MO(60,59,5.5)}
+    <circle cx="60" cy="60" r="54" fill="#FFFDE8" stroke="#F0D000" stroke-width="3"/>
+    <ellipse cx="60" cy="109" rx="18" ry="4.5" fill="rgba(0,0,0,0.07)"/>
+    <!-- 알 -->
+    <ellipse cx="60" cy="65" rx="27" ry="34" fill="#FFFBE0" stroke="#D4A800" stroke-width="3.5"/>
+    <!-- 광택 -->
+    <ellipse cx="50" cy="48" rx="11" ry="8" fill="white" opacity="0.55"/>
+    <!-- 반점 -->
+    <circle cx="46" cy="56" r="3.5" fill="#FFE090" opacity="0.9"/>
+    <circle cx="74" cy="62" r="2.5" fill="#FFE090" opacity="0.9"/>
+    <circle cx="53" cy="79" r="2" fill="#FFE090" opacity="0.9"/>
+    <circle cx="70" cy="46" r="2" fill="#FFE090" opacity="0.9"/>
+    <!-- 균열 (곧 부화할 것 같은!) -->
+    <path d="M64 31 L68 41 L63 47 L67 54" stroke="#B89000" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <!-- 작은 눈 (졸린) -->
+    ${S
+      ?`<path d="M51 63 Q55 69 59 63" stroke="#888" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <circle cx="55" cy="66" r="3" fill="#888"/>
+        <path d="M62 63 Q66 69 70 63" stroke="#888" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <circle cx="66" cy="66" r="3" fill="#888"/>`
+      :H
+      ?`<path d="M51 64 Q55 59 59 64" stroke="#888" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+        <path d="M62 64 Q66 59 70 64" stroke="#888" stroke-width="2.8" fill="none" stroke-linecap="round"/>`
+      :`<ellipse cx="55" cy="64" rx="5.5" ry="3.5" fill="#555"/>
+        <ellipse cx="67" cy="64" rx="5.5" ry="3.5" fill="#555"/>
+        <circle cx="57" cy="62.8" r="1.6" fill="white"/>
+        <circle cx="69" cy="62.8" r="1.6" fill="white"/>`}
+    <path d="M57 71 Q60 74.5 63 71" stroke="#C8A000" stroke-width="2.2" fill="none" stroke-linecap="round"/>
   </svg>`;
 
-  // ════ 열공: 학생 (하늘색, 65% 크기 + 안경+책) ════
+  // ════════════════════════
+  //  열공 📚 — 아기 (2등신, 안경+책)
+  // ════════════════════════
   if(rk.emoji==='📚') return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="60" cy="60" r="${BG_R}" fill="#EFF8FF" stroke="#7EC8FD" stroke-width="3"/>
-    <ellipse cx="60" cy="107" rx="22" ry="5.5" fill="rgba(0,0,0,0.07)"/>
-    <!-- 몸통 (더 큼) -->
-    <ellipse cx="60" cy="78" rx="18" ry="15" fill="#DBEAFE" stroke="#333" stroke-width="${SW}"/>
-    <!-- 옷 디테일 -->
-    <path d="M47 85 Q60 81 73 85" stroke="#60A5FA" stroke-width="2.2" fill="none"/>
-    <!-- 책 (오른팔에) -->
-    <rect x="76" y="72" width="13" height="17" rx="2" fill="#FCD34D" stroke="#333" stroke-width="2"/>
-    <rect x="78" y="72" width="3" height="17" rx="1.5" fill="#F59E0B"/>
-    <line x1="82" y1="76" x2="87" y2="76" stroke="#333" stroke-width="1"/>
-    <line x1="82" y1="79" x2="87" y2="79" stroke="#333" stroke-width="1"/>
-    <!-- 팔 -->
-    <ellipse cx="40" cy="75" rx="6" ry="4" fill="#DBEAFE" stroke="#333" stroke-width="2" transform="rotate(-25 40 75)"/>
+    <circle cx="60" cy="60" r="54" fill="#EDF7FF" stroke="#55AAFF" stroke-width="3"/>
+    <ellipse cx="60" cy="109" rx="22" ry="5" fill="rgba(0,0,0,0.07)"/>
     <!-- 발 -->
-    <ellipse cx="49" cy="92" rx="10" ry="5.5" fill="#DBEAFE" stroke="#333" stroke-width="2.2"/>
-    <ellipse cx="71" cy="92" rx="10" ry="5.5" fill="#DBEAFE" stroke="#333" stroke-width="2.2"/>
-    <!-- 머리 (조금 큼) -->
-    <circle cx="60" cy="52" r="24" fill="#EFF8FF" stroke="#333" stroke-width="${SW}"/>
-    ${BL(46,58,5.5)}${BL(74,58,5.5)}
-    <!-- 안경 (눈 앞에 그려 눈처럼 보이게) -->
-    <circle cx="52" cy="50" r="9.5" fill="rgba(255,255,255,0.55)" stroke="#374151" stroke-width="2.2"/>
-    <circle cx="68" cy="50" r="9.5" fill="rgba(255,255,255,0.55)" stroke="#374151" stroke-width="2.2"/>
-    <path d="M61.5 50 Q60 48.5 58.5 50" stroke="#374151" stroke-width="2" fill="none"/>
-    <line x1="42.5" y1="47.5" x2="38" y2="45" stroke="#374151" stroke-width="1.8"/>
-    <line x1="77.5" y1="47.5" x2="82" y2="45" stroke="#374151" stroke-width="1.8"/>
+    <ellipse cx="49" cy="96" rx="12.5" ry="8" fill="#A8D8FF" stroke="#333" stroke-width="2.8"/>
+    <ellipse cx="71" cy="96" rx="12.5" ry="8" fill="#A8D8FF" stroke="#333" stroke-width="2.8"/>
+    <!-- 몸통 (작은 2등신) -->
+    <ellipse cx="60" cy="80" rx="18" ry="15.5" fill="#A8D8FF" stroke="#333" stroke-width="3"/>
+    <!-- 팔 (왼) -->
+    <ellipse cx="38" cy="79" rx="9" ry="6" fill="#A8D8FF" stroke="#333" stroke-width="2.5" transform="rotate(-20 38 79)"/>
+    <!-- 책 (오른팔) -->
+    <ellipse cx="83" cy="77" rx="9" ry="6" fill="#A8D8FF" stroke="#333" stroke-width="2.5" transform="rotate(20 83 77)"/>
+    <rect x="85" y="67" width="15" height="20" rx="3" fill="#FFE44D" stroke="#333" stroke-width="2.3"/>
+    <rect x="87" y="67" width="4" height="20" rx="2" fill="#F59E0B"/>
+    <line x1="92" y1="73" x2="98" y2="73" stroke="#555" stroke-width="1.3"/>
+    <line x1="92" y1="78" x2="98" y2="78" stroke="#555" stroke-width="1.3"/>
+    <line x1="92" y1="83" x2="98" y2="83" stroke="#555" stroke-width="1.3"/>
+    <!-- 머리카락 -->
+    <ellipse cx="49" cy="18" rx="7.5" ry="10.5" fill="#333" transform="rotate(-15 49 18)"/>
+    <ellipse cx="60" cy="16" rx="7" ry="9.5" fill="#333"/>
+    <ellipse cx="71" cy="18" rx="7.5" ry="10.5" fill="#333" transform="rotate(15 71 18)"/>
+    <!-- 큰 머리 (2등신의 핵심!) -->
+    <circle cx="60" cy="46" r="30" fill="#C8E8FF" stroke="#333" stroke-width="3.2"/>
+    <!-- 볼터치 -->
+    ${BL(41,56)}${BL(79,56)}
+    <!-- 안경테 (큰 눈 주위) -->
+    <circle cx="49" cy="45" r="11.5" fill="rgba(255,255,255,0.48)" stroke="#444" stroke-width="2.8"/>
+    <circle cx="71" cy="45" r="11.5" fill="rgba(255,255,255,0.48)" stroke="#444" stroke-width="2.8"/>
+    <path d="M59.5 45 Q60 43 60.5 45" stroke="#444" stroke-width="2.5" fill="none"/>
+    <line x1="37.5" y1="43" x2="32" y2="40" stroke="#444" stroke-width="2.3"/>
+    <line x1="82.5" y1="43" x2="88" y2="40" stroke="#444" stroke-width="2.3"/>
+    <!-- 눈 (안경 안) -->
     ${H
-      ?`<path d="M46 50 Q52 44 58 50" stroke="#374151" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-        <path d="M62 50 Q68 44 74 50" stroke="#374151" stroke-width="2.2" fill="none" stroke-linecap="round"/>`
+      ?`<path d="M42 45 Q49 38 56 45" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M64 45 Q71 38 78 45" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>`
       :S
-      ?`<circle cx="52" cy="50" r="4.5" fill="#374151"/><circle cx="68" cy="50" r="4.5" fill="#374151"/>
-        <circle cx="54" cy="48.5" r="1.6" fill="white"/><circle cx="70" cy="48.5" r="1.6" fill="white"/>`
-      :`<circle cx="52" cy="50" r="4.5" fill="#374151"/><circle cx="68" cy="50" r="4.5" fill="#374151"/>
-        <circle cx="54" cy="48.5" r="1.7" fill="white"/><circle cx="70" cy="48.5" r="1.7" fill="white"/>`}
-    ${MO(60,61,6.5)}
+      ?`<circle cx="49" cy="45" r="6" fill="#333"/><circle cx="71" cy="45" r="6" fill="#333"/>
+        <circle cx="52" cy="43" r="2.4" fill="white"/><circle cx="74" cy="43" r="2.4" fill="white"/>
+        <path d="M42 40 Q49 46 56 40" stroke="#888" stroke-width="1.6" fill="none"/>
+        <path d="M64 40 Q71 46 78 40" stroke="#888" stroke-width="1.6" fill="none"/>`
+      :`<circle cx="49" cy="45" r="6" fill="#333"/><circle cx="71" cy="45" r="6" fill="#333"/>
+        <circle cx="52" cy="42.5" r="2.5" fill="white"/><circle cx="74" cy="42.5" r="2.5" fill="white"/>
+        <circle cx="54.5" cy="47" r="1.1" fill="white"/><circle cx="76.5" cy="47" r="1.1" fill="white"/>`}
+    ${MO(60,59,7.5)}
   </svg>`;
 
-  // ════ 여유: 여유로운 (라벤더, 78% + 커피) ════
+  // ════════════════════════
+  //  여유 ☕ — 청소년 (민트, 핑크헤어, 커피)
+  // ════════════════════════
   if(rk.emoji==='☕') return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="60" cy="60" r="${BG_R}" fill="#F8F4FF" stroke="#B89FFF" stroke-width="3"/>
-    <ellipse cx="60" cy="108" rx="25" ry="6" fill="rgba(0,0,0,0.07)"/>
-    <!-- 몸통 -->
-    <ellipse cx="60" cy="79" rx="21" ry="18" fill="#EDE9FE" stroke="#333" stroke-width="${SW}"/>
-    <path d="M44 84 Q60 79 76 84" stroke="#A78BFA" stroke-width="2.5" fill="none"/>
-    <circle cx="60" cy="87" r="3.5" fill="#A78BFA"/>
-    <!-- 커피컵 (왼팔) -->
-    <ellipse cx="37" cy="77" rx="6.5" ry="4.5" fill="#EDE9FE" stroke="#333" stroke-width="2" transform="rotate(-28 37 77)"/>
-    <rect x="20" y="74" width="18" height="17" rx="4" fill="white" stroke="#333" stroke-width="2"/>
-    <path d="M38 79 Q46 81 38 85" stroke="#C4B5FD" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <rect x="22" y="79" width="14" height="5" rx="2.5" fill="#D97706" opacity="0.5"/>
-    <path d="M26 72 Q28.5 66 26 60" stroke="#C4B5FD" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-    <path d="M31 71 Q33.5 65 31 59" stroke="#C4B5FD" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-    <!-- 오른팔 -->
-    <ellipse cx="83" cy="77" rx="6.5" ry="4.5" fill="#EDE9FE" stroke="#333" stroke-width="2" transform="rotate(28 83 77)"/>
+    <circle cx="60" cy="60" r="54" fill="#F0FFF8" stroke="#40C880" stroke-width="3"/>
+    <ellipse cx="60" cy="109" rx="25" ry="5.5" fill="rgba(0,0,0,0.07)"/>
     <!-- 발 -->
-    <ellipse cx="47" cy="95" rx="11.5" ry="6.5" fill="#EDE9FE" stroke="#333" stroke-width="2.3"/>
-    <ellipse cx="73" cy="95" rx="11.5" ry="6.5" fill="#EDE9FE" stroke="#333" stroke-width="2.3"/>
-    <!-- 머리 (더 큼) -->
-    <circle cx="60" cy="50" r="27" fill="#F8F4FF" stroke="#333" stroke-width="${SW}"/>
-    ${BL(45,57,6)}${BL(75,57,6)}
-    <!-- 반쯤 감긴 눈 (여유) -->
-    ${H
-      ?`${EY(54,49,5)}${EY(66,49,5)}`
-      :S
-      ?`<circle cx="54" cy="50" r="4.8" fill="#5B21B6"/><circle cx="66" cy="50" r="4.8" fill="#5B21B6"/>
-        <circle cx="56" cy="48.5" r="1.8" fill="white"/><circle cx="68" cy="48.5" r="1.8" fill="white"/>`
-      :`<path d="M48 50 Q54 46 60 50" stroke="#5B21B6" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M48 52.5 Q54 56 60 52.5" stroke="#5B21B6" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-        <path d="M60 50 Q66 46 72 50" stroke="#5B21B6" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M60 52.5 Q66 56 72 52.5" stroke="#5B21B6" stroke-width="2.2" fill="none" stroke-linecap="round"/>`}
-    ${MO(60,61,7)}
-  </svg>`;
-
-  // ════ 베테랑: 프로페셔널 (골드, 90% + 메달) ════
-  if(rk.emoji==='🏅') return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="60" cy="60" r="${BG_R}" fill="#FFFBEB" stroke="#F5C400" stroke-width="3.5"/>
-    <ellipse cx="60" cy="109" rx="27" ry="6.5" fill="rgba(0,0,0,0.08)"/>
-    <!-- 몸통 (큼!) -->
-    <ellipse cx="60" cy="80" rx="25" ry="21" fill="#FEF3C7" stroke="#333" stroke-width="3"/>
-    <!-- 유니폼 라인 -->
-    <path d="M40 82 L42 99" stroke="#F59E0B" stroke-width="3.5" stroke-linecap="round"/>
-    <path d="M45 84 L46 99" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
-    <path d="M80 82 L78 99" stroke="#F59E0B" stroke-width="3.5" stroke-linecap="round"/>
-    <path d="M75 84 L74 99" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
-    <!-- 어깨 별 뱃지 -->
-    <circle cx="36" cy="75" r="7.5" fill="#FCD34D" stroke="#F59E0B" stroke-width="2"/>
-    <text x="33" y="79.5" font-size="11" fill="#92400E" font-weight="900">★</text>
-    <circle cx="84" cy="75" r="7.5" fill="#FCD34D" stroke="#F59E0B" stroke-width="2"/>
-    <text x="81" y="79.5" font-size="11" fill="#92400E" font-weight="900">★</text>
-    <!-- 팔 -->
-    <ellipse cx="33" cy="81" rx="0.1" ry="0.1" fill="none"/>
-    <!-- 발 (큼) -->
-    <ellipse cx="46" cy="99" rx="13" ry="7" fill="#FEF3C7" stroke="#333" stroke-width="2.5"/>
-    <ellipse cx="74" cy="99" rx="13" ry="7" fill="#FEF3C7" stroke="#333" stroke-width="2.5"/>
-    <!-- 메달 (몸통 위) -->
-    <line x1="60" y1="64" x2="60" y2="73" stroke="#EF4444" stroke-width="5" stroke-linecap="round"/>
-    <circle cx="60" cy="81" r="12" fill="#FCD34D" stroke="#F59E0B" stroke-width="2.8"/>
-    <ellipse cx="56" cy="78" rx="5.5" ry="3.5" fill="white" opacity="0.35"/>
-    <polygon points="60,74 62,79.5 68,79.5 63.5,82.5 65.5,88 60,85 54.5,88 56.5,82.5 52,79.5 58,79.5" fill="#F59E0B"/>
-    <!-- 머리 (크게!) -->
-    <circle cx="60" cy="47" r="29" fill="#FEF3C7" stroke="#333" stroke-width="3"/>
-    <!-- 자신감 눈썹 -->
-    <path d="M46 40 L57 42.5" stroke="#92400E" stroke-width="2.8" stroke-linecap="round"/>
-    <path d="M63 42.5 L74 40" stroke="#92400E" stroke-width="2.8" stroke-linecap="round"/>
-    ${H
-      ?`<path d="M47 48 Q54 42 61 48" stroke="#92400E" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M59 48 Q66 42 73 48" stroke="#92400E" stroke-width="3" fill="none" stroke-linecap="round"/>`
-      :S
-      ?`<circle cx="54" cy="49" r="5" fill="#92400E"/><circle cx="66" cy="49" r="5" fill="#92400E"/>
-        <circle cx="56" cy="47.3" r="1.8" fill="white"/><circle cx="68" cy="47.3" r="1.8" fill="white"/>`
-      :`<path d="M46 50 L60 46.5" stroke="#92400E" stroke-width="2.5" stroke-linecap="round"/>
-        <ellipse cx="53" cy="49" rx="6" ry="5" fill="#92400E"/>
-        <circle cx="55.5" cy="47.2" r="2" fill="white"/>
-        <path d="M60 50 L74 46.5" stroke="#92400E" stroke-width="2.5" stroke-linecap="round"/>
-        <ellipse cx="67" cy="49" rx="6" ry="5" fill="#92400E"/>
-        <circle cx="69.5" cy="47.2" r="2" fill="white"/>`}
+    <ellipse cx="47" cy="98" rx="14" ry="8.5" fill="#88EEC0" stroke="#333" stroke-width="2.8"/>
+    <ellipse cx="73" cy="98" rx="14" ry="8.5" fill="#88EEC0" stroke="#333" stroke-width="2.8"/>
+    <!-- 몸통 -->
+    <ellipse cx="60" cy="82" rx="22" ry="18" fill="#88EEC0" stroke="#333" stroke-width="3.2"/>
+    <!-- 리본 장식 -->
+    <path d="M49 76 Q60 72 71 76" stroke="#20A860" stroke-width="3.5" fill="none"/>
+    <circle cx="60" cy="79.5" r="5" fill="#20A860" stroke="#333" stroke-width="1.8"/>
+    <!-- 커피컵 (왼팔) -->
+    <ellipse cx="35" cy="80" rx="9.5" ry="6.5" fill="#88EEC0" stroke="#333" stroke-width="2.5" transform="rotate(-22 35 80)"/>
+    <rect x="16" y="74" width="21" height="21" rx="5" fill="white" stroke="#333" stroke-width="2.5"/>
+    <path d="M37 79.5 Q47 82 37 87.5" stroke="#90D8A8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <rect x="18.5" y="81" width="16" height="6" rx="3" fill="#7B4500" opacity="0.4"/>
+    <path d="M23 72 Q26.5 64 23 57" stroke="#B0E8D0" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M29 71 Q32.5 63 29 56" stroke="#B0E8D0" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- 오른팔 -->
+    <ellipse cx="85" cy="80" rx="9.5" ry="6.5" fill="#88EEC0" stroke="#333" stroke-width="2.5" transform="rotate(22 85 80)"/>
+    <!-- 핑크 헤어 (팡팡) -->
+    <path d="M29 40 Q35 12 60 10 Q85 12 91 40" fill="#FF88AA" stroke="#CC4477" stroke-width="2.5"/>
+    <path d="M33 38 Q38 15 60 13 Q82 15 87 38" fill="#FFAAC8" stroke="none"/>
+    <!-- 양 옆 동그란 장식 -->
+    <circle cx="28" cy="44" r="10" fill="#FF88AA" stroke="#CC4477" stroke-width="2.5"/>
+    <circle cx="92" cy="44" r="10" fill="#FF88AA" stroke="#CC4477" stroke-width="2.5"/>
+    <circle cx="28" cy="44" r="5.5" fill="#FFB3CC"/>
+    <circle cx="92" cy="44" r="5.5" fill="#FFB3CC"/>
+    <!-- 큰 머리 -->
+    <circle cx="60" cy="46" r="31" fill="#C0FFE8" stroke="#333" stroke-width="3.2"/>
+    <!-- 볼터치 -->
+    ${BL(41,57)}${BL(79,57)}
+    <!-- 눈썹 -->
+    <path d="M40 35 Q49 30 58 34" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M62 34 Q71 30 80 35" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- 큰 눈 -->
+    ${EYE(49,47,11,'#333')}${EYE(71,47,11,'#333')}
     ${MO(60,60,8)}
   </svg>`;
 
-  // ════ 전설: 웅장한 왕 (크림슨, 원을 가득 채움!) ════
-  return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="60" cy="60" r="${BG_R}" fill="#FFF0F0" stroke="#F87171" stroke-width="4"/>
-    <ellipse cx="60" cy="111" rx="30" ry="7" fill="rgba(0,0,0,0.1)"/>
-    <!-- 몸통 (원 가득!) -->
-    <ellipse cx="60" cy="82" rx="29" ry="25" fill="#FEE2E2" stroke="#333" stroke-width="3"/>
-    <!-- 망토 라인 -->
-    <path d="M32 79 Q60 72 88 79" stroke="#EF4444" stroke-width="3.5" fill="none"/>
-    <path d="M35 90 Q60 83 85 90" stroke="#EF4444" stroke-width="3" fill="none"/>
-    <!-- 황금 벨트 -->
-    <rect x="38" y="97" width="44" height="8" rx="4" fill="#FCD34D" stroke="#F59E0B" stroke-width="2"/>
-    <circle cx="60" cy="101" r="5.5" fill="#F59E0B" stroke="#333" stroke-width="1.5"/>
-    <circle cx="60" cy="101" r="2.8" fill="#FEF3C7"/>
-    <!-- 발 (매우 큼!) -->
-    <ellipse cx="43" cy="103" rx="15" ry="8" fill="#FEE2E2" stroke="#333" stroke-width="3"/>
-    <ellipse cx="77" cy="103" rx="15" ry="8" fill="#FEE2E2" stroke="#333" stroke-width="3"/>
-    <!-- 왕관 (머리 위) -->
-    <path d="M28,45 L40,58 L60,30 L80,58 L92,45 L90,61 L30,61 Z" fill="#FCD34D" stroke="#F59E0B" stroke-width="2.2"/>
-    <path d="M40 52 Q60 46 80 52" fill="none" stroke="white" stroke-width="2" opacity="0.5"/>
-    <!-- 왕관 보석 -->
-    <circle cx="60" cy="30" r="7.5" fill="#EF4444" stroke="#FCA5A5" stroke-width="1.8"/>
-    <circle cx="60" cy="30" r="4" fill="white" opacity="0.4"/>
-    <circle cx="28" cy="45" r="5.5" fill="#60A5FA" stroke="#BFDBFE" stroke-width="1.5"/>
-    <circle cx="92" cy="45" r="5.5" fill="#60A5FA" stroke="#BFDBFE" stroke-width="1.5"/>
-    <circle cx="44" cy="53" r="4.5" fill="#A78BFA" stroke="#C4B5FD" stroke-width="1"/>
-    <circle cx="76" cy="53" r="4.5" fill="#A78BFA" stroke="#C4B5FD" stroke-width="1"/>
-    <!-- 머리 (거의 원 가득!) -->
-    <circle cx="60" cy="49" r="31" fill="#FEE2E2" stroke="#333" stroke-width="3"/>
-    ${BL(44,57,8)}${BL(76,57,8)}
-    <!-- 왕의 눈 (우아하게 반쯤) -->
-    ${H
-      ?`<path d="M44 56 Q54 48 64 56" stroke="#450A0A" stroke-width="3.2" fill="none" stroke-linecap="round"/>
-        <path d="M56 56 Q66 48 76 56" stroke="#450A0A" stroke-width="3.2" fill="none" stroke-linecap="round"/>
-        <circle cx="40" cy="63" r="8" fill="#FCA5A5" opacity="0.6"/>
-        <circle cx="80" cy="63" r="8" fill="#FCA5A5" opacity="0.6"/>`
-      :S
-      ?`<circle cx="54" cy="57" r="5.5" fill="#450A0A"/><circle cx="66" cy="57" r="5.5" fill="#450A0A"/>
-        <circle cx="56.5" cy="55" r="2" fill="white"/><circle cx="68.5" cy="55" r="2" fill="white"/>
-        <path d="M45 52 Q54 57 63 52" stroke="#450A0A" stroke-width="2.2" fill="none"/>
-        <path d="M57 52 Q66 57 75 52" stroke="#450A0A" stroke-width="2.2" fill="none"/>`
-      :`<path d="M43 58 L59 53.5" stroke="#450A0A" stroke-width="3" stroke-linecap="round"/>
-        <path d="M43 62 Q54 68 65 62" stroke="#450A0A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-        <ellipse cx="54" cy="59" rx="7" ry="5.5" fill="#450A0A"/>
-        <circle cx="57" cy="56.5" r="2.3" fill="white"/>
-        <path d="M61 58 L77 53.5" stroke="#450A0A" stroke-width="3" stroke-linecap="round"/>
-        <path d="M61 62 Q72 68 83 62" stroke="#450A0A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-        <ellipse cx="72" cy="59" rx="7" ry="5.5" fill="#450A0A"/>
-        <circle cx="75" cy="56.5" r="2.3" fill="white"/>`}
-    ${MO(60,70,10)}
-    <!-- 반짝이 -->
-    <text x="10" y="44" font-size="16" style="font-family:sans-serif">✨</text>
-    <text x="96" y="40" font-size="16" style="font-family:sans-serif">✨</text>
-    <text x="14" y="82" font-size="13" style="font-family:sans-serif">⭐</text>
-    <text x="98" y="84" font-size="13" style="font-family:sans-serif">⭐</text>
+  // ════════════════════════
+  //  베테랑 🏅 — 성인 (골드, 메달, 자신감)
+  // ════════════════════════
+  if(rk.emoji==='🏅') return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="60" cy="60" r="54" fill="#FFFBEB" stroke="#F5A000" stroke-width="3.5"/>
+    <ellipse cx="60" cy="110" rx="27" ry="6" fill="rgba(0,0,0,0.08)"/>
+    <!-- 발 -->
+    <ellipse cx="45" cy="100" rx="14.5" ry="9" fill="#FFD055" stroke="#333" stroke-width="3"/>
+    <ellipse cx="75" cy="100" rx="14.5" ry="9" fill="#FFD055" stroke="#333" stroke-width="3"/>
+    <!-- 몸통 -->
+    <ellipse cx="60" cy="83" rx="25" ry="20" fill="#FFD055" stroke="#333" stroke-width="3.2"/>
+    <!-- 정장 라펠 -->
+    <path d="M49 71 L55 85 L60 77 L65 85 L71 71" fill="#F59E0B" stroke="#333" stroke-width="2.3"/>
+    <!-- 어깨 별 뱃지 -->
+    <circle cx="34" cy="76" r="9.5" fill="#FCD34D" stroke="#E59500" stroke-width="2.5"/>
+    <text x="30" y="80.5" font-size="14" fill="#92400E" font-weight="900">★</text>
+    <circle cx="86" cy="76" r="9.5" fill="#FCD34D" stroke="#E59500" stroke-width="2.5"/>
+    <text x="82" y="80.5" font-size="14" fill="#92400E" font-weight="900">★</text>
+    <!-- 메달 리본 -->
+    <line x1="60" y1="65" x2="60" y2="75" stroke="#EF4444" stroke-width="6" stroke-linecap="round"/>
+    <!-- 메달 -->
+    <circle cx="60" cy="84" r="13" fill="#FCD34D" stroke="#D4900A" stroke-width="3"/>
+    <ellipse cx="56" cy="81" rx="6" ry="4" fill="white" opacity="0.42"/>
+    <polygon points="60,77.5 62.5,82.5 68.5,82.5 63.8,85.8 65.5,92 60,88.5 54.5,92 56.2,85.8 51.5,82.5 57.5,82.5" fill="#D4900A"/>
+    <!-- 헤어 (멋진 다크) -->
+    <path d="M30 38 Q37 11 60 10 Q83 11 90 38" fill="#2A2A2A" stroke="#111" stroke-width="2.5"/>
+    <ellipse cx="48" cy="22" rx="9" ry="7" fill="#2A2A2A"/>
+    <ellipse cx="60" cy="19" rx="8" ry="6" fill="#2A2A2A"/>
+    <!-- 큰 머리 -->
+    <circle cx="60" cy="45" r="31" fill="#FFE8A0" stroke="#333" stroke-width="3.2"/>
+    <!-- 자신감 눈썹 (힘차게) -->
+    <path d="M40 33 L54 37" stroke="#333" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M66 37 L80 33" stroke="#333" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- 볼터치 -->
+    ${BL(41,56)}${BL(79,56)}
+    <!-- 큰 눈 (강인) -->
+    ${EYE(49,47,11.5,'#222')}${EYE(71,47,11.5,'#222')}
+    <!-- 콧수염 -->
+    <path d="M50 60 Q55 64 60 60 Q65 64 70 60" stroke="#555" stroke-width="2.3" fill="none" stroke-linecap="round"/>
+    ${MO(60,58,8)}
   </svg>`;
 
-  // (구 CHARS 코드 삭제됨 — 위 if/return 블록으로 대체)
-  // 아래는 절대 실행 안 됨 (dead code 제거용 placeholder)
-  const CHARS_UNUSED={
-    '😰':{
-      bgA:'DELETED',bgB:'DELETED',ring:'DELETED',
-      faceA:'#FFF8C0',faceB:'#FBBF24',
-      bodyA:'#93C5FD',bodyB:'#2563EB',
-      cheek:true,
-      eyes:(m)=>m==='happy'
-        ?`<path d="M46 46 Q51 40 56 46" stroke="#1A1A2E" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-          <path d="M64 46 Q69 40 74 46" stroke="#1A1A2E" stroke-width="2.8" fill="none" stroke-linecap="round"/>`
-        :m==='sad'
-        ?`<circle cx="51" cy="48" r="4.5" fill="#1A1A2E"/><circle cx="69" cy="48" r="4.5" fill="#1A1A2E"/>
-          <circle cx="53" cy="46.5" r="1.5" fill="white"/><circle cx="71" cy="46.5" r="1.5" fill="white"/>
-          <path d="M46 43 Q51 48 56 43" stroke="#1A1A2E" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M64 43 Q69 48 74 43" stroke="#1A1A2E" stroke-width="2" fill="none" stroke-linecap="round"/>`
-        :`<circle cx="51" cy="47" r="5" fill="#1A1A2E"/><circle cx="69" cy="47" r="5" fill="#1A1A2E"/>
-          <circle cx="53" cy="45.2" r="2" fill="white"/><circle cx="71" cy="45.2" r="2" fill="white"/>
-          <circle cx="55" cy="49" r="1" fill="white" opacity="0.7"/><circle cx="73" cy="49" r="1" fill="white" opacity="0.7"/>`,
-      acc:`<rect x="68" y="76" width="17" height="20" rx="5" fill="#BFDBFE" stroke="#93C5FD" stroke-width="1.5"/>
-           <rect x="72" y="74" width="9" height="4" rx="2" fill="#60A5FA"/>
-           <line x1="71" y1="83" x2="83" y2="83" stroke="#93C5FD" stroke-width="1.2"/>
-           <rect x="28" y="78" width="15" height="19" rx="3" fill="#FEF9C3" stroke="#FCD34D" stroke-width="1.5"/>
-           <line x1="31" y1="83" x2="40" y2="83" stroke="#FCD34D" stroke-width="1.2"/>
-           <line x1="31" y1="87" x2="40" y2="87" stroke="#FCD34D" stroke-width="1.2"/>
-           <line x1="31" y1="91" x2="40" y2="91" stroke="#FCD34D" stroke-width="1.2"/>`,
-    },
-    '📚':{
-      bgA:'#EFF6FF',bgB:'#DBEAFE',ring:'#60A5FA',
-      faceA:'#FFE8E8',faceB:'#FCA5A5',
-      bodyA:'#60A5FA',bodyB:'#1D4ED8',
-      cheek:true,
-      eyes:(m)=>`
-        <circle cx="51" cy="48" r="10" fill="rgba(255,255,255,0.55)" stroke="#374151" stroke-width="2.3"/>
-        <circle cx="69" cy="48" r="10" fill="rgba(255,255,255,0.55)" stroke="#374151" stroke-width="2.3"/>
-        <path d="M59.5 48 Q60 47 60.5 48" stroke="#374151" stroke-width="2" fill="none"/>
-        <line x1="41" y1="46" x2="37" y2="44" stroke="#374151" stroke-width="1.8"/>
-        <line x1="79" y1="46" x2="83" y2="44" stroke="#374151" stroke-width="1.8"/>
-        ${m==='happy'
-          ?`<path d="M46 47 Q51 42 56 47" stroke="#374151" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-            <path d="M64 47 Q69 42 74 47" stroke="#374151" stroke-width="2.2" fill="none" stroke-linecap="round"/>`
-          :m==='sad'
-          ?`<circle cx="51" cy="48" r="4.5" fill="#374151"/><circle cx="69" cy="48" r="4.5" fill="#374151"/>
-            <path d="M46 44 Q51 49 56 44" stroke="#374151" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path d="M64 44 Q69 49 74 44" stroke="#374151" stroke-width="2" fill="none" stroke-linecap="round"/>`
-          :`<circle cx="51" cy="48" r="4.5" fill="#374151"/><circle cx="69" cy="48" r="4.5" fill="#374151"/>
-            <circle cx="53" cy="46.5" r="1.5" fill="white"/><circle cx="71" cy="46.5" r="1.5" fill="white"/>`}`,
-      acc:`<rect x="27" y="77" width="18" height="23" rx="3" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.5"/>
-           <rect x="29" y="77" width="3" height="23" rx="1.5" fill="#F59E0B"/>
-           <line x1="33" y1="83" x2="42" y2="83" stroke="#F59E0B" stroke-width="1.1"/>
-           <line x1="33" y1="87" x2="42" y2="87" stroke="#F59E0B" stroke-width="1.1"/>
-           <line x1="33" y1="91" x2="42" y2="91" stroke="#F59E0B" stroke-width="1.1"/>`,
-    },
-    '☕':{
-      bgA:'#FAF5FF',bgB:'#EDE9FE',ring:'#A78BFA',
-      faceA:'#FECDD3',faceB:'#F472B6',
-      bodyA:'#A78BFA',bodyB:'#6D28D9',
-      cheek:false,
-      eyes:(m)=>m==='sad'
-        ?`<circle cx="51" cy="48" r="4.5" fill="#4C1D95"/><circle cx="69" cy="48" r="4.5" fill="#4C1D95"/>
-          <path d="M46 44 Q51 49 56 44" stroke="#4C1D95" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M64 44 Q69 49 74 44" stroke="#4C1D95" stroke-width="2" fill="none" stroke-linecap="round"/>`
-        :m==='happy'
-        ?`<path d="M46 47 Q51 41 56 47" stroke="#4C1D95" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-          <path d="M64 47 Q69 41 74 47" stroke="#4C1D95" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-          <circle cx="44" cy="55" r="6" fill="#F9A8D4" opacity="0.5"/>
-          <circle cx="76" cy="55" r="6" fill="#F9A8D4" opacity="0.5"/>`
-        :`<path d="M46 47 Q51 44 56 47" stroke="#4C1D95" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M46 50 Q51 53 56 50" stroke="#4C1D95" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M64 47 Q69 44 74 47" stroke="#4C1D95" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M64 50 Q69 53 74 50" stroke="#4C1D95" stroke-width="2" fill="none" stroke-linecap="round"/>`,
-      acc:`<rect x="67" y="80" width="19" height="16" rx="4" fill="white" stroke="#E9D5FF" stroke-width="1.5"/>
-           <path d="M86 85 Q94 87 86 91" stroke="#C4B5FD" stroke-width="2" fill="none" stroke-linecap="round"/>
-           <rect x="69" y="84" width="15" height="4.5" rx="2" fill="#D97706" opacity="0.45"/>
-           <path d="M71 78 Q73 73 71 67" stroke="#C4B5FD" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-           <path d="M75 77 Q77 72 75 66" stroke="#C4B5FD" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-           <circle cx="44" cy="55" r="6" fill="#F9A8D4" opacity="0.45"/>
-           <circle cx="76" cy="55" r="6" fill="#F9A8D4" opacity="0.45"/>`,
-    },
-    '🏅':{
-      bgA:'#FFFBEB',bgB:'#FEF3C7',ring:'#FCD34D',
-      faceA:'#FEF3C7',faceB:'#F59E0B',
-      bodyA:'#FBBF24',bodyB:'#92400E',
-      cheek:false,
-      eyes:(m)=>m==='sad'
-        ?`<circle cx="51" cy="48" r="4.5" fill="#78350F"/><circle cx="69" cy="48" r="4.5" fill="#78350F"/>
-          <path d="M46 44 Q51 49 56 44" stroke="#78350F" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M64 44 Q69 49 74 44" stroke="#78350F" stroke-width="2" fill="none" stroke-linecap="round"/>`
-        :m==='happy'
-        ?`<path d="M46 47 Q51 41 56 47" stroke="#78350F" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-          <path d="M64 47 Q69 41 74 47" stroke="#78350F" stroke-width="2.8" fill="none" stroke-linecap="round"/>`
-        :`<path d="M45 49 L57 46" stroke="#78350F" stroke-width="2.2" stroke-linecap="round"/>
-          <ellipse cx="51" cy="48.5" rx="5" ry="4" fill="#78350F"/>
-          <circle cx="53" cy="47" r="1.8" fill="white"/>
-          <path d="M63 49 L75 46" stroke="#78350F" stroke-width="2.2" stroke-linecap="round"/>
-          <ellipse cx="69" cy="48.5" rx="5" ry="4" fill="#78350F"/>
-          <circle cx="71" cy="47" r="1.8" fill="white"/>`,
-      acc:`<line x1="60" y1="75" x2="60" y2="84" stroke="#EF4444" stroke-width="4.5" stroke-linecap="round"/>
-           <circle cx="60" cy="92" r="11" fill="#FCD34D" stroke="#F59E0B" stroke-width="2.5"/>
-           <ellipse cx="57" cy="89" rx="4" ry="2.5" fill="white" opacity="0.35"/>
-           <polygon points="60,85 61.8,89.5 66.8,89.5 62.8,92.2 64.2,97.2 60,94.5 55.8,97.2 57.2,92.2 53.2,89.5 58.2,89.5" fill="#F59E0B"/>
-           <circle cx="37" cy="82" r="6.5" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.8"/>
-           <text x="34" y="86.5" font-size="8.5" fill="#92400E" font-weight="900">★</text>
-           <circle cx="83" cy="82" r="6.5" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.8"/>
-           <text x="80" y="86.5" font-size="8.5" fill="#92400E" font-weight="900">★</text>`,
-    },
-    '👑':{
-      bgA:'#FFF0F0',bgB:'#FECACA',ring:'#F87171',
-      faceA:'#FECACA',faceB:'#EF4444',
-      bodyA:'#F87171',bodyB:'#7F1D1D',
-      cheek:true,
-      eyes:(m)=>m==='sad'
-        ?`<circle cx="51" cy="49" r="4.5" fill="#450A0A"/><circle cx="69" cy="49" r="4.5" fill="#450A0A"/>
-          <path d="M46 44 Q51 49 56 44" stroke="#450A0A" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <path d="M64 44 Q69 49 74 44" stroke="#450A0A" stroke-width="2" fill="none" stroke-linecap="round"/>`
-        :m==='happy'
-        ?`<path d="M46 48 Q51 42 56 48" stroke="#450A0A" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-          <path d="M64 48 Q69 42 74 48" stroke="#450A0A" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-          <circle cx="44" cy="56" r="7" fill="#FCA5A5" opacity="0.6"/>
-          <circle cx="76" cy="56" r="7" fill="#FCA5A5" opacity="0.6"/>`
-        :`<path d="M45 51 L57 47" stroke="#450A0A" stroke-width="2.3" stroke-linecap="round"/>
-          <path d="M45 54 Q51 59 57 54" stroke="#450A0A" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-          <ellipse cx="51" cy="51.5" rx="5.5" ry="3.8" fill="#450A0A"/>
-          <circle cx="53.5" cy="49.5" r="1.8" fill="white"/>
-          <path d="M63 51 L75 47" stroke="#450A0A" stroke-width="2.3" stroke-linecap="round"/>
-          <path d="M63 54 Q69 59 75 54" stroke="#450A0A" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-          <ellipse cx="69" cy="51.5" rx="5.5" ry="3.8" fill="#450A0A"/>
-          <circle cx="71.5" cy="49.5" r="1.8" fill="white"/>`,
-      acc:`<path d="M33,48 L43,59 L60,36 L77,59 L87,48 L85,63 L35,63 Z" fill="#FCD34D" stroke="#F59E0B" stroke-width="2"/>
-           <path d="M43 52 Q60 47 77 52" fill="none" stroke="white" stroke-width="2" opacity="0.45"/>
-           <circle cx="60" cy="36" r="6" fill="#EF4444" stroke="#FCA5A5" stroke-width="1.5"/>
-           <circle cx="60" cy="36" r="3" fill="white" opacity="0.4"/>
-           <circle cx="33" cy="48" r="5" fill="#60A5FA" stroke="#BFDBFE" stroke-width="1.2"/>
-           <circle cx="87" cy="48" r="5" fill="#60A5FA" stroke="#BFDBFE" stroke-width="1.2"/>
-           <circle cx="47" cy="55" r="3.5" fill="#A78BFA"/>
-           <circle cx="73" cy="55" r="3.5" fill="#A78BFA"/>
-           <rect x="35" y="97" width="50" height="5" rx="2.5" fill="#FCD34D" opacity="0.9"/>
-           <ellipse cx="43" cy="99.5" rx="3" ry="2.5" fill="white" opacity="0.3"/>`,
-    },
-  };
+  // ════════════════════════
+  //  전설 👑 — 부자왕 (무지개 헤어+왕관+금목걸이+다이아)
+  // ════════════════════════
+  return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="60" cy="60" r="54" fill="#FFF0FA" stroke="#FF50B0" stroke-width="4"/>
+    <ellipse cx="60" cy="111" rx="29" ry="6.5" fill="rgba(0,0,0,0.1)"/>
+    <!-- 발 (매우 큼!) -->
+    <ellipse cx="42" cy="101" rx="16.5" ry="10" fill="#FFAAD8" stroke="#333" stroke-width="3.2"/>
+    <ellipse cx="78" cy="101" rx="16.5" ry="10" fill="#FFAAD8" stroke="#333" stroke-width="3.2"/>
+    <!-- 몸통 (원 가득!) -->
+    <ellipse cx="60" cy="84" rx="28.5" ry="23" fill="#FFB8DC" stroke="#333" stroke-width="3.5"/>
+    <!-- 드레스 장식 -->
+    <path d="M39 76 Q60 70 81 76" stroke="#FF1888" stroke-width="3.2" fill="none"/>
+    <path d="M42 88 Q60 82 78 88" stroke="#FF1888" stroke-width="2.8" fill="none"/>
+    <!-- 금 목걸이 체인 -->
+    <path d="M38 73 Q60 85 82 73" fill="none" stroke="#FFD700" stroke-width="5" stroke-linecap="round"/>
+    <!-- 목걸이 광택 -->
+    <path d="M43 72 Q60 82 77 72" fill="none" stroke="#FFF0A0" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+    <!-- 다이아 팬던트 -->
+    <circle cx="60" cy="85.5" r="6" fill="#FFD700" stroke="#CC9900" stroke-width="2.2"/>
+    <polygon points="60,91.5 55.5,85.5 60,79.5 64.5,85.5" fill="#88EEFF" stroke="#44AACC" stroke-width="1.8"/>
+    <circle cx="60" cy="85.5" r="2.8" fill="white" opacity="0.55"/>
+    <!-- 팔 -->
+    <ellipse cx="31" cy="80" rx="9" ry="6" fill="#FFAAD8" stroke="#333" stroke-width="2.8" transform="rotate(-22 31 80)"/>
+    <ellipse cx="89" cy="80" rx="9" ry="6" fill="#FFAAD8" stroke="#333" stroke-width="2.8" transform="rotate(22 89 80)"/>
+    <!-- 무지개 헤어!! (6색) -->
+    <path d="M27 41 Q33 9 60 7 Q87 9 93 41" fill="#FF2222" stroke="#CC0000" stroke-width="1.5"/>
+    <path d="M31 40 Q36 11 60 9 Q84 11 89 40" fill="#FF8800" stroke="none"/>
+    <path d="M35 39 Q39 13 60 11 Q81 13 85 39" fill="#FFEE00" stroke="none"/>
+    <path d="M39 38 Q42 15 60 13 Q78 15 81 38" fill="#44DD22" stroke="none"/>
+    <path d="M43 37 Q45 17 60 15 Q75 17 77 37" fill="#2288FF" stroke="none"/>
+    <path d="M47 36 Q48 19 60 17 Q72 19 73 36" fill="#CC44FF" stroke="none"/>
+    <!-- 헤어 아웃라인 -->
+    <path d="M27 41 Q33 9 60 7 Q87 9 93 41" fill="none" stroke="#222" stroke-width="3"/>
+    <!-- 왕관 -->
+    <path d="M31,44 L43,57 L60,29 L77,57 L89,44 L87,59 L33,59 Z" fill="#FFD700" stroke="#CC8800" stroke-width="2.8"/>
+    <path d="M43 52 Q60 46 77 52" fill="none" stroke="white" stroke-width="2.2" opacity="0.52"/>
+    <!-- 왕관 보석 (크고 화려!) -->
+    <circle cx="60" cy="29" r="9" fill="#FF2222" stroke="#FF9999" stroke-width="2"/>
+    <circle cx="60" cy="29" r="5" fill="white" opacity="0.5"/>
+    <circle cx="31" cy="44" r="7" fill="#2266FF" stroke="#88BBFF" stroke-width="1.8"/>
+    <circle cx="89" cy="44" r="7" fill="#22CC44" stroke="#88FF88" stroke-width="1.8"/>
+    <circle cx="43" cy="52" r="5.5" fill="#AA22FF" stroke="#CC88FF" stroke-width="1.5"/>
+    <circle cx="77" cy="52" r="5.5" fill="#FF8800" stroke="#FFCC66" stroke-width="1.5"/>
+    <!-- 큰 머리 -->
+    <circle cx="60" cy="48" r="32" fill="#FFD8EE" stroke="#333" stroke-width="3.5"/>
+    <!-- 아이라인 (화려) -->
+    <path d="M36 40 Q48 34 60 38" stroke="#CC0066" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M60 38 Q72 34 84 40" stroke="#CC0066" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <!-- 볼터치 (크게) -->
+    ${BL(39,59)}${BL(81,59)}
+    <!-- 눈 (가장 크고 화려! 핑크 동공) -->
+    ${EYE(47,50,13,'#CC0066')}${EYE(73,50,13,'#CC0066')}
+    ${MO(60,66,9.5)}
+    <!-- 반짝 효과 -->
+    <text x="6" y="42" font-size="18" style="font-family:sans-serif">✨</text>
+    <text x="97" y="38" font-size="18" style="font-family:sans-serif">✨</text>
+    <text x="9" y="80" font-size="15" style="font-family:sans-serif">💎</text>
+    <text x="98" y="83" font-size="15" style="font-family:sans-serif">💰</text>
+  </svg>`;
 
-  // 신입이 기본값 (fallback)
-  return makeChar(0, size, mood);
 }
 
 /* ═══════════════════════════════
