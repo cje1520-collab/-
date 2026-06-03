@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>상담왕 등극기 🏆</title>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFF9F0;
+  --card: #FFFFFF;
+  --card2: #FFF3E0;
+  --border: #FFD699;
+  --primary: #FF6B35;
+  --primary-light: rgba(255,107,53,0.12);
+  --gold: #F4A017;
+  --green: #06D6A0;
+  --red: #FF5A5F;
+  --text: #2D2D2D;
+  --muted: #9E8C78;
+  --radius: 20px;
+  --shadow: 0 4px 24px rgba(255,107,53,0.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  font-family: 'Nanum Gothic', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  background-image:
+    radial-gradient(circle at 15% 15%, rgba(255,217,61,0.15) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(255,107,53,0.1) 0%, transparent 40%);
+}
+.wrap {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 80px 0;
+}
+.screen { display: none; flex-direction: column; flex: 1; }
+.screen.active { display: flex; animation: popIn 0.4s cubic-bezier(.22,.68,0,1.2); }
+@keyframes popIn {
+  from { opacity:0; transform:translateY(16px) scale(0.97); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* ═══ 공통 카드 ═══ */
+.top-bar {
+  background: linear-gradient(90deg, #FF6B35, #FF9F1C);
+  height: 5px; width: 100%; flex-shrink: 0;
+}
+.page-card {
+  background: var(--card);
+  margin: 12px;
+  border-radius: 24px;
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  position: relative;
+}
+.page-card::before {
+  content: '';
+  position: absolute; top:0; left:0; right:0; height:4px;
+  background: linear-gradient(90deg, #FF6B35, #FFD93D, #FF9F1C);
+}
+.section-card {
+  background: var(--card2);
+  margin: 0 12px 10px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  padding: 16px;
+}
+
+/* ═══ 공통 버튼 ═══ */
+.btn-main {
+  display: block; width: calc(100% - 24px); margin: 0 12px 10px;
+  padding: 18px;
+  background: linear-gradient(135deg, #FF6B35, #FF9F1C);
+  color: white; border: none; border-radius: var(--radius);
+  font-family: 'Jua', sans-serif; font-size: 19px; letter-spacing: 1px;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(255,107,53,0.4);
+  text-align: center;
+}
+.btn-main:active { transform: scale(0.97); }
+.btn-main:disabled { opacity:0.6; }
+.btn-sub {
+  display: block; width: calc(100% - 24px); margin: 0 12px 10px;
+  padding: 16px;
+  background: transparent; color: var(--primary);
+  border: 2px solid var(--primary); border-radius: var(--radius);
+  font-family: 'Jua', sans-serif; font-size: 17px; letter-spacing: 1px;
+  cursor: pointer; transition: all 0.2s; text-align: center;
+}
+.btn-sub:active { background: var(--primary-light); }
+.btn-ghost {
+  display: block; width: calc(100% - 24px); margin: 0 12px 10px;
+  padding: 15px; background: var(--card2);
+  border: 1.5px solid var(--border); border-radius: var(--radius);
+  font-family: 'Jua', sans-serif; font-size: 16px; color: var(--text);
+  cursor: pointer; text-align: center; transition: all 0.2s;
+}
+.btn-ghost:active { background: #FFE0B2; }
+
+/* ════════════════════════════
+   인트로 화면
+════════════════════════════ */
+.intro-hero {
+  padding: 40px 24px 24px;
+  text-align: center;
+}
+.intro-badge {
+  display: inline-block;
+  font-family: 'Jua', sans-serif; font-size: 13px; letter-spacing: 1px;
+  color: var(--primary); background: var(--primary-light);
+  border: 1.5px solid rgba(255,107,53,0.3);
+  padding: 6px 18px; border-radius: 99px; margin-bottom: 20px;
+}
+.intro-title {
+  font-family: 'Jua', sans-serif; font-size: 34px;
+  color: var(--text); line-height: 1.25; margin-bottom: 10px;
+}
+.intro-title em { color: var(--primary); font-style: normal; }
+.intro-sub { font-size: 14px; color: var(--muted); line-height: 1.8; margin-bottom: 28px; }
+.intro-features { text-align: left; }
+.intro-feat {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 13px 0; border-bottom: 1px solid #FFE0B2;
+}
+.intro-feat:last-child { border-bottom: none; }
+.feat-icon { font-size: 24px; flex-shrink: 0; }
+.feat-text strong { display: block; font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+.feat-text span { font-size: 13px; color: var(--muted); }
+
+/* ════════════════════════════
+   로그인 화면
+════════════════════════════ */
+.login-hero {
+  padding: 36px 24px 24px;
+  text-align: center;
+}
+.login-emoji { font-size: 52px; margin-bottom: 12px; display: block; }
+.login-title { font-family: 'Jua', sans-serif; font-size: 26px; color: var(--text); margin-bottom: 6px; }
+.login-sub { font-size: 13px; color: var(--muted); line-height: 1.7; }
+.input-group { margin: 0 12px 10px; }
+.input-label {
+  display: block; font-size: 12px; font-weight: 800;
+  color: var(--muted); letter-spacing: 1.5px; margin-bottom: 7px;
+  text-transform: uppercase; padding-left: 4px;
+}
+.input-field {
+  display: block; width: 100%;
+  padding: 16px 18px; background: var(--card);
+  border: 2px solid var(--border); border-radius: 16px;
+  color: var(--text); font-family: 'Nanum Gothic', sans-serif;
+  font-size: 16px; font-weight: 700; outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+}
+.input-field:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255,107,53,0.15); }
+.input-field::placeholder { color: #C9B99A; font-weight: 400; }
+.input-note { font-size: 11px; color: var(--muted); margin-top: 5px; padding-left: 4px; font-weight: 700; }
+
+/* ════════════════════════════
+   대시보드
+════════════════════════════ */
+.dash-header {
+  padding: 28px 20px 20px;
+  text-align: center;
+  position: relative;
+}
+.dash-greeting { font-size: 14px; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
+.dash-name { font-family: 'Jua', sans-serif; font-size: 26px; color: var(--text); margin-bottom: 16px; }
+.dash-name span { color: var(--primary); }
+.char-circle {
+  width: 120px; height: 120px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: var(--card2);
+  border: 3px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(255,107,53,0.15);
+  position: relative;
+}
+.rank-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+  border: 1.5px solid var(--border); border-radius: 99px;
+  padding: 8px 20px; font-family: 'Jua', sans-serif;
+  font-size: 16px; color: var(--text); margin-bottom: 16px;
+}
+.pts-display {
+  font-family: 'Jua', sans-serif; font-size: 36px;
+  color: var(--primary); margin-bottom: 4px;
+}
+.pts-display span { font-size: 16px; color: var(--muted); }
+.pts-gauge-wrap { padding: 0 4px; margin-bottom: 6px; }
+.pts-gauge-label {
+  display: flex; justify-content: space-between;
+  font-size: 11px; font-weight: 800; color: var(--muted); margin-bottom: 5px;
+}
+.pts-gauge { height: 8px; background: #FFE0B2; border-radius: 99px; overflow: hidden; }
+.pts-gauge-fill {
+  height: 100%; background: linear-gradient(90deg, #FF6B35, #FFD93D);
+  border-radius: 99px; transition: width 1s cubic-bezier(.22,.68,0,1.2);
+  box-shadow: 0 0 6px rgba(255,107,53,0.4);
+}
+.next-level-txt { font-size: 12px; color: var(--muted); font-weight: 700; text-align: center; margin-bottom: 16px; }
+.next-level-txt strong { color: var(--primary); }
+
+/* 공지사항 */
+.notice-banner {
+  margin: 0 12px 10px;
+  background: linear-gradient(135deg, rgba(255,217,61,0.15), rgba(255,107,53,0.08));
+  border: 1.5px solid rgba(255,159,28,0.4);
+  border-radius: 16px; padding: 12px 16px;
+  font-size: 13px; font-weight: 700; color: #B45309;
+  display: none;
+}
+.notice-banner span { font-size: 11px; color: var(--muted); display: block; margin-top: 2px; }
+
+/* TOP5 */
+.top5-card { padding: 14px 16px; }
+.top5-title {
+  font-family: 'Jua', sans-serif; font-size: 14px; color: var(--text);
+  margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+}
+.top5-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0; border-bottom: 1px solid #FFE0B2; font-size: 13px;
+}
+.top5-row:last-child { border-bottom: none; }
+.top5-rank { font-family: 'Jua', sans-serif; font-size: 16px; width: 26px; flex-shrink: 0; }
+.top5-name { font-weight: 800; color: var(--text); flex: 1; margin: 0 8px; }
+.top5-pts { font-family: 'Jua', sans-serif; font-size: 13px; color: var(--primary); font-weight: 800; }
+.top5-rank-tag { font-size: 11px; color: var(--muted); }
+.top5-me { background: rgba(255,107,53,0.06); border-radius: 8px; }
+
+/* ════════════════════════════
+   성장 화면
+════════════════════════════ */
+.growth-header { padding: 24px 20px 16px; text-align: center; }
+.growth-title { font-family: 'Jua', sans-serif; font-size: 24px; color: var(--text); margin-bottom: 4px; }
+.growth-sub { font-size: 13px; color: var(--muted); }
+.growth-current {
+  margin: 0 12px 12px;
+  background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+  border: 2px solid var(--gold); border-radius: 20px;
+  padding: 16px; text-align: center;
+}
+.growth-cur-label { font-size: 12px; font-weight: 800; color: var(--muted); letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
+.growth-cur-rank { font-family: 'Jua', sans-serif; font-size: 22px; color: var(--text); margin-bottom: 4px; }
+.growth-cur-pts { font-family: 'Jua', sans-serif; font-size: 32px; color: var(--primary); margin-bottom: 2px; }
+.growth-cur-pts span { font-size: 14px; color: var(--muted); }
+.growth-next { font-size: 13px; color: #B45309; font-weight: 800; }
+.growth-next strong { color: var(--primary); font-size: 15px; }
+
+/* 성장 여정 단계 */
+.journey-wrap { padding: 0 12px 12px; }
+.journey-step {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 14px; margin-bottom: 8px;
+  background: var(--card); border: 2px solid var(--border);
+  border-radius: 16px; transition: all 0.2s; position: relative;
+}
+.journey-step.current {
+  border-color: var(--primary);
+  background: rgba(255,107,53,0.05);
+  box-shadow: 0 0 0 3px rgba(255,107,53,0.15);
+}
+.journey-step.done {
+  background: rgba(6,214,160,0.05);
+  border-color: rgba(6,214,160,0.4);
+}
+.journey-step.locked { opacity: 0.55; }
+.step-char { width: 52px; height: 52px; flex-shrink: 0; }
+.step-info { flex: 1; }
+.step-rank { font-family: 'Jua', sans-serif; font-size: 15px; color: var(--text); margin-bottom: 2px; }
+.step-pts-range { font-size: 12px; color: var(--muted); font-weight: 700; }
+.step-status {
+  font-family: 'Jua', sans-serif; font-size: 12px;
+  padding: 4px 10px; border-radius: 99px; flex-shrink: 0;
+}
+.step-status.current-tag { background: var(--primary); color: white; }
+.step-status.done-tag { background: rgba(6,214,160,0.15); color: #059669; border: 1px solid rgba(6,214,160,0.4); }
+.step-status.lock-tag { background: #F3F4F6; color: var(--muted); }
+.journey-progress-wrap { padding: 0 12px 12px; }
+.journey-progress-label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; color: var(--muted); margin-bottom: 6px; }
+.journey-progress { height: 10px; background: #FFE0B2; border-radius: 99px; overflow: hidden; }
+.journey-progress-fill { height: 100%; background: linear-gradient(90deg, #22C55E, #FF6B35, #FFD93D); border-radius: 99px; transition: width 1s ease; }
+
+/* ════════════════════════════
+   퀴즈 화면
+════════════════════════════ */
+.quiz-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 12px 0;
+}
+.q-pill {
+  font-family: 'Jua', sans-serif; font-size: 13px; color: var(--primary);
+  background: var(--primary-light); border: 1.5px solid rgba(255,107,53,0.25);
+  padding: 8px 16px; border-radius: 99px;
+}
+.pts-pill {
+  font-family: 'Jua', sans-serif; font-size: 13px; color: var(--gold);
+  background: rgba(244,160,23,0.1); border: 1.5px solid rgba(244,160,23,0.3);
+  padding: 8px 16px; border-radius: 99px; transition: all 0.3s;
+}
+.pts-pill.pop { animation: ptsPop 0.4s ease; }
+@keyframes ptsPop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.3); box-shadow: 0 0 16px rgba(244,160,23,0.6); }
+  100% { transform: scale(1); }
+}
+.btn-exit {
+  font-family: 'Jua', sans-serif; font-size: 12px;
+  background: rgba(239,68,68,0.1); color: #DC2626;
+  border: 1.5px solid rgba(239,68,68,0.3); border-radius: 99px;
+  padding: 8px 14px; cursor: pointer; transition: all 0.2s;
+}
+.btn-exit:active { background: rgba(239,68,68,0.2); }
+.quiz-progress { height: 4px; background: #FFE0B2; margin: 10px 12px; border-radius: 99px; overflow: hidden; }
+.quiz-progress-fill { height: 100%; background: linear-gradient(90deg, #FF6B35, #FFD93D); border-radius: 99px; transition: width 0.5s ease; }
+
+/* 미니 캐릭터 바 */
+.char-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--card2); border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 10px 14px; margin: 0 12px 10px;
+}
+.char-bar-mini { width: 44px; height: 44px; flex-shrink: 0; }
+.char-bar-mini.bounce { animation: charBounce 0.5s cubic-bezier(.22,.68,0,1.5); }
+.char-bar-mini.shake  { animation: charShake 0.4s ease; }
+@keyframes charBounce { 0%{transform:scale(1)translateY(0)} 40%{transform:scale(1.25)translateY(-8px)} 70%{transform:scale(0.95)translateY(2px)} 100%{transform:scale(1)translateY(0)} }
+@keyframes charShake  { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)rotate(-3deg)} 40%{transform:translateX(5px)rotate(3deg)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+.char-bar-info { flex: 1; }
+.char-bar-rank { font-family: 'Jua', sans-serif; font-size: 12px; color: var(--primary); margin-bottom: 4px; }
+.char-bar-gauge { height: 5px; background: #FFE0B2; border-radius: 99px; overflow: hidden; }
+.char-bar-gauge-fill { height: 100%; background: linear-gradient(90deg, #FF6B35, #FFD93D); border-radius: 99px; transition: width 0.8s ease; }
+.streak-tag {
+  font-family: 'Jua', sans-serif; font-size: 12px;
+  background: linear-gradient(135deg, #FF6B35, #FFD93D);
+  color: white; padding: 5px 10px; border-radius: 99px;
+  animation: streakIn 0.4s ease; flex-shrink: 0;
+}
+@keyframes streakIn { from{transform:scale(0.6);opacity:0} to{transform:scale(1);opacity:1} }
+
+.quiz-body { margin: 0 12px; }
+.quiz-card {
+  background: var(--card); border: 2px solid var(--border);
+  border-radius: 24px; padding: 20px; box-shadow: var(--shadow);
+}
+.cat-tag {
+  display: inline-block; font-size: 11px; font-weight: 800;
+  letter-spacing: 0.5px; padding: 4px 12px; border-radius: 99px; margin-bottom: 12px;
+}
+.cat-가격    { background: rgba(6,214,160,0.12); color: #059669; border: 1px solid rgba(6,214,160,0.35); }
+.cat-문제집  { background: rgba(155,93,229,0.12); color: #9B5DE5; border: 1px solid rgba(155,93,229,0.35); }
+.cat-학습앱  { background: rgba(255,107,53,0.12); color: var(--primary); border: 1px solid rgba(255,107,53,0.3); }
+.cat-상품    { background: rgba(244,160,23,0.12); color: var(--gold); border: 1px solid rgba(244,160,23,0.35); }
+.q-text { font-size: 17px; font-weight: 800; color: var(--text); line-height: 1.7; margin-bottom: 16px; }
+.hint-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.hint-lbl { font-size: 11px; font-weight: 800; color: var(--muted); flex-shrink: 0; }
+.hint-chars { display: flex; gap: 5px; flex-wrap: wrap; }
+.hint-char {
+  width: 34px; height: 34px; background: var(--card2);
+  border: 1.5px solid var(--border); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Jua', sans-serif; font-size: 15px; color: var(--primary); transition: all 0.3s;
+}
+.hint-char.hidden { color: transparent; }
+.hint-btn {
+  font-size: 12px; font-weight: 800; color: #FF9F1C;
+  background: rgba(255,159,28,0.1); border: 1.5px solid rgba(255,159,28,0.3);
+  padding: 6px 14px; border-radius: 99px; cursor: pointer; white-space: nowrap;
+}
+.hint-btn.used { color: var(--muted); border-color: #E0D0BC; background: transparent; }
+.hint-tip {
+  font-size: 12px; font-weight: 800; color: #FF9F1C;
+  background: rgba(255,159,28,0.1); border: 1.5px solid rgba(255,159,28,0.3);
+  padding: 6px 14px; border-radius: 99px;
+}
+.ans-input {
+  display: block; width: 100%;
+  padding: 16px 18px; background: var(--card2);
+  border: 2.5px solid var(--border); border-radius: var(--radius);
+  color: var(--text); font-family: 'Jua', sans-serif;
+  font-size: 22px; outline: none; text-align: center;
+  letter-spacing: 3px; margin-bottom: 12px;
+  transition: all 0.2s; -webkit-appearance: none;
+}
+.ans-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(255,107,53,0.15); }
+.ans-input.ok { border-color: var(--green); background: #F0FDF9; }
+.ans-input.ng { border-color: var(--red); background: #FFF5F5; }
+.btn-submit {
+  display: block; width: 100%;
+  padding: 16px; background: transparent; color: var(--primary);
+  border: 2px solid var(--primary); border-radius: var(--radius);
+  font-family: 'Jua', sans-serif; font-size: 17px; cursor: pointer;
+  transition: all 0.2s; letter-spacing: 1px;
+}
+.btn-submit:active { background: var(--primary-light); }
+.btn-submit:disabled { opacity: 0.4; }
+.feedback {
+  margin-top: 12px; padding: 14px 16px; border-radius: var(--radius);
+  font-size: 14px; font-weight: 700; line-height: 1.7; display: none;
+}
+.feedback.show { display: block; animation: popIn 0.3s ease; }
+.feedback.ok { background: #F0FDF9; border: 1.5px solid rgba(6,214,160,0.4); color: #059669; }
+.feedback.ng { background: #FFF5F5; border: 1.5px solid rgba(255,90,95,0.35); color: #DC2626; }
+.motivate {
+  margin-top: 10px; padding: 12px 16px;
+  background: linear-gradient(135deg, rgba(255,217,61,0.15), rgba(255,107,53,0.08));
+  border: 1.5px solid rgba(255,159,28,0.4); border-radius: var(--radius);
+  font-family: 'Jua', sans-serif; font-size: 13px; color: #B45309;
+  text-align: center; display: none; animation: popIn 0.4s ease;
+}
+.motivate.show { display: block; }
+.btn-next {
+  display: none; width: 100%;
+  margin-top: 12px; padding: 16px;
+  background: linear-gradient(135deg, #FF6B35, #FF9F1C);
+  color: white; border: none; border-radius: var(--radius);
+  font-family: 'Jua', sans-serif; font-size: 17px; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255,107,53,0.35); letter-spacing: 1px;
+}
+.btn-next.show { display: block; animation: popIn 0.3s ease; }
+
+/* ════════════════════════════
+   결과 화면
+════════════════════════════ */
+.result-hero { padding: 28px 20px 20px; text-align: center; }
+.result-char-big { width: 120px; height: 120px; margin: 0 auto 12px; animation: resultIn 0.6s cubic-bezier(.22,.68,0,1.4); }
+@keyframes resultIn { from{transform:scale(0.5)translateY(20px);opacity:0} to{transform:scale(1)translateY(0);opacity:1} }
+.result-name-txt { font-size: 14px; color: var(--muted); margin-bottom: 3px; }
+.result-rank-txt { font-family: 'Jua', sans-serif; font-size: 22px; color: var(--text); margin-bottom: 10px; }
+.result-pts-big { font-family: 'Jua', sans-serif; font-size: 56px; color: var(--primary); line-height: 1; }
+.result-pts-big span { font-size: 18px; color: var(--muted); }
+.result-total-txt { font-size: 14px; color: var(--muted); font-weight: 700; margin-top: 4px; }
+.result-total-txt strong { color: var(--gold); font-size: 16px; }
+.result-msg-box {
+  margin: 0 12px 10px;
+  background: var(--card2); border-radius: var(--radius);
+  padding: 14px 16px; font-size: 14px; font-weight: 800;
+  color: var(--text); line-height: 1.65; text-align: center;
+}
+.money-box {
+  margin: 0 12px 10px;
+  background: linear-gradient(135deg, rgba(255,217,61,0.2), rgba(255,107,53,0.1));
+  border: 2px solid var(--gold); border-radius: var(--radius);
+  padding: 14px 16px; font-family: 'Jua', sans-serif;
+  font-size: 15px; color: #B45309; line-height: 1.7; text-align: center;
+}
+/* 뱃지 */
+.badge-area { margin: 0 12px 10px; }
+.badge-area-title { font-family: 'Jua', sans-serif; font-size: 14px; color: var(--text); margin-bottom: 8px; }
+.badge-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.badge-chip {
+  font-size: 12px; font-weight: 800; padding: 6px 12px; border-radius: 99px;
+  background: rgba(255,107,53,0.12); color: var(--primary);
+  border: 1.5px solid rgba(255,107,53,0.3);
+  animation: popIn 0.4s ease;
+}
+/* 스탯 */
+.stats-grid { margin: 0 12px 10px; }
+.stat-row {
+  display: flex; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid #FFE0B2; font-size: 14px;
+}
+.stat-row:last-child { border-bottom: none; }
+.stat-lbl { color: var(--muted); font-weight: 700; }
+.stat-val { font-weight: 800; color: var(--text); }
+.stat-val.hi { color: var(--green); }
+.stat-val.warn { color: var(--primary); }
+/* 상품권 */
+.gift-box {
+  margin: 0 12px 10px;
+  background: linear-gradient(135deg, rgba(255,217,61,0.2), rgba(255,107,53,0.15));
+  border: 2px solid var(--gold); border-radius: var(--radius);
+  padding: 16px; font-family: 'Jua', sans-serif;
+  font-size: 15px; color: #B45309; line-height: 1.7; text-align: center; display: none;
+}
+.levelup-box {
+  margin: 0 12px 10px;
+  background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+  border: 2px solid var(--gold); border-radius: var(--radius);
+  padding: 14px; font-family: 'Jua', sans-serif;
+  font-size: 16px; color: var(--gold); text-align: center; display: none;
+  animation: popIn 0.5s ease;
+}
+/* 공유 */
+.share-toast {
+  position: fixed; bottom: 90px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: #2D2D2D; color: white;
+  font-family: 'Jua', sans-serif; font-size: 14px;
+  padding: 12px 24px; border-radius: 99px; z-index: 9000;
+  transition: transform 0.3s ease; white-space: nowrap;
+}
+.share-toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ════════════════════════════
+   오답 복습 화면
+════════════════════════════ */
+.review-hero { padding: 28px 20px 16px; text-align: center; }
+.review-progress-txt { font-family: 'Jua', sans-serif; font-size: 14px; color: var(--primary); margin-bottom: 4px; }
+.review-title { font-family: 'Jua', sans-serif; font-size: 26px; color: var(--text); }
+.review-card { margin: 0 12px 10px; }
+.review-q { padding: 20px; background: var(--card); border: 2px solid var(--border); border-radius: 24px; box-shadow: var(--shadow); }
+.review-q-text { font-size: 16px; font-weight: 800; color: var(--text); line-height: 1.7; margin-bottom: 14px; }
+.review-ans-box {
+  background: #F0FDF9; border: 2px solid rgba(6,214,160,0.4);
+  border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px;
+}
+.review-ans-label { font-size: 11px; font-weight: 800; color: #059669; letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase; }
+.review-ans-txt { font-family: 'Jua', sans-serif; font-size: 24px; color: var(--text); }
+.review-hint { font-size: 13px; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
+.review-feedback { font-size: 13px; color: var(--muted); font-weight: 700; line-height: 1.6; padding: 10px; background: var(--card2); border-radius: 12px; }
+
+/* ════════════════════════════
+   파티클 & 효과
+════════════════════════════ */
+.coin-particle {
+  position: fixed; pointer-events: none; z-index: 2000;
+  font-size: 22px;
+  animation: coinFly var(--dur, 0.9s) ease-out forwards;
+}
+@keyframes coinFly {
+  0%   { transform: translate(0,0) scale(1) rotate(0deg); opacity:1; }
+  80%  { opacity:1; }
+  100% { transform: translate(var(--tx,0px), var(--ty,-120px)) scale(0.3) rotate(var(--rot,360deg)); opacity:0; }
+}
+.pts-float {
+  position: fixed; pointer-events: none; z-index: 2001;
+  font-family: 'Jua', sans-serif; font-size: 28px; font-weight: 900;
+  color: var(--gold); text-shadow: 0 2px 12px rgba(244,160,23,0.7);
+  animation: ptsUp 1.4s ease-out forwards; white-space: nowrap;
+}
+@keyframes ptsUp {
+  0%   { transform:translateY(0) scale(0.8); opacity:0; }
+  20%  { transform:translateY(-20px) scale(1.2); opacity:1; }
+  70%  { transform:translateY(-80px); opacity:1; }
+  100% { transform:translateY(-130px) scale(0.8); opacity:0; }
+}
+.levelup-overlay {
+  position: fixed; inset:0; z-index:3000;
+  display: flex; flex-direction:column; align-items:center; justify-content:center;
+  background: rgba(255,107,53,0.93); pointer-events:none;
+  animation: lvlIn 0.3s ease;
+}
+.levelup-overlay.hide { animation: lvlOut 0.5s ease forwards; }
+@keyframes lvlIn  { from{opacity:0} to{opacity:1} }
+@keyframes lvlOut { from{opacity:1} to{opacity:0} }
+.lvl-char { width:150px; height:150px; animation: lvlPop 0.6s cubic-bezier(.22,.68,0,1.4) 0.2s both; }
+@keyframes lvlPop { from{transform:scale(0)rotate(-10deg)} to{transform:scale(1)rotate(0)} }
+.lvl-title { font-family:'Jua',sans-serif; font-size:34px; color:white; text-shadow:0 4px 16px rgba(0,0,0,0.3); margin-top:14px; animation:lvlTxt 0.5s ease 0.5s both; }
+.lvl-sub { font-family:'Jua',sans-serif; font-size:17px; color:rgba(255,255,255,0.9); margin-top:6px; animation:lvlTxt 0.5s ease 0.7s both; }
+@keyframes lvlTxt { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+.confetti-wrap { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:999; }
+.cp { position:absolute; animation:fall linear forwards; }
+@keyframes fall { 0%{transform:translateY(-10px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+
+/* ════════════════════════════
+   로딩
+════════════════════════════ */
+.loading-overlay {
+  position:fixed; inset:0; background:rgba(255,249,240,0.92);
+  display:none; align-items:center; justify-content:center;
+  z-index:9999; font-family:'Jua',sans-serif;
+  font-size:16px; color:var(--primary); gap:10px; flex-direction:column;
+}
+.loading-overlay.show { display:flex; }
+.spinner {
+  width:38px; height:38px; border:4px solid #FFE0B2;
+  border-top-color:var(--primary); border-radius:50%;
+  animation:spin 0.7s linear infinite;
+}
+@keyframes spin { to{transform:rotate(360deg)} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ══ 인트로 ══ -->
+  <div class="screen active" id="s-intro">
+    <div class="page-card" style="margin:12px;padding:0">
+      <div class="intro-hero">
+        <div class="intro-badge">✦ 엘리하이 상담왕 퀴즈</div>
+        <h1 class="intro-title">안녕하세요!<br><em>선생님</em> 👋</h1>
+        <p class="intro-sub">
+          상담 퀴즈를 풀며<br>
+          <strong style="color:var(--text)">상담력도 기르고 포인트도 모아요!</strong>
+        </p>
+        <div class="intro-features">
+          <div class="intro-feat">
+            <span class="feat-icon">📚</span>
+            <div class="feat-text">
+              <strong>퀴즈로 상담 지식 UP</strong>
+              <span>가격·상품·앱·문제집 50문항 도전!</span>
+            </div>
+          </div>
+          <div class="intro-feat">
+            <span class="feat-icon">💰</span>
+            <div class="feat-text">
+              <strong>정답 맞추면 포인트 적립</strong>
+              <span>알수록 상담이 달라지고, 계약률이 올라가요</span>
+            </div>
+          </div>
+          <div class="intro-feat">
+            <span class="feat-icon">👑</span>
+            <div class="feat-text">
+              <strong>캐릭터가 함께 성장해요</strong>
+              <span>신입 → 열공 → 여유 → 베테랑 → 전설의 상담왕</span>
+            </div>
+          </div>
+          <div class="intro-feat">
+            <span class="feat-icon">🎁</span>
+            <div class="feat-text">
+              <strong>10,000pts 달성 시 상품권 지급!</strong>
+              <span>누적 포인트 기준, 전화번호로 기록 저장</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-main" onclick="showScreen('s-login')">시작하기 →</button>
+  </div>
+
+  <!-- ══ 로그인 ══ -->
+  <div class="screen" id="s-login">
+    <div class="page-card" style="margin:12px;padding:0">
+      <div class="login-hero">
+        <span class="login-emoji">🔑</span>
+        <div class="login-title">로그인</div>
+        <div class="login-sub">이름과 전화번호로 기록이 저장돼요<br>같은 번호로 접속하면 내 기록을 불러와요</div>
+      </div>
+    </div>
+    <div class="input-group">
+      <label class="input-label">이름</label>
+      <input class="input-field" type="text" id="inp-name" placeholder="홍길동" maxlength="10">
+    </div>
+    <div class="input-group">
+      <label class="input-label">전화번호</label>
+      <input class="input-field" type="tel" id="inp-phone" placeholder="01012345678" maxlength="11"
+             oninput="this.value=this.value.replace(/\D/g,'')"
+             onkeydown="if(event.key==='Enter')loginUser()">
+      <div class="input-note">📌 숫자만 입력해주세요 (예: 01012345678)</div>
+    </div>
+    <button class="btn-main" id="btn-login" onclick="loginUser()">🚀 내 기록 불러오기</button>
+    <button class="btn-ghost" onclick="showScreen('s-intro')">← 돌아가기</button>
+  </div>
+
+  <!-- ══ 대시보드 ══ -->
+  <div class="screen" id="s-dashboard">
+    <div class="page-card" style="margin:12px;padding:0">
+      <div class="dash-header">
+        <div class="dash-greeting">반갑습니다!</div>
+        <div class="dash-name" id="d-name">선생님 👋</div>
+        <div class="char-circle" id="d-char"></div>
+        <div class="rank-pill" id="d-rank">
+          <span id="d-rank-emoji">😰</span>
+          <span id="d-rank-txt">신입 상담사</span>
+        </div>
+        <div class="pts-display" id="d-pts">0<span>pts</span></div>
+        <div class="pts-gauge-wrap">
+          <div class="pts-gauge-label">
+            <span id="d-gauge-left">다음 레벨까지</span>
+            <span id="d-gauge-right">0%</span>
+          </div>
+          <div class="pts-gauge"><div class="pts-gauge-fill" id="d-gauge" style="width:0%"></div></div>
+        </div>
+        <div class="next-level-txt" id="d-next-txt"></div>
+      </div>
+    </div>
+    <div class="notice-banner" id="notice-banner">
+      <strong id="notice-text"></strong>
+      <span id="notice-sub"></span>
+    </div>
+    <button class="btn-main" onclick="startQuiz()">🎯 퀴즈 시작하기</button>
+    <button class="btn-sub" onclick="showGrowth()">🌱 내 성장 보기</button>
+    <div class="section-card">
+      <div class="top5-card">
+        <div class="top5-title">🏆 TOP 5 랭킹 <span style="font-size:11px;color:var(--muted);font-weight:700">실시간</span></div>
+        <div id="d-top5"><div style="text-align:center;color:var(--muted);font-size:13px;padding:8px">불러오는 중...</div></div>
+      </div>
+    </div>
+    <button class="btn-ghost" onclick="showScreen('s-login')">🔄 다른 계정으로</button>
+  </div>
+
+  <!-- ══ 내 성장 ══ -->
+  <div class="screen" id="s-growth">
+    <div class="page-card" style="margin:12px;padding:0">
+      <div class="growth-header">
+        <div class="growth-title">🌱 내 성장 여정</div>
+        <div class="growth-sub">현재 위치와 앞으로의 목표를 확인해보세요</div>
+      </div>
+    </div>
+    <div class="growth-current section-card">
+      <div class="growth-cur-label">현재 나의 직급</div>
+      <div class="growth-cur-rank" id="g-cur-rank">😰 신입 상담사</div>
+      <div class="growth-cur-pts" id="g-cur-pts">0<span>pts</span></div>
+      <div class="growth-next" id="g-next-txt"></div>
+    </div>
+    <div class="journey-progress-wrap section-card">
+      <div class="journey-progress-label">
+        <span>전체 여정</span>
+        <span id="g-overall-pct">0%</span>
+      </div>
+      <div class="journey-progress"><div class="journey-progress-fill" id="g-overall-bar" style="width:0%"></div></div>
+    </div>
+    <div class="journey-wrap" id="g-journey"></div>
+    <button class="btn-main" onclick="showScreen('s-dashboard')">← 대시보드로</button>
+  </div>
+
+  <!-- ══ 퀴즈 ══ -->
+  <div class="screen" id="s-quiz">
+    <div class="quiz-nav">
+      <div class="q-pill" id="q-num">Q 1 / 50</div>
+      <div class="pts-pill" id="pts-badge">⭐ 0 pts</div>
+      <button class="btn-exit" onclick="exitQuiz()">💾 나가기</button>
+    </div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="prog"></div></div>
+    <div class="char-bar">
+      <div class="char-bar-mini" id="q-mini-char"></div>
+      <div class="char-bar-info">
+        <div class="char-bar-rank" id="q-rank-name">😰 신입 상담사</div>
+        <div class="char-bar-gauge"><div class="char-bar-gauge-fill" id="q-gauge-fill" style="width:0%"></div></div>
+      </div>
+      <div class="streak-tag" id="streak-tag" style="display:none">🔥 1연속!</div>
+    </div>
+    <div class="quiz-body">
+      <div class="quiz-card">
+        <span class="cat-tag" id="cat-tag">상품</span>
+        <div class="q-text" id="q-text"></div>
+        <div class="hint-row" id="hint-row">
+          <span class="hint-lbl">힌트</span>
+          <div class="hint-chars" id="hint-chars"></div>
+          <button class="hint-btn" id="hint-btn" onclick="revealHint()">💡 힌트 보기</button>
+          <span class="hint-tip" id="hint-tip" style="display:none"></span>
+        </div>
+        <input class="ans-input" id="ans-input" placeholder="정답 입력" autocomplete="off"
+               onkeydown="if(event.key==='Enter')submitAnswer()">
+        <button class="btn-submit" id="btn-submit" onclick="submitAnswer()">정답 제출</button>
+        <div class="feedback" id="feedback"></div>
+        <div class="motivate" id="motivate"></div>
+        <button class="btn-next" id="btn-next" onclick="nextQ()">다음 문제 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 결과 ══ -->
+  <div class="screen" id="s-result">
+    <div class="page-card" style="margin:12px;padding:0">
+      <div class="result-hero">
+        <div class="result-char-big" id="r-char"></div>
+        <div class="result-name-txt" id="r-name"></div>
+        <div class="result-rank-txt" id="r-rank"></div>
+        <div class="result-pts-big" id="r-pts">+0<span>pts</span></div>
+        <div class="result-total-txt" id="r-total"></div>
+      </div>
+    </div>
+    <div class="levelup-box" id="levelup-box"></div>
+    <div class="result-msg-box" id="r-msg"></div>
+    <div class="money-box" id="money-box"></div>
+    <div class="badge-area" id="badge-area" style="display:none">
+      <div class="badge-area-title">🏅 이번에 획득한 뱃지</div>
+      <div class="badge-list" id="badge-list"></div>
+    </div>
+    <div class="section-card stats-grid">
+      <div class="stat-row"><span class="stat-lbl">✅ 정답</span><span class="stat-val hi" id="st-correct">0문제</span></div>
+      <div class="stat-row"><span class="stat-lbl">❌ 오답</span><span class="stat-val" id="st-wrong">0문제</span></div>
+      <div class="stat-row"><span class="stat-lbl">🎯 정답률</span><span class="stat-val" id="st-rate">0%</span></div>
+      <div class="stat-row"><span class="stat-lbl">⭐ 이번 획득</span><span class="stat-val warn" id="st-pts">0pts</span></div>
+      <div class="stat-row"><span class="stat-lbl">🏅 누적 합계</span><span class="stat-val warn" id="st-total">0pts</span></div>
+    </div>
+    <div class="gift-box" id="gift-box">
+      🎁 10,000포인트 달성!<br>상품권 지급 대상이에요!<br>담당자에게 문의해 주세요 😊
+    </div>
+    <button class="btn-main" id="btn-review" onclick="startReview()" style="display:none">📖 틀린 문제 복습하기</button>
+    <button class="btn-sub" onclick="shareResult()">📤 결과 공유하기</button>
+    <button class="btn-main" onclick="showDashboard()">🏠 대시보드로</button>
+    <button class="btn-ghost" onclick="retryGame()">🔄 다시 도전하기</button>
+  </div>
+
+  <!-- ══ 오답 복습 ══ -->
+  <div class="screen" id="s-review">
+    <div class="page-card" style="margin:12px;padding:0">
+      <div class="review-hero">
+        <div class="review-progress-txt" id="rv-progress">복습 1 / 3</div>
+        <div class="review-title">오답 복습 📖</div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-q">
+        <span class="cat-tag" id="rv-cat">상품</span>
+        <div class="review-q-text" id="rv-q"></div>
+        <div class="review-ans-box">
+          <div class="review-ans-label">✅ 정답</div>
+          <div class="review-ans-txt" id="rv-ans"></div>
+        </div>
+        <div class="review-hint" id="rv-hint"></div>
+        <div class="review-feedback" id="rv-fb"></div>
+      </div>
+    </div>
+    <button class="btn-main" id="btn-rv-next" onclick="nextReview()">✓ 확인했어요! 다음</button>
+  </div>
+
+</div><!-- /wrap -->
+
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <span id="loading-msg">불러오는 중...</span>
+</div>
+<div class="share-toast" id="share-toast">📋 클립보드에 복사됐어요!</div>
+<div class="confetti-wrap" id="confetti"></div>
+
+<script>
+/* ═══════════════════════════════
+   Supabase
+═══════════════════════════════ */
+const SB_URL = 'https://nwmtsywdeixlpdtukems.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53bXRzeXdkZWl4bHBkdHVrZW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTY0NzYsImV4cCI6MjA5NTUzMjQ3Nn0.8tIDYOyn-L-mxrQAKqBG7Q00R1ZX_DCfBl9EyT3g0Uc';
+const HDR = { 'Content-Type':'application/json', 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY };
+
+async function sbInsert(row){ return fetch(`${SB_URL}/rest/v1/quiz_results`,{method:'POST',headers:{...HDR,'Prefer':'return=minimal'},body:JSON.stringify(row)}); }
+async function sbTotal(phone){ const r=await fetch(`${SB_URL}/rest/v1/quiz_results?phone=eq.${encodeURIComponent(phone)}&select=points`,{headers:HDR}); const d=await r.json(); return Array.isArray(d)?d.reduce((s,x)=>s+(x.points||0),0):0; }
+async function sbDone(phone){ const r=await fetch(`${SB_URL}/rest/v1/quiz_results?phone=eq.${encodeURIComponent(phone)}&select=question_id`,{headers:HDR}); const d=await r.json(); return new Set(Array.isArray(d)?d.map(x=>x.question_id):[]); }
+async function sbQuestions(){ const r=await fetch(`${SB_URL}/rest/v1/questions?active=eq.true&order=sort_order.asc,id.asc`,{headers:HDR}); return r.json(); }
+async function sbTop5(){ const r=await fetch(`${SB_URL}/rest/v1/quiz_results?select=name,phone,points`,{headers:HDR}); const rows=await r.json(); if(!Array.isArray(rows)) return []; const m={}; rows.forEach(r=>{ if(!m[r.phone]) m[r.phone]={name:r.name,pts:0}; m[r.phone].pts+=(r.points||0); }); return Object.values(m).sort((a,b)=>b.pts-a.pts).slice(0,5); }
+async function sbNotice(){ try{ const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.notice&select=value,updated_at`,{headers:HDR}); const d=await r.json(); return Array.isArray(d)&&d[0]?d[0]:null; }catch(e){ return null; } }
+
+/* ═══════════════════════════════
+   직급 시스템
+═══════════════════════════════ */
+const RANKS = [
+  { min:0,     max:999,   emoji:'😰', title:'신입 상담사',   msg:'첫 발걸음! 제품 공부 열심히 해봐요!', color:'#22C55E', next:1000 },
+  { min:1000,  max:2999,  emoji:'📚', title:'열공 상담사',   msg:'공부하는 모습이 빛나요! 계속 달려봐요!', color:'#3B82F6', next:3000 },
+  { min:3000,  max:5999,  emoji:'☕', title:'여유 상담사',   msg:'학부모 마음을 읽기 시작했어요!', color:'#8B5CF6', next:6000 },
+  { min:6000,  max:9999,  emoji:'🏅', title:'베테랑 상담사', msg:'계약률 탑! 이제 전설이 보여요!', color:'#F59E0B', next:10000 },
+  { min:10000, max:99999, emoji:'👑', title:'전설의 상담왕', msg:'전설이 되셨습니다! 당신이 최고예요!', color:'#EF4444', next:10000 },
+];
+function getRank(pts){ return RANKS.slice().reverse().find(r=>pts>=r.min)||RANKS[0]; }
+
+/* ═══════════════════════════════
+   동기부여 메시지
+═══════════════════════════════ */
+const MOT_OK = {
+  '가격':   ['💰 가격 정확히 알면 학부모 신뢰 쑥!','🎯 숫자 막힘없이 말하면 계약이 달라져요!'],
+  '상품':   ['🔥 상품 잘 알면 설명이 달라져요!','💎 이거 아는 선생님 계약률 진짜 달라요!'],
+  '문제집': ['📚 교재 지식이 학부모 마음을 열어요!','🎯 이런 디테일이 계약을 만들어요!'],
+  '학습앱': ['📱 앱 기능 설명하면 학부모가 감탄해요!','🚀 기능 알면 체험 상담이 완전 달라져요!'],
+};
+const MOT_NG = ['💪 한 번 더 보면 꼭 기억해요!','🌱 틀린 문제가 진짜 실력을 만들어요!','📚 이 내용 알면 다음 상담이 달라져요!'];
+const STREAK_MSG = { 3:'🔥 3연속! 이 실력이면 계약 OK!', 5:'💎 5연속! 상담왕 가즈아!', 10:'👑 10연속!! 전설 눈앞!' };
+const MONEY_MSGS = ['💰 제품을 잘 알수록 학부모 신뢰가 높아지고 계약률이 올라가요!','🔥 오늘 배운 지식이 내일 상담에서 바로 돈이 돼요!','👑 상담 잘하는 선생님은 제품을 꿰고 있어요. 당신이 그 주인공!','💎 이 문제들 다 맞추는 날, 진짜 상담왕이 됩니다!'];
+function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+/* ═══════════════════════════════
+   캐릭터 SVG
+═══════════════════════════════ */
+function makeChar(pts, size=120, mood='normal'){
+  const r=getRank(pts);
+  const f={
+    normal:{ e:'<circle cx="51" cy="47" r="4" fill="#2D2D2D"/><circle cx="69" cy="47" r="4" fill="#2D2D2D"/><circle cx="52" cy="46" r="1.5" fill="white"/><circle cx="70" cy="46" r="1.5" fill="white"/>', m:'<path d="M53 60 Q60 66 67 60" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/>' },
+    happy: { e:'<path d="M47 45 Q51 41 55 45" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M65 45 Q69 41 73 45" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/>', m:'<path d="M50 59 Q60 70 70 59" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="46" cy="55" r="5" fill="#FCA5A5" opacity="0.5"/><circle cx="74" cy="55" r="5" fill="#FCA5A5" opacity="0.5"/>' },
+    sad:   { e:'<path d="M47 42 Q51 46 55 42" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M65 42 Q69 46 73 42" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="51" cy="47" r="3" fill="#2D2D2D"/><circle cx="69" cy="47" r="3" fill="#2D2D2D"/>', m:'<path d="M53 64 Q60 59 67 64" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/>' },
+  }[mood]||{e:'',m:''};
+  const b={
+    '😰':{ fc:'#FBBF24', bd:'#93C5FD', bg:'#FFF3E0', ri:'#FFD699', acc:`<polygon points="60,76 55,80 58,96 60,98 62,96 65,80" fill="#EF4444"/><rect x="70" y="82" width="14" height="18" rx="3" fill="white" stroke="#FFD699" stroke-width="1.5"/><rect x="73" y="80" width="8" height="4" rx="2" fill="#FFD699"/>` },
+    '📚':{ fc:'#FCA5A5', bd:'#60A5FA', bg:'#EFF6FF', ri:'#93C5FD', acc:`<circle cx="51" cy="48" r="8" fill="none" stroke="#374151" stroke-width="2"/><circle cx="69" cy="48" r="8" fill="none" stroke="#374151" stroke-width="2"/><line x1="59" y1="48" x2="61" y2="48" stroke="#374151" stroke-width="2"/><rect x="30" y="82" width="20" height="22" rx="3" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.5"/>` },
+    '☕':{ fc:'#F9A8D4', bd:'#A78BFA', bg:'#FAF5FF', ri:'#C4B5FD', acc:`<rect x="68" y="82" width="16" height="14" rx="3" fill="white" stroke="#D1D5DB" stroke-width="1.5"/><path d="M84 86 Q90 88 84 92" stroke="#D1D5DB" stroke-width="1.5" fill="none"/><path d="M72 80 Q73 76 72 72" stroke="#D1D5DB" stroke-width="1.5" fill="none" stroke-linecap="round"/>` },
+    '🏅':{ fc:'#FDE68A', bd:'#F59E0B', bg:'#FFFBEB', ri:'#FCD34D', acc:`<circle cx="60" cy="82" r="9" fill="#FCD34D" stroke="#F59E0B" stroke-width="2"/><polygon points="60,76 61.5,80 66,80 62.5,82.5 63.5,87 60,84.5 56.5,87 57.5,82.5 54,80 58.5,80" fill="#F59E0B"/><rect x="58" y="72" width="4" height="7" rx="1" fill="#EF4444"/>` },
+    '👑':{ fc:'#FCA5A5', bd:'#EF4444', bg:'#FFF1F2', ri:'#FCA5A5', acc:`<path d="M36,44 L44,54 L60,38 L76,54 L84,44 L82,58 L38,58 Z" fill="#FCD34D" stroke="#F59E0B" stroke-width="1.5"/><circle cx="60" cy="38" r="4" fill="#EF4444"/><circle cx="36" cy="44" r="3" fill="#3B82F6"/><circle cx="84" cy="44" r="3" fill="#3B82F6"/><circle cx="52" cy="86" r="4" fill="#FCD34D"/><circle cx="60" cy="84" r="4" fill="#FCD34D"/><circle cx="68" cy="86" r="4" fill="#FCD34D"/>` },
+  }[r.emoji]||{fc:'#FBBF24',bd:'#93C5FD',bg:'#FFF3E0',ri:'#FFD699',acc:''};
+  const hasGlasses = r.emoji==='📚';
+  return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="60" cy="60" r="54" fill="${b.bg}" stroke="${b.ri}" stroke-width="3"/>
+    <circle cx="60" cy="50" r="26" fill="${b.fc}"/>
+    ${b.acc}
+    ${hasGlasses?'':f.e}
+    ${f.m}
+    <rect x="36" y="76" width="48" height="30" rx="14" fill="${b.bd}"/>
+  </svg>`;
+}
+
+/* ═══════════════════════════════
+   게임 상태
+═══════════════════════════════ */
+var userName='', userPhone='';
+var current=0, sessionScore=0, correct=0, streak=0;
+var hintUsed=false, answered=false;
+var shuffled=[], allQuestions=[], doneSet=new Set(), totalPts=0, prevRank=null;
+var wrongAnswers=[], reviewIndex=0;
+
+function norm(s){ return s.replace(/[\s\-,]/g,'').toLowerCase(); }
+function isConsonant(h){ return /^[ㄱ-ㅎ\s]+$/.test((h||'').trim()); }
+
+/* ═══════════════════════════════
+   유틸
+═══════════════════════════════ */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function showLoading(m='불러오는 중...'){ document.getElementById('loading-msg').textContent=m; document.getElementById('loading').classList.add('show'); }
+function hideLoading(){ document.getElementById('loading').classList.remove('show'); }
+
+function calcGauge(pts){
+  const r=getRank(pts);
+  if(r.min===10000) return { pct:100, left:'최고 레벨', right:'10,000pts', nextTxt:'최고 등급 달성! 당신이 전설이에요 👑' };
+  const pct=Math.min(100,Math.round((pts-r.min)/(r.next-r.min)*100));
+  const left=`${r.next-pts}pts 더 모으면 다음 레벨`;
+  return { pct, left, right:pct+'%', nextTxt:`다음 레벨까지 <strong>${(r.next-pts).toLocaleString()}pts</strong> 남았어요!` };
+}
+
+/* ═══════════════════════════════
+   로그인
+═══════════════════════════════ */
+async function loginUser(){
+  const n=document.getElementById('inp-name').value.trim();
+  const p=document.getElementById('inp-phone').value.replace(/\D/g,'');
+  if(!n){alert('이름을 입력해주세요!');return;}
+  if(p.length<10){alert('전화번호를 정확히 입력해주세요!\n(숫자 10~11자리)');return;}
+  userName=n; userPhone=p;
+  const btn=document.getElementById('btn-login');
+  btn.disabled=true; btn.textContent='불러오는 중...';
+  showLoading('내 기록 불러오는 중...');
+  try{
+    [doneSet, totalPts, allQuestions] = await Promise.all([sbDone(userPhone), sbTotal(userPhone), sbQuestions()]);
+  }catch(e){ doneSet=new Set(); totalPts=0; allQuestions=[]; }
+  hideLoading();
+  btn.disabled=false; btn.textContent='🚀 내 기록 불러오기';
+  prevRank=getRank(totalPts);
+  showDashboard();
+}
+
+/* ═══════════════════════════════
+   대시보드
+═══════════════════════════════ */
+async function showDashboard(){
+  const rank=getRank(totalPts);
+  const g=calcGauge(totalPts);
+  document.getElementById('d-name').innerHTML=`<span>${userName}</span> 선생님 👋`;
+  document.getElementById('d-char').innerHTML=makeChar(totalPts,100,'happy');
+  document.getElementById('d-rank-emoji').textContent=rank.emoji;
+  document.getElementById('d-rank-txt').textContent=rank.title;
+  document.getElementById('d-pts').innerHTML=`${totalPts.toLocaleString()}<span>pts</span>`;
+  document.getElementById('d-gauge').style.width=g.pct+'%';
+  document.getElementById('d-gauge-left').textContent=g.left;
+  document.getElementById('d-gauge-right').textContent=g.right;
+  document.getElementById('d-next-txt').innerHTML=g.nextTxt;
+  // 공지사항
+  const notice=await sbNotice();
+  if(notice&&notice.value){
+    document.getElementById('notice-text').textContent=notice.value;
+    const d=new Date(notice.updated_at);
+    document.getElementById('notice-sub').textContent=d.toLocaleDateString('ko-KR');
+    document.getElementById('notice-banner').style.display='block';
+  }
+  // TOP5
+  renderTop5Dashboard();
+  showScreen('s-dashboard');
+}
+
+async function renderTop5Dashboard(){
+  const list=document.getElementById('d-top5');
+  try{
+    const top=await sbTop5();
+    if(!top.length){ list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px">아직 참여자가 없어요 😊</div>'; return; }
+    const medals=['🥇','🥈','🥉','4','5'];
+    list.innerHTML=top.map((u,i)=>{
+      const r=getRank(u.pts);
+      const isMe=u.phone===userPhone||u.name===userName;
+      return `<div class="top5-row${isMe?' top5-me':''}">
+        <span class="top5-rank">${medals[i]}</span>
+        <span class="top5-name">${u.name}${isMe?' 👈':''}</span>
+        <span class="top5-rank-tag">${r.emoji}</span>
+        <span class="top5-pts">${u.pts.toLocaleString()}</span>
+      </div>`;
+    }).join('');
+  }catch(e){ list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:13px">랭킹 불러오기 실패</div>'; }
+}
+
+/* ═══════════════════════════════
+   성장 화면
+═══════════════════════════════ */
+function showGrowth(){
+  const rank=getRank(totalPts);
+  const g=calcGauge(totalPts);
+  document.getElementById('g-cur-rank').textContent=rank.emoji+' '+rank.title;
+  document.getElementById('g-cur-pts').innerHTML=`${totalPts.toLocaleString()}<span>pts</span>`;
+  document.getElementById('g-next-txt').innerHTML=rank.min===10000?'🏆 최고 등급 달성! 전설이에요!':g.nextTxt;
+  // 전체 진행률 (0~10000)
+  const overallPct=Math.min(100,Math.round(totalPts/10000*100));
+  document.getElementById('g-overall-bar').style.width=overallPct+'%';
+  document.getElementById('g-overall-pct').textContent=overallPct+'%';
+  // 여정 단계
+  const journey=document.getElementById('g-journey');
+  journey.innerHTML=[...RANKS].reverse().map(r=>{
+    const isCurrent=r.title===rank.title;
+    const isDone=totalPts>r.max;
+    const isLocked=totalPts<r.min&&!isCurrent;
+    let cls='journey-step';
+    if(isCurrent) cls+=' current';
+    else if(isDone) cls+=' done';
+    else cls+=' locked';
+    let statusTag='';
+    if(isCurrent) statusTag='<span class="step-status current-tag">📍 현재</span>';
+    else if(isDone) statusTag='<span class="step-status done-tag">✅ 달성</span>';
+    else statusTag='<span class="step-status lock-tag">🔒 미달성</span>';
+    return `<div class="${cls}">
+      <div class="step-char">${makeChar(r.min,52)}</div>
+      <div class="step-info">
+        <div class="step-rank">${r.emoji} ${r.title}</div>
+        <div class="step-pts-range">${r.min.toLocaleString()}pts ~ ${r.min===10000?'':'${r.max.toLocaleString()}pts'}</div>
+      </div>
+      ${statusTag}
+    </div>`;
+  }).join('');
+  // 템플릿 리터럴 버그 수정
+  document.querySelectorAll('.step-pts-range').forEach((el,i)=>{
+    const r=[...RANKS].reverse()[i];
+    el.textContent=r.min===10000?`${r.min.toLocaleString()}pts 이상`:
+      `${r.min.toLocaleString()} ~ ${r.max.toLocaleString()}pts`;
+  });
+  showScreen('s-growth');
+}
+
+/* ═══════════════════════════════
+   퀴즈 시작
+═══════════════════════════════ */
+async function startQuiz(){
+  if(!allQuestions.length){
+    showLoading('문제 불러오는 중...');
+    try{ allQuestions=await sbQuestions(); }catch(e){ allQuestions=[]; }
+    hideLoading();
+    if(!allQuestions.length){ alert('등록된 문제가 없어요!'); return; }
+  }
+  current=0; sessionScore=0; correct=0; streak=0; wrongAnswers=[];
+  prevRank=getRank(totalPts);
+  shuffled=[...allQuestions].sort(()=>Math.random()-0.5);
+  showScreen('s-quiz');
+  renderQ();
+}
+
+function renderQ(){
+  answered=false; hintUsed=false;
+  const q=shuffled[current], tot=shuffled.length;
+  document.getElementById('q-num').textContent=`Q ${current+1} / ${tot}`;
+  document.getElementById('pts-badge').textContent=`⭐ ${sessionScore} pts`;
+  document.getElementById('prog').style.width=`${((current+1)/tot)*100}%`;
+  const tag=document.getElementById('cat-tag');
+  tag.textContent=q.cat; tag.className='cat-tag cat-'+(q.cat||'상품');
+  document.getElementById('q-text').textContent=q.q;
+  // 힌트
+  const hc=document.getElementById('hint-chars');
+  const hbtn=document.getElementById('hint-btn');
+  const htip=document.getElementById('hint-tip');
+  if(isConsonant(q.hint)){
+    hc.style.display='flex'; hbtn.style.display=''; htip.style.display='none';
+    hc.innerHTML=''; q.hint.trim().split('').forEach(ch=>{ const el=document.createElement('div'); el.className='hint-char hidden'; el.textContent=ch; hc.appendChild(el); });
+    hbtn.className='hint-btn'; hbtn.textContent='💡 힌트 보기';
+  } else {
+    hc.style.display='none'; hbtn.style.display='none'; htip.style.display='';
+    htip.textContent='💡 '+(q.hint||'');
+  }
+  const inp=document.getElementById('ans-input');
+  inp.value=''; inp.className='ans-input'; inp.disabled=false;
+  document.getElementById('btn-submit').disabled=false;
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('feedback').innerHTML='';
+  document.getElementById('motivate').className='motivate';
+  document.getElementById('motivate').textContent='';
+  const nb=document.getElementById('btn-next'); nb.className='btn-next';
+  nb.textContent=current===tot-1?'결과 보기 🎯':'다음 문제 →';
+  updateQuizChar('normal');
+  setTimeout(()=>inp.focus(),150);
+}
+
+function revealHint(){
+  if(hintUsed)return; hintUsed=true;
+  document.querySelectorAll('.hint-char').forEach(el=>el.classList.remove('hidden'));
+  document.getElementById('hint-btn').className='hint-btn used';
+  document.getElementById('hint-btn').textContent='✓ 확인됨';
+}
+
+function updateQuizChar(mood){
+  const rank=getRank(totalPts);
+  const el=document.getElementById('q-mini-char');
+  el.innerHTML=makeChar(totalPts,44,mood);
+  document.getElementById('q-rank-name').textContent=rank.emoji+' '+rank.title;
+  const g=calcGauge(totalPts);
+  document.getElementById('q-gauge-fill').style.width=g.pct+'%';
+  el.classList.remove('bounce','shake');
+  void el.offsetWidth;
+  if(mood==='happy') el.classList.add('bounce');
+  if(mood==='sad')   el.classList.add('shake');
+}
+
+async function submitAnswer(){
+  if(answered)return;
+  const q=shuffled[current];
+  const inp=document.getElementById('ans-input');
+  const val=inp.value.trim();
+  if(!val){inp.focus();return;}
+  answered=true;
+  document.getElementById('btn-submit').disabled=true; inp.disabled=true;
+  const isOk=norm(val)===norm(q.answer);
+  const alreadyDone=doneSet.has(q.id);
+  const pts=q.points||200;
+  const fbOk=q.fb_ok||`✅ 정답! 정답은 '${q.answer}'입니다.`;
+  const fbNg=q.fb_ng||`❌ 오답! 정답은 '${q.answer}'이에요.`;
+  const fb=document.getElementById('feedback');
+  const mot=document.getElementById('motivate');
+
+  if(isOk){
+    inp.className='ans-input ok'; correct++; streak++;
+    if(!alreadyDone){
+      showLoading('포인트 적립 중...');
+      try{ await sbInsert({name:userName,phone:userPhone,question_id:q.id,points:pts}); doneSet.add(q.id); sessionScore+=pts; totalPts+=pts; }catch(e){}
+      hideLoading();
+      launchCoins(pts);
+      document.getElementById('pts-badge').textContent=`⭐ ${sessionScore} pts`;
+      fb.className='feedback ok show';
+      fb.innerHTML=fbOk+`<br><span style="color:var(--gold)">+${pts} pts 획득! 🎉</span>`;
+      // 레벨업 체크
+      const newRank=getRank(totalPts);
+      if(prevRank&&newRank.title!==prevRank.title){ await showLevelUp(newRank); prevRank=newRank; }
+    } else {
+      fb.className='feedback ok show';
+      fb.innerHTML=fbOk+`<br><span style="color:var(--muted)">(이미 적립된 문제예요)</span>`;
+    }
+    const stk=document.getElementById('streak-tag');
+    if(streak>=3){ stk.style.display=''; stk.textContent=STREAK_MSG[streak]||(streak+'연속! 🔥'); } else { stk.style.display='none'; }
+    mot.textContent=rand(MOT_OK[q.cat]||['💰 이 지식이 계약률을 높여줘요!']);
+    mot.className='motivate show';
+    updateQuizChar('happy');
+  } else {
+    inp.className='ans-input ng'; streak=0;
+    document.getElementById('streak-tag').style.display='none';
+    fb.className='feedback ng show'; fb.innerHTML=fbNg;
+    mot.textContent=rand(MOT_NG); mot.className='motivate show';
+    updateQuizChar('sad');
+    wrongAnswers.push(q);
+  }
+  setTimeout(()=>updateQuizChar('normal'),800);
+  document.getElementById('btn-next').classList.add('show');
+}
+
+function nextQ(){ current++; if(current>=shuffled.length) showResult(); else renderQ(); }
+
+function exitQuiz(){
+  if(confirm('지금까지 맞춘 문제는 자동으로 저장됐어요.\n대시보드로 돌아갈까요?')){
+    showDashboard();
+  }
+}
+
+/* ═══════════════════════════════
+   결과
+═══════════════════════════════ */
+function showResult(){
+  showScreen('s-result');
+  const tot=shuffled.length, rate=Math.round(correct/tot*100);
+  const rank=getRank(totalPts);
+  document.getElementById('r-char').innerHTML=makeChar(totalPts,120,'happy');
+  document.getElementById('r-name').textContent=userName+' 선생님';
+  document.getElementById('r-rank').textContent=rank.emoji+' '+rank.title;
+  document.getElementById('r-pts').innerHTML=`+${sessionScore}<span>pts</span>`;
+  document.getElementById('r-total').innerHTML=`누적 포인트 <strong>${totalPts.toLocaleString()} pts</strong>`;
+  document.getElementById('st-correct').textContent=correct+'문제';
+  document.getElementById('st-wrong').textContent=(tot-correct)+'문제';
+  document.getElementById('st-rate').textContent=rate+'%';
+  document.getElementById('st-pts').textContent='+'+sessionScore+'pts';
+  document.getElementById('st-total').textContent=totalPts.toLocaleString()+'pts';
+  // 레벨업
+  if(prevRank&&rank.title!==prevRank.title){
+    document.getElementById('levelup-box').textContent=`🎉 ${rank.emoji} ${rank.title} 승급!`;
+    document.getElementById('levelup-box').style.display='block';
+  }
+  // 메시지
+  let msg;
+  if(rate===100) msg='완벽해요! 진짜 상담의 神이에요! 🔥';
+  else if(rate>=80) msg='거의 완벽해요! 조금만 더 채우면 만점! 💪';
+  else if(rate>=60) msg='잘 하셨어요! 놓친 문제를 다시 확인해보세요 👍';
+  else msg='퀴즈를 반복하면 금방 늘어요. 파이팅! 📚';
+  document.getElementById('r-msg').textContent=msg;
+  document.getElementById('money-box').textContent=rand(MONEY_MSGS);
+  // 뱃지
+  const badges=computeBadges(rate,streak,totalPts,sessionScore);
+  if(badges.length){
+    document.getElementById('badge-area').style.display='block';
+    document.getElementById('badge-list').innerHTML=badges.map(b=>`<span class="badge-chip">${b}</span>`).join('');
+  }
+  // 오답 복습
+  if(wrongAnswers.length) document.getElementById('btn-review').style.display='block';
+  // 상품권
+  if(totalPts>=10000){ document.getElementById('gift-box').style.display='block'; launchConfetti(); }
+  if(rate>=80) launchConfetti();
+}
+
+function computeBadges(rate, maxStreak, pts, gained){
+  const b=[];
+  if(rate===100) b.push('🏆 퍼펙트 클리어!');
+  if(rate>=80)   b.push('⭐ 우수 성적 달성');
+  if(maxStreak>=5) b.push('🔥 5연속 정답!');
+  if(maxStreak>=3) b.push('💪 3연속 정답');
+  if(gained>0)   b.push('💰 포인트 획득');
+  if(pts>=10000) b.push('👑 전설의 상담왕');
+  if(pts>=6000)  b.push('🏅 베테랑 달성');
+  if(pts>=3000)  b.push('☕ 여유 달성');
+  if(pts>=1000)  b.push('📚 열공 달성');
+  return [...new Set(b)].slice(0,4);
+}
+
+function retryGame(){
+  current=0; sessionScore=0; correct=0; streak=0; wrongAnswers=[];
+  prevRank=getRank(totalPts);
+  shuffled=[...allQuestions].sort(()=>Math.random()-0.5);
+  showScreen('s-quiz'); renderQ();
+}
+
+/* ═══════════════════════════════
+   오답 복습
+═══════════════════════════════ */
+function startReview(){
+  reviewIndex=0;
+  showScreen('s-review');
+  renderReview();
+}
+
+function renderReview(){
+  if(reviewIndex>=wrongAnswers.length){ showDashboard(); return; }
+  const q=wrongAnswers[reviewIndex];
+  document.getElementById('rv-progress').textContent=`복습 ${reviewIndex+1} / ${wrongAnswers.length}`;
+  const tag=document.getElementById('rv-cat');
+  tag.textContent=q.cat; tag.className='cat-tag cat-'+(q.cat||'상품');
+  document.getElementById('rv-q').textContent=q.q;
+  document.getElementById('rv-ans').textContent=q.answer;
+  document.getElementById('rv-hint').textContent=q.hint?`힌트: ${q.hint}`:'';
+  document.getElementById('rv-fb').textContent=q.fb_ng||`정답은 '${q.answer}'이에요. 다음 번엔 꼭 기억해요! 💪`;
+  const btn=document.getElementById('btn-rv-next');
+  btn.textContent=reviewIndex===wrongAnswers.length-1?'✓ 복습 완료! 대시보드로':'✓ 확인했어요! 다음';
+}
+
+function nextReview(){ reviewIndex++; renderReview(); }
+
+/* ═══════════════════════════════
+   공유
+═══════════════════════════════ */
+function shareResult(){
+  const rank=getRank(totalPts);
+  const tot=shuffled.length, rate=Math.round(correct/tot*100);
+  const text=`📊 ${userName} 선생님의 상담왕 퀴즈 결과\n\n🎯 정답률: ${rate}%\n⭐ 이번 획득: +${sessionScore}pts\n🏆 누적 포인트: ${totalPts.toLocaleString()}pts\n👤 현재 직급: ${rank.emoji} ${rank.title}\n\n💪 상담왕 등극기에 도전해보세요!`;
+  if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>showShareToast()); }
+  else { const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showShareToast(); }
+}
+function showShareToast(){
+  const t=document.getElementById('share-toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+/* ═══════════════════════════════
+   이펙트
+═══════════════════════════════ */
+function launchCoins(pts){
+  const badge=document.getElementById('pts-badge');
+  const rect=badge.getBoundingClientRect();
+  const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+  const coins=['💰','💵','🪙','✨','⭐'];
+  for(let i=0;i<10;i++){
+    const el=document.createElement('div'); el.className='coin-particle';
+    el.textContent=coins[Math.floor(Math.random()*coins.length)];
+    const angle=(Math.random()*360)*Math.PI/180, dist=50+Math.random()*70;
+    el.style.cssText=`left:${cx}px;top:${cy}px;--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist-70}px;--rot:${Math.random()>0.5?360:-360}deg;--dur:${0.7+Math.random()*0.5}s;animation-delay:${Math.random()*0.15}s`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),1400);
+  }
+  const pf=document.createElement('div'); pf.className='pts-float';
+  pf.textContent=`+${pts}pts 💰`;
+  pf.style.cssText=`left:${cx-40}px;top:${cy}px`;
+  document.body.appendChild(pf);
+  setTimeout(()=>pf.remove(),1500);
+  document.getElementById('pts-badge').classList.remove('pop');
+  void document.getElementById('pts-badge').offsetWidth;
+  document.getElementById('pts-badge').classList.add('pop');
+}
+
+function showLevelUp(newRank){
+  return new Promise(resolve=>{
+    const o=document.createElement('div'); o.className='levelup-overlay';
+    o.innerHTML=`<div class="lvl-char">${makeChar(newRank.min,150,'happy')}</div>
+      <div class="lvl-title">🎉 직급 승급!</div>
+      <div class="lvl-sub">${newRank.emoji} ${newRank.title}</div>
+      <div style="font-family:'Jua',sans-serif;font-size:14px;color:rgba(255,255,255,0.85);margin-top:8px">${newRank.msg}</div>`;
+    document.body.appendChild(o);
+    launchConfetti();
+    setTimeout(()=>{ o.classList.add('hide'); setTimeout(()=>{ o.remove(); resolve(); },500); },2800);
+  });
+}
+
+function launchConfetti(){
+  const wrap=document.getElementById('confetti'); wrap.innerHTML='';
+  const cols=['#FF6B35','#FFD93D','#FF9F1C','#06D6A0','#9B5DE5','#FF6B6B','#FCD34D'];
+  for(let i=0;i<90;i++){
+    const p=document.createElement('div'); p.className='cp';
+    const s=6+Math.random()*10;
+    p.style.cssText=`left:${Math.random()*100}%;width:${s}px;height:${s}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${Math.random()>.5?'50%':'3px'};animation-duration:${2+Math.random()*2.5}s;animation-delay:${Math.random()*0.8}s;`;
+    wrap.appendChild(p);
+  }
+  setTimeout(()=>wrap.innerHTML='',6000);
+}
+</script>
+</body>
+</html>
