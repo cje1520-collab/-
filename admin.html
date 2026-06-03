@@ -480,6 +480,8 @@ body {
     <button class="tab-btn" onclick="switchTab('tab-questions',this)">📝 문제 관리</button>
     <button class="tab-btn" onclick="switchTab('tab-ranking',this)">🏆 랭킹</button>
     <button class="tab-btn" onclick="switchTab('tab-monthly',this)">📅 이번 달</button>
+    <button class="tab-btn" onclick="switchTab('tab-texts',this)">✏️ 텍스트</button>
+    <button class="tab-btn" onclick="switchTab('tab-config',this)">⚙️ 설정</button>
     <button class="tab-btn" onclick="switchTab('tab-notice',this)">📢 공지</button>
   </div>
 
@@ -600,7 +602,105 @@ body {
     </div>
   </div>
 
-  <!-- ▶ 탭 5: 공지사항 -->
+  <!-- ▶ 탭 5: 텍스트 관리 -->
+  <div class="tab-pane" id="tab-texts">
+    <div class="section">
+      <div class="section-title">✏️ 게임 문구 직접 수정</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;font-weight:700;line-height:1.7">
+        아래 내용을 수정하고 <strong style="color:var(--primary)">💾 저장하기</strong>를 누르면 게임에 바로 반영돼요.<br>
+        ※ Supabase settings 테이블이 필요해요 (미생성 시 공지 탭 참고).
+      </p>
+
+      <!-- 인트로 화면 -->
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border)">📱 인트로 화면</div>
+      <div class="form-row" style="margin-bottom:10px">
+        <div class="form-group">
+          <label class="q-edit-label">뱃지 문구</label>
+          <input class="q-edit-input" id="t-badge" value="✦ 엘리하이 상담왕 퀴즈">
+        </div>
+        <div class="form-group">
+          <label class="q-edit-label">인트로 제목</label>
+          <input class="q-edit-input" id="t-intro-title" value="안녕하세요!&#10;선생님" placeholder="줄바꿈은 \n 으로">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:10px">
+        <label class="q-edit-label">인트로 부제목</label>
+        <input class="q-edit-input" id="t-intro-sub" value="상담 퀴즈를 풀며 상담력도 기르고 포인트도 모아요!">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
+        <div><label class="q-edit-label">특징1 아이콘</label><input class="q-edit-input" id="t-f1i" value="📚"></div>
+        <div><label class="q-edit-label">특징1 제목</label><input class="q-edit-input" id="t-f1t" value="퀴즈로 상담 지식 UP"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:10px"><label class="q-edit-label">특징1 설명</label><input class="q-edit-input" id="t-f1d" value="가격·상품·앱·문제집 50문항 도전!"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
+        <div><label class="q-edit-label">특징2 아이콘</label><input class="q-edit-input" id="t-f2i" value="💰"></div>
+        <div><label class="q-edit-label">특징2 제목</label><input class="q-edit-input" id="t-f2t" value="정답 맞추면 포인트 적립"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:10px"><label class="q-edit-label">특징2 설명</label><input class="q-edit-input" id="t-f2d" value="알수록 상담이 달라지고, 계약률이 올라가요"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
+        <div><label class="q-edit-label">특징3 아이콘</label><input class="q-edit-input" id="t-f3i" value="👑"></div>
+        <div><label class="q-edit-label">특징3 제목</label><input class="q-edit-input" id="t-f3t" value="캐릭터가 함께 성장해요"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:10px"><label class="q-edit-label">특징3 설명</label><input class="q-edit-input" id="t-f3d" value="신입 → 열공 → 여유 → 베테랑 → 전설의 상담왕"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
+        <div><label class="q-edit-label">특징4 아이콘</label><input class="q-edit-input" id="t-f4i" value="🎁"></div>
+        <div><label class="q-edit-label">특징4 제목</label><input class="q-edit-input" id="t-f4t" value="10,000pts 달성 시 상품권 지급!"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:16px"><label class="q-edit-label">특징4 설명</label><input class="q-edit-input" id="t-f4d" value="누적 포인트 기준, 전화번호로 기록 저장"></div>
+
+      <!-- 직급 이름 -->
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border)">👑 직급 이름 & 메시지</div>
+      <div id="rank-text-fields"></div>
+
+      <!-- 응원 메시지 -->
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin:16px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--border)">💬 정답 응원 메시지</div>
+      <div id="ok-msg-fields"></div>
+
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin:16px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--border)">❌ 오답 응원 메시지</div>
+      <div id="ng-msg-fields"></div>
+
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin:16px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--border)">💰 결과화면 동기부여 문구</div>
+      <div id="money-msg-fields"></div>
+
+      <button class="btn-add" style="margin-top:16px" onclick="saveTexts()">💾 저장하기</button>
+    </div>
+  </div>
+
+  <!-- ▶ 탭 6: 게임 설정 -->
+  <div class="tab-pane" id="tab-config">
+    <div class="section">
+      <div class="section-title">⚙️ 게임 설정</div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="q-edit-label">상품권 지급 기준 포인트</label>
+        <input type="number" class="q-edit-input" id="cfg-gift" value="10000" min="1000" step="500">
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">현재: 10,000pts 달성 시 상품권 지급</div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="q-edit-label">1회 출제 문제 수 (0 = 전체)</label>
+        <input type="number" class="q-edit-input" id="cfg-qcount" value="0" min="0" step="5">
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">0 입력 시 전체 문제 랜덤 출제</div>
+      </div>
+      <button class="btn-add" onclick="saveConfig()">💾 게임 설정 저장</button>
+    </div>
+    <div class="section">
+      <div class="section-title">🔐 어드민 비밀번호 변경</div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="q-edit-label">현재 비밀번호</label>
+        <input type="password" class="q-edit-input" id="pw-old" placeholder="현재 비밀번호">
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="q-edit-label">새 비밀번호</label>
+        <input type="password" class="q-edit-input" id="pw-new" placeholder="새 비밀번호 (6자 이상)">
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="q-edit-label">새 비밀번호 확인</label>
+        <input type="password" class="q-edit-input" id="pw-new2" placeholder="동일하게 입력">
+      </div>
+      <button class="btn-add" onclick="changePw()">🔐 비밀번호 변경</button>
+    </div>
+  </div>
+
+  <!-- ▶ 탭 7: 공지사항 -->
   <div class="tab-pane" id="tab-notice">
     <div class="section">
       <div class="section-title">📢 공지사항 관리</div>
@@ -754,7 +854,152 @@ function switchTab(id, btn){
   const el = btn || (event && event.target);
   if(el) el.classList.add('active');
   if(id==='tab-monthly') loadMonthlyStats();
-  if(id==='tab-notice') loadNotice();
+  if(id==='tab-notice')  loadNotice();
+  if(id==='tab-texts')   loadTexts();
+  if(id==='tab-config')  loadConfig();
+}
+
+/* ════════════════════════════
+   텍스트 관리
+════════════════════════════ */
+const RANK_DEFAULTS = [
+  {emoji:'😰', title:'신입 상담사',   msg:'첫 발걸음! 제품 공부 열심히 해봐요!'},
+  {emoji:'📚', title:'열공 상담사',   msg:'공부하는 모습이 빛나요! 계속 달려봐요!'},
+  {emoji:'☕', title:'여유 상담사',   msg:'학부모 마음을 읽기 시작했어요!'},
+  {emoji:'🏅', title:'베테랑 상담사', msg:'계약률 탑! 이제 전설이 보여요!'},
+  {emoji:'👑', title:'전설의 상담왕', msg:'전설이 되셨습니다! 당신이 최고예요!'},
+];
+const MOT_OK_DEFAULTS = {
+  '가격':  ['💰 가격 정확히 알면 학부모 신뢰 쑥!','🎯 숫자 막힘없이 말하면 계약이 달라져요!'],
+  '상품':  ['🔥 상품 잘 알면 설명이 달라져요!','💎 이거 아는 선생님 계약률 진짜 달라요!'],
+  '문제집':['📚 교재 지식이 학부모 마음을 열어요!','🎯 이런 디테일이 계약을 만들어요!'],
+  '학습앱':['📱 앱 기능 설명하면 학부모가 감탄해요!','🚀 기능 알면 체험 상담이 완전 달라져요!'],
+};
+const MOT_NG_DEFAULTS = ['💪 한 번 더 보면 꼭 기억해요!','🌱 틀린 문제가 진짜 실력을 만들어요!','📚 이 내용 알면 다음 상담이 달라져요!','🎯 다시 도전하면 반드시 맞출 수 있어요!'];
+const MONEY_DEFAULTS = ['💰 제품을 잘 알수록 학부모 신뢰가 높아지고 계약률이 올라가요!','🔥 오늘 배운 지식이 내일 상담에서 바로 돈이 돼요!','👑 상담 잘하는 선생님은 제품을 꿰고 있어요. 당신이 그 주인공!','💎 이 문제들 다 맞추는 날, 진짜 상담왕이 됩니다!'];
+
+function buildTextFields(gt){
+  // 직급 필드
+  const rf=document.getElementById('rank-text-fields');
+  rf.innerHTML=RANK_DEFAULTS.map((r,i)=>`
+    <div style="background:var(--card2);border-radius:12px;padding:12px;margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:60px 1fr 1fr;gap:8px;margin-bottom:6px">
+        <div><label class="q-edit-label">이모지</label><input class="q-edit-input" id="rk${i}e" value="${gt?gt[`rank_${i}_emoji`]||r.emoji:r.emoji}"></div>
+        <div><label class="q-edit-label">직급명</label><input class="q-edit-input" id="rk${i}t" value="${gt?gt[`rank_${i}_title`]||r.title:r.title}"></div>
+        <div><label class="q-edit-label">달성 메시지</label><input class="q-edit-input" id="rk${i}m" value="${gt?gt[`rank_${i}_msg`]||r.msg:r.msg}"></div>
+      </div>
+    </div>`).join('');
+  // 정답 응원 메시지
+  const of=document.getElementById('ok-msg-fields');
+  of.innerHTML=Object.entries(MOT_OK_DEFAULTS).map(([cat,msgs])=>`
+    <div style="margin-bottom:10px">
+      <div style="font-size:12px;font-weight:800;color:var(--primary);margin-bottom:6px">[${cat}]</div>
+      ${msgs.map((m,i)=>`<div class="form-group" style="margin-bottom:6px"><input class="q-edit-input" id="ok_${cat}_${i}" value="${gt?gt[`mot_ok_${cat}_${i+1}`]||m:m}"></div>`).join('')}
+    </div>`).join('');
+  // 오답 메시지
+  const ngf=document.getElementById('ng-msg-fields');
+  ngf.innerHTML=MOT_NG_DEFAULTS.map((m,i)=>`<div class="form-group" style="margin-bottom:6px"><input class="q-edit-input" id="ng_${i}" value="${gt?gt[`mot_ng_${i+1}`]||m:m}"></div>`).join('');
+  // 동기부여 메시지
+  const mf=document.getElementById('money-msg-fields');
+  mf.innerHTML=MONEY_DEFAULTS.map((m,i)=>`<div class="form-group" style="margin-bottom:6px"><input class="q-edit-input" id="mn_${i}" value="${gt?gt[`money_${i+1}`]||m:m}"></div>`).join('');
+}
+
+async function loadTexts(){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.game_texts&select=value`,{headers:HDR});
+    const d=await r.json();
+    const gt=Array.isArray(d)&&d[0]?JSON.parse(d[0].value):null;
+    // 기본 필드
+    if(gt){
+      if(gt.intro_badge) document.getElementById('t-badge').value=gt.intro_badge;
+      if(gt.intro_title) document.getElementById('t-intro-title').value=gt.intro_title;
+      if(gt.intro_sub)   document.getElementById('t-intro-sub').value=gt.intro_sub;
+      for(let i=1;i<=4;i++){
+        if(gt[`feat_${i}_icon`]) document.getElementById(`t-f${i}i`).value=gt[`feat_${i}_icon`];
+        if(gt[`feat_${i}_title`])document.getElementById(`t-f${i}t`).value=gt[`feat_${i}_title`];
+        if(gt[`feat_${i}_desc`]) document.getElementById(`t-f${i}d`).value=gt[`feat_${i}_desc`];
+      }
+    }
+    buildTextFields(gt);
+  }catch(e){ buildTextFields(null); }
+}
+
+async function saveTexts(){
+  const gt={
+    intro_badge: document.getElementById('t-badge').value.trim(),
+    intro_title: document.getElementById('t-intro-title').value.trim(),
+    intro_sub:   document.getElementById('t-intro-sub').value.trim(),
+  };
+  for(let i=1;i<=4;i++){
+    gt[`feat_${i}_icon`] =document.getElementById(`t-f${i}i`).value.trim();
+    gt[`feat_${i}_title`]=document.getElementById(`t-f${i}t`).value.trim();
+    gt[`feat_${i}_desc`] =document.getElementById(`t-f${i}d`).value.trim();
+  }
+  RANK_DEFAULTS.forEach((_,i)=>{
+    gt[`rank_${i}_emoji`]=document.getElementById(`rk${i}e`).value.trim();
+    gt[`rank_${i}_title`]=document.getElementById(`rk${i}t`).value.trim();
+    gt[`rank_${i}_msg`]  =document.getElementById(`rk${i}m`).value.trim();
+  });
+  Object.keys(MOT_OK_DEFAULTS).forEach(cat=>{
+    MOT_OK_DEFAULTS[cat].forEach((_,i)=>{ gt[`mot_ok_${cat}_${i+1}`]=document.getElementById(`ok_${cat}_${i}`).value.trim(); });
+  });
+  MOT_NG_DEFAULTS.forEach((_,i)=>{ gt[`mot_ng_${i+1}`]=document.getElementById(`ng_${i}`).value.trim(); });
+  MONEY_DEFAULTS.forEach((_,i)=>{ gt[`money_${i+1}`]=document.getElementById(`mn_${i}`).value.trim(); });
+
+  try{
+    await fetch(`${SB_URL}/rest/v1/settings`,{
+      method:'POST',
+      headers:{...HDR,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({key:'game_texts',value:JSON.stringify(gt),updated_at:new Date().toISOString()})
+    });
+    toast('✅ 텍스트가 저장됐어요! 게임에 바로 반영됩니다.');
+  }catch(e){ alert('저장 실패. Supabase settings 테이블을 먼저 생성해주세요.'); }
+}
+
+/* ════════════════════════════
+   게임 설정
+════════════════════════════ */
+var ADMIN_PW_CURRENT = ADMIN_PW;
+
+async function loadConfig(){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.game_config&select=value`,{headers:HDR});
+    const d=await r.json();
+    if(Array.isArray(d)&&d[0]){
+      const c=JSON.parse(d[0].value);
+      if(c.gift_threshold) document.getElementById('cfg-gift').value=c.gift_threshold;
+      if(c.questions_per_session!==undefined) document.getElementById('cfg-qcount').value=c.questions_per_session;
+    }
+  }catch(e){}
+}
+
+async function saveConfig(){
+  const cfg={
+    gift_threshold: parseInt(document.getElementById('cfg-gift').value)||10000,
+    questions_per_session: parseInt(document.getElementById('cfg-qcount').value)||0,
+  };
+  try{
+    await fetch(`${SB_URL}/rest/v1/settings`,{
+      method:'POST',
+      headers:{...HDR,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({key:'game_config',value:JSON.stringify(cfg),updated_at:new Date().toISOString()})
+    });
+    toast('✅ 게임 설정이 저장됐어요!');
+  }catch(e){ alert('저장 실패. Supabase settings 테이블을 먼저 생성해주세요.'); }
+}
+
+function changePw(){
+  const old=document.getElementById('pw-old').value;
+  const n1=document.getElementById('pw-new').value;
+  const n2=document.getElementById('pw-new2').value;
+  if(old!==ADMIN_PW_CURRENT){ alert('현재 비밀번호가 틀렸어요!'); return; }
+  if(n1.length<6){ alert('새 비밀번호는 6자 이상이어야 해요!'); return; }
+  if(n1!==n2){ alert('새 비밀번호가 일치하지 않아요!'); return; }
+  ADMIN_PW_CURRENT=n1;
+  document.getElementById('pw-old').value='';
+  document.getElementById('pw-new').value='';
+  document.getElementById('pw-new2').value='';
+  toast('🔐 비밀번호가 변경됐어요! (새로고침 전까지 유효)');
 }
 
 /* ── 로그인 ── */

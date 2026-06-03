@@ -495,14 +495,15 @@ body {
 }
 /* 공유 */
 .share-toast {
-  position: fixed; bottom: 90px; left: 50%;
-  transform: translateX(-50%) translateY(80px);
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%);
   background: #2D2D2D; color: white;
   font-family: 'Jua', sans-serif; font-size: 14px;
   padding: 12px 24px; border-radius: 99px; z-index: 9000;
-  transition: transform 0.3s ease; white-space: nowrap;
+  transition: opacity 0.3s ease; white-space: nowrap;
+  opacity: 0; pointer-events: none;
 }
-.share-toast.show { transform: translateX(-50%) translateY(0); }
+.share-toast.show { opacity: 1; pointer-events: auto; }
 
 /* ════════════════════════════
    오답 복습 화면
@@ -590,39 +591,39 @@ body {
   <div class="screen active" id="s-intro">
     <div class="page-card" style="margin:12px;padding:0">
       <div class="intro-hero">
-        <div class="intro-badge">✦ 엘리하이 상담왕 퀴즈</div>
-        <h1 class="intro-title">안녕하세요!<br><em>선생님</em> 👋</h1>
-        <p class="intro-sub">
+        <div class="intro-badge" id="intro-badge">✦ 엘리하이 상담왕 퀴즈</div>
+        <h1 class="intro-title" id="intro-title">안녕하세요!<br><em>선생님</em> 👋</h1>
+        <p class="intro-sub" id="intro-sub">
           상담 퀴즈를 풀며<br>
           <strong style="color:var(--text)">상담력도 기르고 포인트도 모아요!</strong>
         </p>
         <div class="intro-features">
           <div class="intro-feat">
-            <span class="feat-icon">📚</span>
+            <span class="feat-icon" id="feat-1-icon">📚</span>
             <div class="feat-text">
-              <strong>퀴즈로 상담 지식 UP</strong>
-              <span>가격·상품·앱·문제집 50문항 도전!</span>
+              <strong id="feat-1-title">퀴즈로 상담 지식 UP</strong>
+              <span id="feat-1-desc">가격·상품·앱·문제집 50문항 도전!</span>
             </div>
           </div>
           <div class="intro-feat">
-            <span class="feat-icon">💰</span>
+            <span class="feat-icon" id="feat-2-icon">💰</span>
             <div class="feat-text">
-              <strong>정답 맞추면 포인트 적립</strong>
-              <span>알수록 상담이 달라지고, 계약률이 올라가요</span>
+              <strong id="feat-2-title">정답 맞추면 포인트 적립</strong>
+              <span id="feat-2-desc">알수록 상담이 달라지고, 계약률이 올라가요</span>
             </div>
           </div>
           <div class="intro-feat">
-            <span class="feat-icon">👑</span>
+            <span class="feat-icon" id="feat-3-icon">👑</span>
             <div class="feat-text">
-              <strong>캐릭터가 함께 성장해요</strong>
-              <span>신입 → 열공 → 여유 → 베테랑 → 전설의 상담왕</span>
+              <strong id="feat-3-title">캐릭터가 함께 성장해요</strong>
+              <span id="feat-3-desc">신입 → 열공 → 여유 → 베테랑 → 전설의 상담왕</span>
             </div>
           </div>
           <div class="intro-feat">
-            <span class="feat-icon">🎁</span>
+            <span class="feat-icon" id="feat-4-icon">🎁</span>
             <div class="feat-text">
-              <strong>10,000pts 달성 시 상품권 지급!</strong>
-              <span>누적 포인트 기준, 전화번호로 기록 저장</span>
+              <strong id="feat-4-title">10,000pts 달성 시 상품권 지급!</strong>
+              <span id="feat-4-desc">누적 포인트 기준, 전화번호로 기록 저장</span>
             </div>
           </div>
         </div>
@@ -683,6 +684,7 @@ body {
     </div>
     <button class="btn-main" onclick="startQuiz()">🎯 퀴즈 시작하기</button>
     <button class="btn-sub" onclick="showGrowth()">🌱 내 성장 보기</button>
+    <button class="btn-ghost" id="btn-dash-review" onclick="startReviewFromDash()" style="display:none">📖 오답노트 보기</button>
     <div class="section-card">
       <div class="top5-card">
         <div class="top5-title">🏆 TOP 5 랭킹 <span style="font-size:11px;color:var(--muted);font-weight:700">실시간</span></div>
@@ -818,8 +820,174 @@ body {
 </div>
 <div class="share-toast" id="share-toast">📋 클립보드에 복사됐어요!</div>
 <div class="confetti-wrap" id="confetti"></div>
+<button id="bgm-btn" onclick="BGM.toggle()" title="배경음악 켜기/끄기" style="
+  position:fixed;bottom:20px;right:16px;z-index:8000;
+  width:46px;height:46px;border-radius:50%;
+  background:var(--primary);color:white;border:none;
+  font-size:20px;cursor:pointer;
+  box-shadow:0 3px 12px rgba(255,107,53,0.45);
+  display:flex;align-items:center;justify-content:center;
+">🔇</button>
 
 <script>
+/* ═══════════════════════════════
+   기본 텍스트 설정값 (어드민에서 수정 가능)
+═══════════════════════════════ */
+var GT = {
+  intro_badge:'✦ 엘리하이 상담왕 퀴즈',
+  intro_title:'안녕하세요!\n선생님',
+  intro_sub:'상담 퀴즈를 풀며\n상담력도 기르고 포인트도 모아요!',
+  feat_1_icon:'📚', feat_1_title:'퀴즈로 상담 지식 UP',         feat_1_desc:'가격·상품·앱·문제집 50문항 도전!',
+  feat_2_icon:'💰', feat_2_title:'정답 맞추면 포인트 적립',      feat_2_desc:'알수록 상담이 달라지고, 계약률이 올라가요',
+  feat_3_icon:'👑', feat_3_title:'캐릭터가 함께 성장해요',        feat_3_desc:'신입 → 열공 → 여유 → 베테랑 → 전설의 상담왕',
+  feat_4_icon:'🎁', feat_4_title:'10,000pts 달성 시 상품권 지급!',feat_4_desc:'누적 포인트 기준, 전화번호로 기록 저장',
+  rank_0_emoji:'😰', rank_0_title:'신입 상담사',   rank_0_msg:'첫 발걸음! 제품 공부 열심히 해봐요!',
+  rank_1_emoji:'📚', rank_1_title:'열공 상담사',   rank_1_msg:'공부하는 모습이 빛나요! 계속 달려봐요!',
+  rank_2_emoji:'☕', rank_2_title:'여유 상담사',   rank_2_msg:'학부모 마음을 읽기 시작했어요!',
+  rank_3_emoji:'🏅', rank_3_title:'베테랑 상담사', rank_3_msg:'계약률 탑! 이제 전설이 보여요!',
+  rank_4_emoji:'👑', rank_4_title:'전설의 상담왕', rank_4_msg:'전설이 되셨습니다! 당신이 최고예요!',
+  mot_ok_가격_1:'💰 가격 정확히 알면 학부모 신뢰 쑥!',
+  mot_ok_가격_2:'🎯 숫자 막힘없이 말하면 계약이 달라져요!',
+  mot_ok_상품_1:'🔥 상품 잘 알면 설명이 달라져요!',
+  mot_ok_상품_2:'💎 이거 아는 선생님 계약률 진짜 달라요!',
+  mot_ok_문제집_1:'📚 교재 지식이 학부모 마음을 열어요!',
+  mot_ok_문제집_2:'🎯 이런 디테일이 계약을 만들어요!',
+  mot_ok_학습앱_1:'📱 앱 기능 설명하면 학부모가 감탄해요!',
+  mot_ok_학습앱_2:'🚀 기능 알면 체험 상담이 완전 달라져요!',
+  mot_ng_1:'💪 한 번 더 보면 꼭 기억해요!',
+  mot_ng_2:'🌱 틀린 문제가 진짜 실력을 만들어요!',
+  mot_ng_3:'📚 이 내용 알면 다음 상담이 달라져요!',
+  mot_ng_4:'🎯 다시 도전하면 반드시 맞출 수 있어요!',
+  money_1:'💰 제품을 잘 알수록 학부모 신뢰가 높아지고 계약률이 올라가요!',
+  money_2:'🔥 오늘 배운 지식이 내일 상담에서 바로 돈이 돼요!',
+  money_3:'👑 상담 잘하는 선생님은 제품을 꿰고 있어요. 당신이 그 주인공!',
+  money_4:'💎 이 문제들 다 맞추는 날, 진짜 상담왕이 됩니다!',
+  gift_threshold:10000,
+};
+
+async function loadGameSettings(){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.game_texts&select=value`,{headers:HDR});
+    const d=await r.json();
+    if(Array.isArray(d)&&d[0]&&d[0].value){
+      const loaded=JSON.parse(d[0].value);
+      Object.assign(GT,loaded);
+      applyTexts();
+    }
+  }catch(e){}
+}
+
+function applyTexts(){
+  // 인트로
+  const badge=document.getElementById('intro-badge'); if(badge) badge.textContent=GT.intro_badge;
+  const tit=document.getElementById('intro-title'); if(tit) tit.innerHTML=GT.intro_title.replace('\n','<br>')+' 👋';
+  const sub=document.getElementById('intro-sub'); if(sub) sub.innerHTML=GT.intro_sub.replace('\n','<br>');
+  for(let i=1;i<=4;i++){
+    const ic=document.getElementById(`feat-${i}-icon`); if(ic) ic.textContent=GT[`feat_${i}_icon`];
+    const tt=document.getElementById(`feat-${i}-title`); if(tt) tt.textContent=GT[`feat_${i}_title`];
+    const dc=document.getElementById(`feat-${i}-desc`); if(dc) dc.textContent=GT[`feat_${i}_desc`];
+  }
+  // 직급 업데이트
+  for(let i=0;i<5;i++){
+    RANKS[i].emoji=GT[`rank_${i}_emoji`];
+    RANKS[i].title=GT[`rank_${i}_title`];
+    RANKS[i].msg  =GT[`rank_${i}_msg`];
+  }
+  // 응원 메시지 업데이트
+  MOT_OK['가격']  =[GT.mot_ok_가격_1, GT.mot_ok_가격_2];
+  MOT_OK['상품']  =[GT.mot_ok_상품_1, GT.mot_ok_상품_2];
+  MOT_OK['문제집']=[GT.mot_ok_문제집_1,GT.mot_ok_문제집_2];
+  MOT_OK['학습앱']=[GT.mot_ok_학습앱_1,GT.mot_ok_학습앱_2];
+  MOT_NG=[GT.mot_ng_1,GT.mot_ng_2,GT.mot_ng_3,GT.mot_ng_4];
+  MONEY_MSGS=[GT.money_1,GT.money_2,GT.money_3,GT.money_4];
+}
+
+/* ═══════════════════════════════
+   오답노트 (localStorage)
+═══════════════════════════════ */
+function saveWrongNote(phone, wrongs){
+  if(wrongs.length) localStorage.setItem('wrong_'+phone, JSON.stringify(wrongs));
+  else localStorage.removeItem('wrong_'+phone);
+}
+function loadWrongNote(phone){
+  try{ const s=localStorage.getItem('wrong_'+phone); return s?JSON.parse(s):[]; }catch(e){ return []; }
+}
+function startReviewFromDash(){
+  const saved=loadWrongNote(userPhone);
+  if(!saved.length){ alert('저장된 오답이 없어요! 퀴즈를 먼저 풀어주세요 😊'); return; }
+  wrongAnswers=saved; reviewIndex=0;
+  showScreen('s-review'); renderReview();
+}
+
+/* ═══════════════════════════════
+   BGM (Web Audio API — 저작권 없는 칩튠)
+═══════════════════════════════ */
+const BGM = {
+  ctx: null, gain: null, playing: false, muted: true, loopTimer: null,
+  // 업비트 펜타토닉 멜로디 (C 장조, 원곡)
+  MELODY: [
+    [784,0.2],[659,0.2],[784,0.2],[880,0.2],  // G5 E5 G5 A5
+    [1047,0.4],[880,0.2],[784,0.2],            // C6 A5 G5
+    [784,0.2],[659,0.2],[523,0.2],[659,0.2],  // G5 E5 C5 E5
+    [784,0.5],[0,0.1],                         // G5 hold
+    [880,0.2],[1047,0.2],[880,0.2],[784,0.2], // A5 C6 A5 G5
+    [659,0.4],[523,0.2],[587,0.2],             // E5 C5 D5
+    [659,0.2],[784,0.2],[659,0.2],[523,0.2],  // E5 G5 E5 C5
+    [587,0.2],[659,0.2],[523,0.5],[0,0.1],    // D5 E5 C5
+  ],
+  init(){
+    this.ctx=new (window.AudioContext||window.webkitAudioContext)();
+    this.gain=this.ctx.createGain();
+    this.gain.gain.value=0;
+    this.gain.connect(this.ctx.destination);
+  },
+  note(freq,start,dur){
+    if(!freq) return;
+    const osc=this.ctx.createOscillator();
+    const env=this.ctx.createGain();
+    osc.connect(env); env.connect(this.gain);
+    osc.type='square'; osc.frequency.value=freq;
+    env.gain.setValueAtTime(0,start);
+    env.gain.linearRampToValueAtTime(0.4,start+0.01);
+    env.gain.setValueAtTime(0.4,start+dur*0.75);
+    env.gain.linearRampToValueAtTime(0,start+dur);
+    osc.start(start); osc.stop(start+dur+0.05);
+  },
+  loop(){
+    if(!this.playing||this.muted) return;
+    let t=this.ctx.currentTime+0.05;
+    this.MELODY.forEach(([f,d])=>{ this.note(f,t,d); t+=d; });
+    const total=this.MELODY.reduce((s,[,d])=>s+d,0);
+    this.loopTimer=setTimeout(()=>this.loop(), total*1000-100);
+  },
+  toggle(){
+    if(!this.ctx) this.init();
+    if(this.ctx.state==='suspended') this.ctx.resume();
+    this.muted=!this.muted;
+    this.gain.gain.setTargetAtTime(this.muted?0:0.18, this.ctx.currentTime, 0.1);
+    if(!this.muted&&!this.playing){ this.playing=true; this.loop(); }
+    if(this.muted){ clearTimeout(this.loopTimer); }
+    document.getElementById('bgm-btn').textContent=this.muted?'🔇':'🔊';
+  },
+  start(){
+    if(this.playing) return;
+    if(!this.ctx) this.init();
+    if(this.ctx.state==='suspended') this.ctx.resume();
+    this.playing=true; this.muted=false;
+    this.gain.gain.setTargetAtTime(0.18,this.ctx.currentTime,0.1);
+    this.loop();
+    document.getElementById('bgm-btn').textContent='🔊';
+    document.removeEventListener('touchstart',BGM._starter);
+    document.removeEventListener('click',BGM._starter);
+  },
+  _starter: null,
+  init_auto(){
+    this._starter=()=>this.start();
+    document.addEventListener('touchstart',this._starter,{once:true});
+    document.addEventListener('click',this._starter,{once:true});
+  }
+};
+
 /* ═══════════════════════════════
    Supabase
 ═══════════════════════════════ */
@@ -833,6 +1001,7 @@ async function sbDone(phone){ const r=await fetch(`${SB_URL}/rest/v1/quiz_result
 async function sbQuestions(){ const r=await fetch(`${SB_URL}/rest/v1/questions?active=eq.true&order=sort_order.asc,id.asc`,{headers:HDR}); return r.json(); }
 async function sbTop5(){ const r=await fetch(`${SB_URL}/rest/v1/quiz_results?select=name,phone,points`,{headers:HDR}); const rows=await r.json(); if(!Array.isArray(rows)) return []; const m={}; rows.forEach(r=>{ if(!m[r.phone]) m[r.phone]={name:r.name,pts:0}; m[r.phone].pts+=(r.points||0); }); return Object.values(m).sort((a,b)=>b.pts-a.pts).slice(0,5); }
 async function sbNotice(){ try{ const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.notice&select=value,updated_at`,{headers:HDR}); const d=await r.json(); return Array.isArray(d)&&d[0]?d[0]:null; }catch(e){ return null; } }
+async function sbGameConfig(){ try{ const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.game_config&select=value`,{headers:HDR}); const d=await r.json(); return Array.isArray(d)&&d[0]?JSON.parse(d[0].value):{}; }catch(e){ return {}; } }
 
 /* ═══════════════════════════════
    직급 시스템
@@ -965,6 +1134,11 @@ async function showDashboard(){
   }
   // TOP5
   renderTop5Dashboard();
+  // 오답노트 버튼
+  const wrongs=loadWrongNote(userPhone);
+  const rvBtn=document.getElementById('btn-dash-review');
+  if(wrongs.length){ rvBtn.style.display='block'; rvBtn.textContent=`📖 오답노트 (${wrongs.length}문제)`; }
+  else { rvBtn.style.display='none'; }
   showScreen('s-dashboard');
 }
 
@@ -1197,8 +1371,10 @@ function showResult(){
     document.getElementById('badge-area').style.display='block';
     document.getElementById('badge-list').innerHTML=badges.map(b=>`<span class="badge-chip">${b}</span>`).join('');
   }
-  // 오답 복습
-  if(wrongAnswers.length) document.getElementById('btn-review').style.display='block';
+  // 오답 저장 (localStorage)
+  saveWrongNote(userPhone, wrongAnswers);
+  // 오답 복습 버튼
+  if(wrongAnswers.length){ document.getElementById('btn-review').style.display='block'; document.getElementById('btn-review').textContent=`📖 틀린 문제 복습하기 (${wrongAnswers.length}문제)`; }
   // 상품권
   if(totalPts>=10000){ document.getElementById('gift-box').style.display='block'; launchConfetti(); }
   if(rate>=80) launchConfetti();
@@ -1316,6 +1492,14 @@ function launchConfetti(){
   }
   setTimeout(()=>wrap.innerHTML='',6000);
 }
+
+/* ═══════════════════════════════
+   초기화
+═══════════════════════════════ */
+(async ()=>{
+  await loadGameSettings(); // 어드민 텍스트 설정 로드
+  BGM.init_auto();           // 첫 터치/클릭 시 BGM 시작
+})();
 </script>
 </body>
 </html>
