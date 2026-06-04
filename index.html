@@ -1176,6 +1176,8 @@ async function sbGameConfig(){ try{ const r=await fetch(`${SB_URL}/rest/v1/setti
 /* ═══════════════════════════════
    직급 시스템
 ═══════════════════════════════ */
+function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
 const RANKS = [
   { min:0,     max:999,   emoji:'😰', title:'신입 상담사',   msg:'첫 발걸음! 제품 공부 열심히 해봐요!', color:'#22C55E', next:1000 },
   { min:1000,  max:2999,  emoji:'📚', title:'열공 상담사',   msg:'공부하는 모습이 빛나요! 계속 달려봐요!', color:'#3B82F6', next:3000 },
