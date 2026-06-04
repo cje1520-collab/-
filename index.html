@@ -750,26 +750,16 @@ body {
 }
 @keyframes spin { to{transform:rotate(360deg)} }
 
-/* ════ btn-next 항상 화면 하단 고정 ════ */
+/* ════ btn-next 문제 아래 중앙 인라인 ════ */
 .btn-next.show {
-  position: fixed !important;
-  bottom: 0 !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  max-width: 480px !important;
-  width: 100% !important;
-  z-index: 6000 !important;
-  border-radius: 20px 20px 0 0 !important;
-  margin: 0 !important;
-  padding: 22px !important;
-  animation: slideUpBtn 0.3s ease forwards !important;
+  display: block;
+  animation: popIn 0.35s cubic-bezier(.22,.68,0,1.2);
+  font-size: 18px !important;
+  padding: 18px !important;
+  border-radius: var(--radius) !important;
+  margin-top: 16px !important;
 }
-@keyframes slideUpBtn {
-  from { transform: translateX(-50%) translateY(100%); opacity:0; }
-  to   { transform: translateX(-50%) translateY(0);   opacity:1; }
-}
-/* btn-next가 떠있을 때 아래 여백 확보 */
-.quiz-body { padding-bottom: 80px; }
+.quiz-body { padding-bottom: 20px; }
 
 /* ════ 강화된 퀴즈 UI ════ */
 .quiz-nav {
@@ -1003,16 +993,6 @@ body {
     </div>
   </div>
 
-  <!-- ══ 다음문제 플로팅 버튼 (정답 후 화면 하단 고정) ══ -->
-  <button id="floating-next" onclick="navAction()" style="
-    display:none; position:fixed; bottom:0; left:50%; transform:translateX(-50%);
-    width:100%; max-width:480px; padding:22px 20px;
-    background:linear-gradient(135deg,#FF6B35,#FF9F1C);
-    color:white; border:none; border-radius:24px 24px 0 0;
-    font-family:'Jua',sans-serif; font-size:20px; letter-spacing:1px;
-    cursor:pointer; z-index:9000;
-    box-shadow:0 -4px 24px rgba(255,107,53,0.4);
-  ">다음 문제 →</button>
 
   <!-- ══ 퀴즈 ══ -->
   <div class="screen" id="s-quiz">
@@ -1709,12 +1689,9 @@ function renderQ(){
   nb.textContent=current===tot-1?'결과 보기 🎯':'다음 문제 →';
   updateQuizChar('normal');
   setTimeout(()=>inp.focus(),150);
-  // 플로팅 버튼 숨기기
-  const fb2=document.getElementById('floating-next');
-  if(fb2) fb2.style.display='none';
   // 나가기 버튼 리셋
   const nav=document.getElementById('btn-nav-action');
-  if(nav){ nav.textContent='💾 나가기'; nav.style.cssText=''; }
+  if(nav){ nav.textContent='💾 나가기'; nav.style.cssText=''; nav.disabled=false; }
 }
 
 function revealHint(){
@@ -1745,6 +1722,9 @@ async function submitAnswer(){
   if(!val){inp.focus();return;}
   answered=true;
   document.getElementById('btn-submit').disabled=true; inp.disabled=true;
+  // 나가기 버튼 즉시 비활성화 (answered 설정 직후 클릭 방지)
+  const navBtn=document.getElementById('btn-nav-action');
+  if(navBtn) navBtn.disabled=true;
   const isOk=norm(val)===norm(q.answer);
   const pts=calcPts(q); // 회차별 포인트
   const fbOk=q.fb_ok||`✅ 정답! 정답은 '${q.answer}'입니다.`;
@@ -1785,27 +1765,19 @@ async function submitAnswer(){
     wrongAnswers.push(q);
   }
   setTimeout(()=>updateQuizChar('normal'),800);
-  document.getElementById('btn-next').classList.add('show');
-  // 플로팅 버튼 표시 (화면 하단 고정, 항상 보임)
+  // 다음 문제 버튼 표시 (문제 아래 중앙 인라인)
   const isLast=current===shuffled.length-1;
-  const fb2=document.getElementById('floating-next');
-  if(fb2){
-    fb2.textContent=isLast?'결과 보기 🎯':'다음 문제 →';
-    fb2.style.display='block';
-  }
-  // 상단 nav 버튼도 변경
-  const nav=document.getElementById('btn-nav-action');
-  if(nav){
-    nav.textContent=isLast?'결과 🎯':'다음 →';
-    nav.style.cssText='background:linear-gradient(135deg,#FF6B35,#FF9F1C);color:white;border:none;font-size:12px;font-weight:900;padding:7px 12px;border-radius:99px;cursor:pointer;';
-  }
+  const nb=document.getElementById('btn-next');
+  nb.textContent=isLast?'결과 보기 🎯':'다음 문제 →';
+  nb.classList.add('show');
+  // 나가기 버튼 다시 활성화
+  if(navBtn) navBtn.disabled=false;
 }
 
 function nextQ(){ current++; if(current>=shuffled.length) showResult(); else renderQ(); }
 
 function navAction(){
-  if(answered){ nextQ(); }
-  else { if(confirm('지금까지 맞춘 문제는 자동으로 저장됐어요.\n홈으로 돌아갈까요?')) showDashboard(); }
+  if(confirm('지금까지 맞춘 문제는 자동으로 저장됐어요.\n홈으로 돌아갈까요?')) showDashboard();
 }
 function exitQuiz(){ navAction(); }
 
@@ -1971,13 +1943,13 @@ async function showRankModal(){
     list.innerHTML = data.slice(0,5).map((r,i)=>{
       const isMe = r.phone===userPhone;
       if(isMe) myRank = `${i+1}위`;
-      const rank = getRank(r.total);
+      const rank = getRank(r.pts);
       return `<div class="rank-row${i===0?' top1':''}${isMe?' me':''}">
         <div class="rank-num">${i+1}</div>
         <div class="rank-emoji">${rank.emoji}</div>
         <div class="rank-info">
           <div class="rank-info-name">${r.name} ${GT.manager_title||'매니저'}</div>
-          <div class="rank-info-pts">${r.total.toLocaleString()} pts</div>
+          <div class="rank-info-pts">${r.pts.toLocaleString()} pts</div>
         </div>
         <div class="rank-badge">${MEDALS[i]||''}</div>
       </div>`;
