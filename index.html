@@ -806,6 +806,17 @@ body {
     <button class="btn-main" onclick="showScreen('s-dashboard')">← 대시보드로</button>
   </div>
 
+  <!-- ══ 다음문제 플로팅 버튼 (정답 후 화면 하단 고정) ══ -->
+  <button id="floating-next" onclick="navAction()" style="
+    display:none; position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:480px; padding:22px 20px;
+    background:linear-gradient(135deg,#FF6B35,#FF9F1C);
+    color:white; border:none; border-radius:24px 24px 0 0;
+    font-family:'Jua',sans-serif; font-size:20px; letter-spacing:1px;
+    cursor:pointer; z-index:9000;
+    box-shadow:0 -4px 24px rgba(255,107,53,0.4);
+  ">다음 문제 →</button>
+
   <!-- ══ 퀴즈 ══ -->
   <div class="screen" id="s-quiz">
     <div class="quiz-nav">
@@ -1480,6 +1491,9 @@ function renderQ(){
   nb.textContent=current===tot-1?'결과 보기 🎯':'다음 문제 →';
   updateQuizChar('normal');
   setTimeout(()=>inp.focus(),150);
+  // 플로팅 버튼 숨기기
+  const fb2=document.getElementById('floating-next');
+  if(fb2) fb2.style.display='none';
   // 나가기 버튼 리셋
   const nav=document.getElementById('btn-nav-action');
   if(nav){ nav.textContent='💾 나가기'; nav.style.cssText=''; }
@@ -1554,12 +1568,18 @@ async function submitAnswer(){
   }
   setTimeout(()=>updateQuizChar('normal'),800);
   document.getElementById('btn-next').classList.add('show');
-  // 상단 nav 버튼을 "다음 문제 →"로 변경 (항상 보이는 위치)
+  // 플로팅 버튼 표시 (화면 하단 고정, 항상 보임)
+  const isLast=current===shuffled.length-1;
+  const fb2=document.getElementById('floating-next');
+  if(fb2){
+    fb2.textContent=isLast?'결과 보기 🎯':'다음 문제 →';
+    fb2.style.display='block';
+  }
+  // 상단 nav 버튼도 변경
   const nav=document.getElementById('btn-nav-action');
   if(nav){
-    const isLast=current===shuffled.length-1;
-    nav.textContent=isLast?'결과 보기 🎯':'다음 문제 →';
-    nav.style.cssText='background:linear-gradient(135deg,#FF6B35,#FF9F1C);color:white;border:none;font-size:13px;font-weight:900;padding:8px 14px;border-radius:99px;cursor:pointer;box-shadow:0 3px 12px rgba(255,107,53,0.45);';
+    nav.textContent=isLast?'결과 🎯':'다음 →';
+    nav.style.cssText='background:linear-gradient(135deg,#FF6B35,#FF9F1C);color:white;border:none;font-size:12px;font-weight:900;padding:7px 12px;border-radius:99px;cursor:pointer;';
   }
 }
 
