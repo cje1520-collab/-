@@ -486,6 +486,7 @@ body {
     <button class="tab-btn" onclick="switchTab('tab-texts',this)">✏️ 텍스트</button>
     <button class="tab-btn" onclick="switchTab('tab-config',this)">⚙️ 설정</button>
     <button class="tab-btn" onclick="switchTab('tab-notice',this)">📢 공지</button>
+    <button class="tab-btn" onclick="switchTab('tab-roulette',this);loadRouletteAdmin()">🎰 룰렛</button>
   </div>
 
   <!-- ▶ 탭 1: 현황 -->
@@ -749,6 +750,28 @@ body {
     <div class="section" id="notice-preview-section" style="display:none">
       <div class="section-title">👁️ 현재 공지</div>
       <div id="notice-preview" style="font-size:14px;font-weight:700;color:var(--text);line-height:1.7;padding:4px 0"></div>
+    </div>
+  </div>
+
+  <!-- ══ 룰렛 관리 탭 ══ -->
+  <div class="tab-pane" id="tab-roulette">
+    <div class="section">
+      <div class="section-title">🎰 롤플레잉 룰렛 관리</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;font-weight:700;line-height:1.6">
+        카테고리와 항목을 자유롭게 추가·수정·삭제할 수 있어요.<br>
+        저장 후 게임에 즉시 반영됩니다.
+      </p>
+
+      <!-- 카테고리 목록 -->
+      <div id="roulette-cat-list" style="margin-bottom:14px"></div>
+
+      <!-- 카테고리 추가 -->
+      <div style="display:flex;gap:8px;margin-bottom:20px">
+        <input id="new-cat-input" class="q-edit-input" placeholder="새 카테고리 이름 (예: 가격안내)" style="flex:1">
+        <button class="btn-add" style="flex-shrink:0;padding:10px 16px;font-size:13px" onclick="addRouletteCategory()">+ 추가</button>
+      </div>
+
+      <button class="btn-add" onclick="saveRouletteAdmin()">💾 저장하기</button>
     </div>
   </div>
 
@@ -1051,6 +1074,101 @@ async function loadAll(){
   try { await Promise.all([loadStats(), loadQuestions()]); }
   catch(e){ alert('로드 실패: '+e.message); }
   hideLoading();
+}
+
+/* ══ 룰렛 관리 ══ */
+var rouletteAdminData = [];
+
+async function loadRouletteAdmin(){
+  showLoading('룰렛 데이터 불러오는 중...');
+  try{
+    const r = await fetch(`${SB_URL}/rest/v1/settings?key=eq.roulette_config&select=value`,{headers:HDR});
+    const d = await r.json();
+    if(Array.isArray(d)&&d[0]){
+      const cfg = JSON.parse(d[0].value);
+      rouletteAdminData = cfg.categories||[];
+    } else {
+      rouletteAdminData = [{ name:'거절극복', items:['탭싫어요','바빠요','애가 공부 안해요','학원 다녀요','시간 없어요'] }];
+    }
+  }catch(e){
+    rouletteAdminData = [{ name:'거절극복', items:['탭싫어요','바빠요','애가 공부 안해요','학원 다녀요','시간 없어요'] }];
+  }
+  hideLoading();
+  renderRouletteAdmin();
+}
+
+function renderRouletteAdmin(){
+  const wrap = document.getElementById('roulette-cat-list');
+  if(!rouletteAdminData.length){ wrap.innerHTML='<p style="color:var(--muted);font-size:13px">카테고리가 없어요. 아래에서 추가해보세요!</p>'; return; }
+  wrap.innerHTML = rouletteAdminData.map((cat,ci)=>`
+    <div style="background:#F9FAFB;border:1.5px solid #E5E7EB;border-radius:14px;padding:14px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <input class="q-edit-input" value="${cat.name}" style="flex:1;margin-right:8px;font-weight:800"
+          onchange="rouletteAdminData[${ci}].name=this.value">
+        <button onclick="deleteRouletteCategory(${ci})" style="padding:6px 12px;background:#FEE2E2;color:#DC2626;border:1.5px solid #FECACA;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer">삭제</button>
+      </div>
+      <div id="roulette-items-${ci}">
+        ${cat.items.map((item,ii)=>`
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <input class="q-edit-input" value="${item}" style="flex:1"
+              onchange="rouletteAdminData[${ci}].items[${ii}]=this.value">
+            <button onclick="deleteRouletteItem(${ci},${ii})" style="padding:6px 10px;background:#FEE2E2;color:#DC2626;border:1.5px solid #FECACA;border-radius:8px;font-size:12px;cursor:pointer">✕</button>
+          </div>
+        `).join('')}
+      </div>
+      <button onclick="addRouletteItem(${ci})" style="width:100%;padding:8px;margin-top:4px;background:transparent;color:#6B7280;border:1.5px dashed #D1D5DB;border-radius:8px;font-size:13px;cursor:pointer">+ 항목 추가</button>
+    </div>
+  `).join('');
+}
+
+function addRouletteCategory(){
+  const input = document.getElementById('new-cat-input');
+  const name = input.value.trim();
+  if(!name){ alert('카테고리 이름을 입력해주세요!'); return; }
+  rouletteAdminData.push({ name, items:[] });
+  input.value = '';
+  renderRouletteAdmin();
+}
+
+function deleteRouletteCategory(ci){
+  if(!confirm(`"${rouletteAdminData[ci].name}" 카테고리를 삭제할까요?`)) return;
+  rouletteAdminData.splice(ci,1);
+  renderRouletteAdmin();
+}
+
+function addRouletteItem(ci){
+  rouletteAdminData[ci].items.push('새 항목');
+  renderRouletteAdmin();
+}
+
+function deleteRouletteItem(ci,ii){
+  rouletteAdminData[ci].items.splice(ii,1);
+  renderRouletteAdmin();
+}
+
+async function saveRouletteAdmin(){
+  if(!rouletteAdminData.length){ alert('카테고리가 하나 이상 있어야 해요!'); return; }
+  for(const cat of rouletteAdminData){
+    if(!cat.name.trim()){ alert('카테고리 이름이 비어있어요!'); return; }
+    cat.items = cat.items.filter(i=>i.trim());
+    if(!cat.items.length){ alert(`"${cat.name}" 카테고리에 항목이 하나 이상 있어야 해요!`); return; }
+  }
+  showLoading('저장 중...');
+  try{
+    const val = JSON.stringify({ categories: rouletteAdminData });
+    const checkR = await fetch(`${SB_URL}/rest/v1/settings?key=eq.roulette_config`,{headers:HDR});
+    const checkD = await checkR.json();
+    if(Array.isArray(checkD)&&checkD.length){
+      await fetch(`${SB_URL}/rest/v1/settings?key=eq.roulette_config`,{method:'PATCH',headers:{...HDR,'Prefer':'return=minimal'},body:JSON.stringify({value:val,updated_at:new Date().toISOString()})});
+    } else {
+      await fetch(`${SB_URL}/rest/v1/settings`,{method:'POST',headers:{...HDR,'Prefer':'return=minimal'},body:JSON.stringify({key:'roulette_config',value:val})});
+    }
+    hideLoading();
+    toast('🎰 룰렛 설정이 저장됐어요!');
+  }catch(e){
+    hideLoading();
+    alert('저장 실패: '+e.message);
+  }
 }
 
 /* ── 현황 통계 ── */
