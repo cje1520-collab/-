@@ -811,7 +811,7 @@ body {
     <div class="quiz-nav">
       <div class="q-pill" id="q-num">Q 1 / 50</div>
       <div class="pts-pill" id="pts-badge">⭐ 0 pts</div>
-      <button class="btn-exit" onclick="exitQuiz()">💾 나가기</button>
+      <button class="btn-exit" id="btn-nav-action" onclick="navAction()">💾 나가기</button>
     </div>
     <div class="quiz-progress"><div class="quiz-progress-fill" id="prog"></div></div>
     <div class="char-bar">
@@ -1480,6 +1480,9 @@ function renderQ(){
   nb.textContent=current===tot-1?'결과 보기 🎯':'다음 문제 →';
   updateQuizChar('normal');
   setTimeout(()=>inp.focus(),150);
+  // 나가기 버튼 리셋
+  const nav=document.getElementById('btn-nav-action');
+  if(nav){ nav.textContent='💾 나가기'; nav.style.cssText=''; }
 }
 
 function revealHint(){
@@ -1550,24 +1553,23 @@ async function submitAnswer(){
     wrongAnswers.push(q);
   }
   setTimeout(()=>updateQuizChar('normal'),800);
-  const nb=document.getElementById('btn-next');
-  nb.classList.add('show');
-  // 버튼이 뷰포트 밖으로 밀렸을 때 자동 스크롤
-  setTimeout(()=>{
-    const rect=nb.getBoundingClientRect();
-    if(rect.bottom>window.innerHeight||rect.top<0){
-      nb.scrollIntoView({behavior:'smooth',block:'end'});
-    }
-  },150);
+  document.getElementById('btn-next').classList.add('show');
+  // 상단 nav 버튼을 "다음 문제 →"로 변경 (항상 보이는 위치)
+  const nav=document.getElementById('btn-nav-action');
+  if(nav){
+    const isLast=current===shuffled.length-1;
+    nav.textContent=isLast?'결과 보기 🎯':'다음 문제 →';
+    nav.style.cssText='background:linear-gradient(135deg,#FF6B35,#FF9F1C);color:white;border:none;font-size:13px;font-weight:900;padding:8px 14px;border-radius:99px;cursor:pointer;box-shadow:0 3px 12px rgba(255,107,53,0.45);';
+  }
 }
 
 function nextQ(){ current++; if(current>=shuffled.length) showResult(); else renderQ(); }
 
-function exitQuiz(){
-  if(confirm('지금까지 맞춘 문제는 자동으로 저장됐어요.\n대시보드로 돌아갈까요?')){
-    showDashboard();
-  }
+function navAction(){
+  if(answered){ nextQ(); }
+  else { if(confirm('지금까지 맞춘 문제는 자동으로 저장됐어요.\n대시보드로 돌아갈까요?')) showDashboard(); }
 }
+function exitQuiz(){ navAction(); }
 
 /* ═══════════════════════════════
    결과
