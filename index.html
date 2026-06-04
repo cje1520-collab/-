@@ -920,23 +920,23 @@ body {
     <div class="menu-grid">
       <div class="menu-card c-quiz" onclick="startQuiz()">
         <div class="menu-icon">📚</div>
-        <div class="menu-label">상담 퀴즈</div>
-        <div class="menu-desc">50문항 도전!</div>
+        <div class="menu-label" id="menu-quiz-label">상담 퀴즈</div>
+        <div class="menu-desc"  id="menu-quiz-desc">50문항 도전!</div>
       </div>
       <div class="menu-card c-roulette" onclick="showRoulette()">
         <div class="menu-icon">🎰</div>
-        <div class="menu-label">롤플레잉 룰렛</div>
-        <div class="menu-desc">거절극복 연습</div>
+        <div class="menu-label" id="menu-roulette-label">롤플레잉 룰렛</div>
+        <div class="menu-desc"  id="menu-roulette-desc">거절극복 연습</div>
       </div>
       <div class="menu-card c-rank" onclick="showRankModal()">
         <div class="menu-icon">🏆</div>
-        <div class="menu-label">랭킹</div>
-        <div class="menu-desc">월간 TOP 5</div>
+        <div class="menu-label" id="menu-rank-label">랭킹</div>
+        <div class="menu-desc"  id="menu-rank-desc">월간 TOP 5</div>
       </div>
       <div class="menu-card c-growth" onclick="showGrowth()">
         <div class="menu-icon">🌱</div>
-        <div class="menu-label">내 성장 보기</div>
-        <div class="menu-desc">직급 여정 확인</div>
+        <div class="menu-label" id="menu-growth-label">내 성장 보기</div>
+        <div class="menu-desc"  id="menu-growth-desc">직급 여정 확인</div>
       </div>
     </div>
     <button class="btn-ghost" id="btn-dash-review" onclick="startReviewFromDash()" style="display:none">📖 오답노트 (틀린 문제)</button>
@@ -1135,6 +1135,10 @@ var GT = {
   feat_2_icon:'💰', feat_2_title:'정답 맞추면 포인트 적립',      feat_2_desc:'알수록 상담이 달라지고, 계약률이 올라가요',
   feat_3_icon:'👑', feat_3_title:'캐릭터가 함께 성장해요',        feat_3_desc:'신입 → 열공 → 여유 → 베테랑 → 전설의 상담왕',
   feat_4_icon:'🎁', feat_4_title:'10,000pts 달성 시 상품권 지급!',feat_4_desc:'누적 포인트 기준, 전화번호로 기록 저장',
+  menu_quiz_label:'상담 퀴즈',       menu_quiz_desc:'50문항 도전!',
+  menu_roulette_label:'롤플레잉 룰렛', menu_roulette_desc:'거절극복 연습',
+  menu_rank_label:'랭킹',           menu_rank_desc:'월간 TOP 5',
+  menu_growth_label:'내 성장 보기',  menu_growth_desc:'직급 여정 확인',
   rank_0_emoji:'😰', rank_0_title:'신입 상담사',   rank_0_msg:'첫 발걸음! 제품 공부 열심히 해봐요!',
   rank_1_emoji:'📚', rank_1_title:'열공 상담사',   rank_1_msg:'공부하는 모습이 빛나요! 계속 달려봐요!',
   rank_2_emoji:'☕', rank_2_title:'여유 상담사',   rank_2_msg:'학부모 마음을 읽기 시작했어요!',
@@ -1185,6 +1189,14 @@ function applyTexts(){
     const tt=document.getElementById(`feat-${i}-title`); if(tt) tt.textContent=GT[`feat_${i}_title`];
     const dc=document.getElementById(`feat-${i}-desc`); if(dc) dc.textContent=GT[`feat_${i}_desc`];
   }
+  // 메뉴 카드 텍스트
+  const menuMap = {
+    'menu-quiz-label':GT.menu_quiz_label, 'menu-quiz-desc':GT.menu_quiz_desc,
+    'menu-roulette-label':GT.menu_roulette_label, 'menu-roulette-desc':GT.menu_roulette_desc,
+    'menu-rank-label':GT.menu_rank_label, 'menu-rank-desc':GT.menu_rank_desc,
+    'menu-growth-label':GT.menu_growth_label, 'menu-growth-desc':GT.menu_growth_desc,
+  };
+  Object.entries(menuMap).forEach(([id,val])=>{ const el=document.getElementById(id); if(el&&val) el.textContent=val; });
   // 직급 업데이트
   for(let i=0;i<5;i++){
     RANKS[i].emoji=GT[`rank_${i}_emoji`];

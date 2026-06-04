@@ -670,6 +670,31 @@ body {
       </div>
       <div class="form-group" style="margin-bottom:16px"><label class="q-edit-label">특징4 설명</label><input class="q-edit-input" id="t-f4d" value="누적 포인트 기준, 전화번호로 기록 저장"></div>
 
+      <!-- 메뉴 카드 -->
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border)">🗂️ 대시보드 메뉴 카드</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
+        <div style="background:#FFF3E0;border:1.5px solid #FFD699;border-radius:12px;padding:12px">
+          <div style="font-size:11px;font-weight:800;color:var(--primary);margin-bottom:8px">📚 상담 퀴즈</div>
+          <div class="form-group" style="margin-bottom:6px"><label class="q-edit-label">제목</label><input class="q-edit-input" id="t-menu-quiz-label" value="상담 퀴즈"></div>
+          <div class="form-group"><label class="q-edit-label">설명</label><input class="q-edit-input" id="t-menu-quiz-desc" value="50문항 도전!"></div>
+        </div>
+        <div style="background:#F0FDF9;border:1.5px solid #06D6A0;border-radius:12px;padding:12px">
+          <div style="font-size:11px;font-weight:800;color:#059669;margin-bottom:8px">🎰 롤플레잉 룰렛</div>
+          <div class="form-group" style="margin-bottom:6px"><label class="q-edit-label">제목</label><input class="q-edit-input" id="t-menu-roulette-label" value="롤플레잉 룰렛"></div>
+          <div class="form-group"><label class="q-edit-label">설명</label><input class="q-edit-input" id="t-menu-roulette-desc" value="거절극복 연습"></div>
+        </div>
+        <div style="background:#FFFBEB;border:1.5px solid #F4A017;border-radius:12px;padding:12px">
+          <div style="font-size:11px;font-weight:800;color:#B45309;margin-bottom:8px">🏆 랭킹</div>
+          <div class="form-group" style="margin-bottom:6px"><label class="q-edit-label">제목</label><input class="q-edit-input" id="t-menu-rank-label" value="랭킹"></div>
+          <div class="form-group"><label class="q-edit-label">설명</label><input class="q-edit-input" id="t-menu-rank-desc" value="월간 TOP 5"></div>
+        </div>
+        <div style="background:#F5F3FF;border:1.5px solid #A78BFA;border-radius:12px;padding:12px">
+          <div style="font-size:11px;font-weight:800;color:#7C3AED;margin-bottom:8px">🌱 내 성장 보기</div>
+          <div class="form-group" style="margin-bottom:6px"><label class="q-edit-label">제목</label><input class="q-edit-input" id="t-menu-growth-label" value="내 성장 보기"></div>
+          <div class="form-group"><label class="q-edit-label">설명</label><input class="q-edit-input" id="t-menu-growth-desc" value="직급 여정 확인"></div>
+        </div>
+      </div>
+
       <!-- 직급 이름 -->
       <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border)">👑 직급 이름 & 메시지</div>
       <div id="rank-text-fields"></div>
@@ -968,6 +993,13 @@ async function loadTexts(){
         if(gt[`feat_${i}_title`])document.getElementById(`t-f${i}t`).value=gt[`feat_${i}_title`];
         if(gt[`feat_${i}_desc`]) document.getElementById(`t-f${i}d`).value=gt[`feat_${i}_desc`];
       }
+      // 메뉴 카드
+      const menuFields=['quiz','roulette','rank','growth'];
+      menuFields.forEach(k=>{
+        const lv=gt[`menu_${k}_label`]; const dv=gt[`menu_${k}_desc`];
+        if(lv) document.getElementById(`t-menu-${k}-label`).value=lv;
+        if(dv) document.getElementById(`t-menu-${k}-desc`).value=dv;
+      });
     }
     buildTextFields(gt);
     if(gt&&gt.manager_title) document.getElementById('t-manager-title').value=gt.manager_title;
@@ -986,6 +1018,11 @@ async function saveTexts(){
     gt[`feat_${i}_title`]=document.getElementById(`t-f${i}t`).value.trim();
     gt[`feat_${i}_desc`] =document.getElementById(`t-f${i}d`).value.trim();
   }
+  // 메뉴 카드
+  ['quiz','roulette','rank','growth'].forEach(k=>{
+    gt[`menu_${k}_label`]=document.getElementById(`t-menu-${k}-label`).value.trim();
+    gt[`menu_${k}_desc`] =document.getElementById(`t-menu-${k}-desc`).value.trim();
+  });
   RANK_DEFAULTS.forEach((_,i)=>{
     gt[`rank_${i}_emoji`]=document.getElementById(`rk${i}e`).value.trim();
     gt[`rank_${i}_title`]=document.getElementById(`rk${i}t`).value.trim();
