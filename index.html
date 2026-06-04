@@ -1163,268 +1163,135 @@ const MONEY_MSGS = ['💰 제품을 잘 알수록 학부모 신뢰가 높아지�
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
 /* ═══════════════════════════════
-   캐릭터 SVG (다마고치 스타일)
-   성장할수록 크기·색·악세서리로 확연한 차이
+   캐릭터 SVG — 32×32 픽셀아트
+   각 픽셀 = rect, 배경 투명
 ═══════════════════════════════ */
 let _cid=0;
 function makeChar(pts, size=120, mood='normal'){
   const rk=getRank(pts);
-  const uid='c'+(++_cid);
-
-  // ── 헬퍼 ──
   const H=mood==='happy', S=mood==='sad';
+  const px=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 
-  // 다마고치형 큰 눈 (흰자+동공+광택)
-  const EYE=(cx,cy,r,col='#222')=>H
-    ?`<circle cx="${cx}" cy="${cy}" r="${r}" fill="white" stroke="${col}" stroke-width="2.2"/>
-      <path d="M${cx-r+1} ${cy+1} Q${cx} ${cy-r*1.9} ${cx+r-1} ${cy+1}" fill="${col}" stroke="${col}" stroke-width="1" stroke-linecap="round"/>
-      <circle cx="${cx+r*0.28}" cy="${cy-r*0.9}" r="${r*0.32}" fill="white"/>`
-    :S
-    ?`<circle cx="${cx}" cy="${cy}" r="${r}" fill="white" stroke="${col}" stroke-width="2.2"/>
-      <circle cx="${cx}" cy="${cy+1}" r="${r-2.5}" fill="${col}"/>
-      <circle cx="${cx+r*0.4}" cy="${cy-r*0.4+1}" r="${r*0.38}" fill="white"/>
-      <path d="M${cx-r-1} ${cy-r+1} Q${cx} ${cy-r*3} ${cx+r+1} ${cy-r+1}" stroke="#AAA" stroke-width="1.4" fill="none"/>`
-    :`<circle cx="${cx}" cy="${cy}" r="${r}" fill="white" stroke="${col}" stroke-width="2.2"/>
-      <circle cx="${cx}" cy="${cy}" r="${r-2.5}" fill="${col}"/>
-      <circle cx="${cx+r*0.42}" cy="${cy-r*0.42}" r="${r*0.4}" fill="white"/>
-      <circle cx="${cx+r*0.8}" cy="${cy-r*0.8}" r="${r*0.18}" fill="white"/>`;
+  // pixel oval (outline+fill)
+  function ov(cx,cy,rx,ry,fc,oc){
+    let s='';
+    for(let y=Math.ceil(cy-ry);y<=Math.floor(cy+ry);y++){
+      const f=(y-cy)/ry, dx=Math.sqrt(Math.max(0,1-f*f))*rx;
+      const xl=Math.round(cx-dx), xr=Math.round(cx+dx);
+      if(xl>=xr){s+=px(xl,y,1,1,oc);continue;}
+      s+=px(xl,y,1,1,oc);
+      if(xr-xl>1)s+=px(xl+1,y,xr-xl-1,1,fc);
+      s+=px(xr,y,1,1,oc);
+    }
+    return s;
+  }
 
-  const MO=(cx,cy,w)=>H
-    ?`<path d="M${cx-w} ${cy} Q${cx} ${cy+w*1.1} ${cx+w} ${cy}" stroke="#333" stroke-width="2.8" fill="none" stroke-linecap="round"/>`
-    :S
-    ?`<path d="M${cx-w} ${cy+4} Q${cx} ${cy} ${cx+w} ${cy+4}" stroke="#555" stroke-width="2.8" fill="none" stroke-linecap="round"/>`
-    :`<path d="M${cx-w} ${cy} Q${cx} ${cy+w*0.65} ${cx+w} ${cy}" stroke="#333" stroke-width="2.8" fill="none" stroke-linecap="round"/>`;
+  // face helpers
+  const EN=(x1,x2,y,c='#1a1a1a')=>px(x1,y,2,2,c)+px(x1,y,1,1,'#fff')+px(x2,y,2,2,c)+px(x2,y,1,1,'#fff');
+  const EH=(x1,x2,y,c='#1a1a1a')=>px(x1,y,2,1,c)+px(x1-1,y+1,1,1,c)+px(x1+2,y+1,1,1,c)+px(x2,y,2,1,c)+px(x2-1,y+1,1,1,c)+px(x2+2,y+1,1,1,c);
+  const ES=(x1,x2,y,c='#1a1a1a')=>px(x1,y,2,2,c)+px(x1,y,1,1,'#fff')+px(x1-1,y-1,2,1,c)+px(x2,y,2,2,c)+px(x2,y,1,1,'#fff')+px(x2+1,y-1,2,1,c);
+  const EY=(x1,x2,y,c)=>H?EH(x1,x2,y,c):S?ES(x1,x2,y,c):EN(x1,x2,y,c);
+  const MN=(cx,y)=>px(cx-2,y,5,1,'#1a1a1a');
+  const MH=(cx,y)=>px(cx-3,y,7,1,'#1a1a1a')+px(cx-4,y+1,1,1,'#1a1a1a')+px(cx+4,y+1,1,1,'#1a1a1a')+px(cx-3,y+2,7,1,'#1a1a1a');
+  const MS=(cx,y)=>px(cx-3,y+2,7,1,'#1a1a1a')+px(cx-4,y+1,1,1,'#1a1a1a')+px(cx+4,y+1,1,1,'#1a1a1a');
+  const MO=(cx,y)=>H?MH(cx,y):S?MS(cx,y):MN(cx,y);
+  const CK=(x1,x2,y)=>px(x1,y,3,2,'#ffb3c1')+px(x2,y,3,2,'#ffb3c1');
+  const W=`<svg width="${size}" height="${size}" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;image-rendering:crisp-edges">`;
 
-  const BL=(cx,cy)=>`<ellipse cx="${cx}" cy="${cy}" rx="7" ry="5" fill="#FF9EC8" opacity="0.7"/>`;
+  // ════ 신입: EGG 🥚 — 알, 작고 단순 ════
+  if(rk.emoji==='😰') return W
+    +ov(15,13,6,9,'#ffe566','#b8860b')
+    +px(14,5,4,3,'#fffff5')
+    +px(17,3,1,1,'#896000')+px(16,4,1,1,'#896000')+px(17,5,1,1,'#896000')
+    +EY(12,18,11)+CK(10,19,12)+MO(15,14)
+    +'</svg>';
 
-  // ════════════════════════
-  //  신입 🥚 — 알 형태
-  // ════════════════════════
-  if(rk.emoji==='😰') return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="60" cy="60" r="54" fill="#FFFDE8" stroke="#F0D000" stroke-width="3"/>
-    <ellipse cx="60" cy="109" rx="18" ry="4.5" fill="rgba(0,0,0,0.07)"/>
-    <!-- 알 -->
-    <ellipse cx="60" cy="65" rx="27" ry="34" fill="#FFFBE0" stroke="#D4A800" stroke-width="3.5"/>
-    <!-- 광택 -->
-    <ellipse cx="50" cy="48" rx="11" ry="8" fill="white" opacity="0.55"/>
-    <!-- 반점 -->
-    <circle cx="46" cy="56" r="3.5" fill="#FFE090" opacity="0.9"/>
-    <circle cx="74" cy="62" r="2.5" fill="#FFE090" opacity="0.9"/>
-    <circle cx="53" cy="79" r="2" fill="#FFE090" opacity="0.9"/>
-    <circle cx="70" cy="46" r="2" fill="#FFE090" opacity="0.9"/>
-    <!-- 균열 (곧 부화할 것 같은!) -->
-    <path d="M64 31 L68 41 L63 47 L67 54" stroke="#B89000" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-    <!-- 작은 눈 (졸린) -->
-    ${S
-      ?`<path d="M51 63 Q55 69 59 63" stroke="#888" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <circle cx="55" cy="66" r="3" fill="#888"/>
-        <path d="M62 63 Q66 69 70 63" stroke="#888" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <circle cx="66" cy="66" r="3" fill="#888"/>`
-      :H
-      ?`<path d="M51 64 Q55 59 59 64" stroke="#888" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-        <path d="M62 64 Q66 59 70 64" stroke="#888" stroke-width="2.8" fill="none" stroke-linecap="round"/>`
-      :`<ellipse cx="55" cy="64" rx="5.5" ry="3.5" fill="#555"/>
-        <ellipse cx="67" cy="64" rx="5.5" ry="3.5" fill="#555"/>
-        <circle cx="57" cy="62.8" r="1.6" fill="white"/>
-        <circle cx="69" cy="62.8" r="1.6" fill="white"/>`}
-    <path d="M57 71 Q60 74.5 63 71" stroke="#C8A000" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-  </svg>`;
+  // ════ 열공: BABY 📚 — 2등신, 안경+책 ════
+  if(rk.emoji==='📚'){
+    const B='#88c8ff',O='#1a1a1a',HA='#2a2a2a',GL='#555555';
+    return W
+      +px(14,1,4,2,HA)+px(13,2,2,1,HA)+px(17,2,2,1,HA)+px(12,3,2,2,HA)+px(18,3,2,2,HA)
+      +ov(15,10,7,7,B,O)
+      +px(10,7,5,1,GL)+px(10,7,1,4,GL)+px(14,7,1,4,GL)+px(10,10,5,1,GL)
+      +px(16,7,5,1,GL)+px(16,7,1,4,GL)+px(20,7,1,4,GL)+px(16,10,5,1,GL)
+      +px(15,9,1,1,GL)
+      +EY(12,18,8,O)+CK(9,21,11)+MO(15,12)
+      +ov(15,21,5,4,B,O)
+      +px(8,19,3,4,B)+px(8,19,1,4,O)+px(10,19,1,1,O)+px(10,22,1,1,O)
+      +px(20,19,3,4,B)+px(22,19,1,4,O)+px(20,19,1,1,O)+px(20,22,1,1,O)
+      +px(23,18,4,6,'#ffe066')+px(23,18,1,6,O)+px(26,18,1,6,O)+px(23,18,4,1,O)+px(23,23,4,1,O)+px(24,19,1,4,'#c8a000')
+      +px(11,26,5,3,B)+px(11,26,1,3,O)+px(15,26,1,3,O)+px(11,28,5,1,O)
+      +px(17,26,5,3,B)+px(17,26,1,3,O)+px(21,26,1,3,O)+px(17,28,5,1,O)
+      +'</svg>';
+  }
 
-  // ════════════════════════
-  //  열공 📚 — 아기 (2등신, 안경+책)
-  // ════════════════════════
-  if(rk.emoji==='📚') return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="60" cy="60" r="54" fill="#EDF7FF" stroke="#55AAFF" stroke-width="3"/>
-    <ellipse cx="60" cy="109" rx="22" ry="5" fill="rgba(0,0,0,0.07)"/>
-    <!-- 발 -->
-    <ellipse cx="49" cy="96" rx="12.5" ry="8" fill="#A8D8FF" stroke="#333" stroke-width="2.8"/>
-    <ellipse cx="71" cy="96" rx="12.5" ry="8" fill="#A8D8FF" stroke="#333" stroke-width="2.8"/>
-    <!-- 몸통 (작은 2등신) -->
-    <ellipse cx="60" cy="80" rx="18" ry="15.5" fill="#A8D8FF" stroke="#333" stroke-width="3"/>
-    <!-- 팔 (왼) -->
-    <ellipse cx="38" cy="79" rx="9" ry="6" fill="#A8D8FF" stroke="#333" stroke-width="2.5" transform="rotate(-20 38 79)"/>
-    <!-- 책 (오른팔) -->
-    <ellipse cx="83" cy="77" rx="9" ry="6" fill="#A8D8FF" stroke="#333" stroke-width="2.5" transform="rotate(20 83 77)"/>
-    <rect x="85" y="67" width="15" height="20" rx="3" fill="#FFE44D" stroke="#333" stroke-width="2.3"/>
-    <rect x="87" y="67" width="4" height="20" rx="2" fill="#F59E0B"/>
-    <line x1="92" y1="73" x2="98" y2="73" stroke="#555" stroke-width="1.3"/>
-    <line x1="92" y1="78" x2="98" y2="78" stroke="#555" stroke-width="1.3"/>
-    <line x1="92" y1="83" x2="98" y2="83" stroke="#555" stroke-width="1.3"/>
-    <!-- 머리카락 -->
-    <ellipse cx="49" cy="18" rx="7.5" ry="10.5" fill="#333" transform="rotate(-15 49 18)"/>
-    <ellipse cx="60" cy="16" rx="7" ry="9.5" fill="#333"/>
-    <ellipse cx="71" cy="18" rx="7.5" ry="10.5" fill="#333" transform="rotate(15 71 18)"/>
-    <!-- 큰 머리 (2등신의 핵심!) -->
-    <circle cx="60" cy="46" r="30" fill="#C8E8FF" stroke="#333" stroke-width="3.2"/>
-    <!-- 볼터치 -->
-    ${BL(41,56)}${BL(79,56)}
-    <!-- 안경테 (큰 눈 주위) -->
-    <circle cx="49" cy="45" r="11.5" fill="rgba(255,255,255,0.48)" stroke="#444" stroke-width="2.8"/>
-    <circle cx="71" cy="45" r="11.5" fill="rgba(255,255,255,0.48)" stroke="#444" stroke-width="2.8"/>
-    <path d="M59.5 45 Q60 43 60.5 45" stroke="#444" stroke-width="2.5" fill="none"/>
-    <line x1="37.5" y1="43" x2="32" y2="40" stroke="#444" stroke-width="2.3"/>
-    <line x1="82.5" y1="43" x2="88" y2="40" stroke="#444" stroke-width="2.3"/>
-    <!-- 눈 (안경 안) -->
-    ${H
-      ?`<path d="M42 45 Q49 38 56 45" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M64 45 Q71 38 78 45" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round"/>`
-      :S
-      ?`<circle cx="49" cy="45" r="6" fill="#333"/><circle cx="71" cy="45" r="6" fill="#333"/>
-        <circle cx="52" cy="43" r="2.4" fill="white"/><circle cx="74" cy="43" r="2.4" fill="white"/>
-        <path d="M42 40 Q49 46 56 40" stroke="#888" stroke-width="1.6" fill="none"/>
-        <path d="M64 40 Q71 46 78 40" stroke="#888" stroke-width="1.6" fill="none"/>`
-      :`<circle cx="49" cy="45" r="6" fill="#333"/><circle cx="71" cy="45" r="6" fill="#333"/>
-        <circle cx="52" cy="42.5" r="2.5" fill="white"/><circle cx="74" cy="42.5" r="2.5" fill="white"/>
-        <circle cx="54.5" cy="47" r="1.1" fill="white"/><circle cx="76.5" cy="47" r="1.1" fill="white"/>`}
-    ${MO(60,59,7.5)}
-  </svg>`;
+  // ════ 여유: TEEN ☕ — 민트, 핑크 폰폰헤어, 커피 ════
+  if(rk.emoji==='☕'){
+    const B='#7debb8',O='#1a1a1a',PH='#ff88aa';
+    return W
+      +ov(7,5,4,4,PH,'#cc3366')+ov(24,5,4,4,PH,'#cc3366')
+      +px(10,2,12,4,'#cc3366')+px(11,1,10,4,PH)
+      +ov(16,12,8,8,B,O)
+      +px(10,7,4,1,'#333')+px(18,7,4,1,'#333')
+      +EY(11,19,10)+CK(9,21,13)+MO(16,15)
+      +ov(16,23,7,6,B,O)
+      +px(12,20,8,1,'#20a868')+px(15,19,3,3,'#20a868')+px(15,21,3,1,'#0d7040')
+      +px(3,17,5,7,'#ffffff')+px(3,17,1,7,O)+px(7,17,1,7,O)+px(3,17,5,1,O)+px(3,23,5,1,O)
+      +px(8,19,3,1,O)+px(8,19,3,3,'#ffffff')+px(8,21,3,1,O)
+      +px(4,20,3,2,'#7b4500')+px(4,18,3,1,'#b0f0d8')
+      +px(8,20,4,3,B)+px(8,20,1,3,O)
+      +px(22,20,4,3,B)+px(25,20,1,3,O)
+      +px(11,29,6,2,B)+px(11,29,1,2,O)+px(16,29,1,2,O)+px(11,30,6,1,O)
+      +px(18,29,6,2,B)+px(18,29,1,2,O)+px(23,29,1,2,O)+px(18,30,6,1,O)
+      +'</svg>';
+  }
 
-  // ════════════════════════
-  //  여유 ☕ — 청소년 (민트, 핑크헤어, 커피)
-  // ════════════════════════
-  if(rk.emoji==='☕') return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="60" cy="60" r="54" fill="#F0FFF8" stroke="#40C880" stroke-width="3"/>
-    <ellipse cx="60" cy="109" rx="25" ry="5.5" fill="rgba(0,0,0,0.07)"/>
-    <!-- 발 -->
-    <ellipse cx="47" cy="98" rx="14" ry="8.5" fill="#88EEC0" stroke="#333" stroke-width="2.8"/>
-    <ellipse cx="73" cy="98" rx="14" ry="8.5" fill="#88EEC0" stroke="#333" stroke-width="2.8"/>
-    <!-- 몸통 -->
-    <ellipse cx="60" cy="82" rx="22" ry="18" fill="#88EEC0" stroke="#333" stroke-width="3.2"/>
-    <!-- 리본 장식 -->
-    <path d="M49 76 Q60 72 71 76" stroke="#20A860" stroke-width="3.5" fill="none"/>
-    <circle cx="60" cy="79.5" r="5" fill="#20A860" stroke="#333" stroke-width="1.8"/>
-    <!-- 커피컵 (왼팔) -->
-    <ellipse cx="35" cy="80" rx="9.5" ry="6.5" fill="#88EEC0" stroke="#333" stroke-width="2.5" transform="rotate(-22 35 80)"/>
-    <rect x="16" y="74" width="21" height="21" rx="5" fill="white" stroke="#333" stroke-width="2.5"/>
-    <path d="M37 79.5 Q47 82 37 87.5" stroke="#90D8A8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-    <rect x="18.5" y="81" width="16" height="6" rx="3" fill="#7B4500" opacity="0.4"/>
-    <path d="M23 72 Q26.5 64 23 57" stroke="#B0E8D0" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <path d="M29 71 Q32.5 63 29 56" stroke="#B0E8D0" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <!-- 오른팔 -->
-    <ellipse cx="85" cy="80" rx="9.5" ry="6.5" fill="#88EEC0" stroke="#333" stroke-width="2.5" transform="rotate(22 85 80)"/>
-    <!-- 핑크 헤어 (팡팡) -->
-    <path d="M29 40 Q35 12 60 10 Q85 12 91 40" fill="#FF88AA" stroke="#CC4477" stroke-width="2.5"/>
-    <path d="M33 38 Q38 15 60 13 Q82 15 87 38" fill="#FFAAC8" stroke="none"/>
-    <!-- 양 옆 동그란 장식 -->
-    <circle cx="28" cy="44" r="10" fill="#FF88AA" stroke="#CC4477" stroke-width="2.5"/>
-    <circle cx="92" cy="44" r="10" fill="#FF88AA" stroke="#CC4477" stroke-width="2.5"/>
-    <circle cx="28" cy="44" r="5.5" fill="#FFB3CC"/>
-    <circle cx="92" cy="44" r="5.5" fill="#FFB3CC"/>
-    <!-- 큰 머리 -->
-    <circle cx="60" cy="46" r="31" fill="#C0FFE8" stroke="#333" stroke-width="3.2"/>
-    <!-- 볼터치 -->
-    ${BL(41,57)}${BL(79,57)}
-    <!-- 눈썹 -->
-    <path d="M40 35 Q49 30 58 34" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-    <path d="M62 34 Q71 30 80 35" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-    <!-- 큰 눈 -->
-    ${EYE(49,47,11,'#333')}${EYE(71,47,11,'#333')}
-    ${MO(60,60,8)}
-  </svg>`;
+  // ════ 베테랑: ADULT 🏅 — 골드, 다크헤어, 메달 ════
+  if(rk.emoji==='🏅'){
+    const B='#ffd055',O='#1a1a1a',HA='#2a2a2a',MD='#ffd700',RD='#ef4444';
+    return W
+      +px(8,1,16,3,HA)+px(9,3,14,3,HA)
+      +ov(16,13,9,8,B,O)
+      +px(9,7,5,2,'#2a2a2a')+px(18,7,5,2,'#2a2a2a')
+      +EY(11,19,10)+CK(9,22,12)
+      +px(11,15,5,2,O)+px(16,15,5,2,O)+MO(16,15)
+      +ov(16,26,9,6,B,O)
+      +px(13,21,3,4,'#f59e0b')+px(18,21,3,4,'#f59e0b')+px(16,21,2,6,'#e8a000')
+      +px(6,22,5,5,MD)+px(6,22,1,5,O)+px(10,22,1,5,O)+px(6,22,5,1,O)+px(6,26,5,1,O)+px(7,23,3,3,'#f59e0b')
+      +px(21,22,5,5,MD)+px(21,22,1,5,O)+px(25,22,1,5,O)+px(21,22,5,1,O)+px(21,26,5,1,O)+px(22,23,3,3,'#f59e0b')
+      +px(15,21,2,6,RD)
+      +ov(16,29,5,3,MD,'#b8860b')
+      +px(15,28,3,1,'#f59e0b')+px(14,29,5,1,'#f59e0b')+px(15,30,3,1,'#f59e0b')
+      +'</svg>';
+  }
 
-  // ════════════════════════
-  //  베테랑 🏅 — 성인 (골드, 메달, 자신감)
-  // ════════════════════════
-  if(rk.emoji==='🏅') return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="60" cy="60" r="54" fill="#FFFBEB" stroke="#F5A000" stroke-width="3.5"/>
-    <ellipse cx="60" cy="110" rx="27" ry="6" fill="rgba(0,0,0,0.08)"/>
-    <!-- 발 -->
-    <ellipse cx="45" cy="100" rx="14.5" ry="9" fill="#FFD055" stroke="#333" stroke-width="3"/>
-    <ellipse cx="75" cy="100" rx="14.5" ry="9" fill="#FFD055" stroke="#333" stroke-width="3"/>
-    <!-- 몸통 -->
-    <ellipse cx="60" cy="83" rx="25" ry="20" fill="#FFD055" stroke="#333" stroke-width="3.2"/>
-    <!-- 정장 라펠 -->
-    <path d="M49 71 L55 85 L60 77 L65 85 L71 71" fill="#F59E0B" stroke="#333" stroke-width="2.3"/>
-    <!-- 어깨 별 뱃지 -->
-    <circle cx="34" cy="76" r="9.5" fill="#FCD34D" stroke="#E59500" stroke-width="2.5"/>
-    <text x="30" y="80.5" font-size="14" fill="#92400E" font-weight="900">★</text>
-    <circle cx="86" cy="76" r="9.5" fill="#FCD34D" stroke="#E59500" stroke-width="2.5"/>
-    <text x="82" y="80.5" font-size="14" fill="#92400E" font-weight="900">★</text>
-    <!-- 메달 리본 -->
-    <line x1="60" y1="65" x2="60" y2="75" stroke="#EF4444" stroke-width="6" stroke-linecap="round"/>
-    <!-- 메달 -->
-    <circle cx="60" cy="84" r="13" fill="#FCD34D" stroke="#D4900A" stroke-width="3"/>
-    <ellipse cx="56" cy="81" rx="6" ry="4" fill="white" opacity="0.42"/>
-    <polygon points="60,77.5 62.5,82.5 68.5,82.5 63.8,85.8 65.5,92 60,88.5 54.5,92 56.2,85.8 51.5,82.5 57.5,82.5" fill="#D4900A"/>
-    <!-- 헤어 (멋진 다크) -->
-    <path d="M30 38 Q37 11 60 10 Q83 11 90 38" fill="#2A2A2A" stroke="#111" stroke-width="2.5"/>
-    <ellipse cx="48" cy="22" rx="9" ry="7" fill="#2A2A2A"/>
-    <ellipse cx="60" cy="19" rx="8" ry="6" fill="#2A2A2A"/>
-    <!-- 큰 머리 -->
-    <circle cx="60" cy="45" r="31" fill="#FFE8A0" stroke="#333" stroke-width="3.2"/>
-    <!-- 자신감 눈썹 (힘차게) -->
-    <path d="M40 33 L54 37" stroke="#333" stroke-width="3.5" stroke-linecap="round"/>
-    <path d="M66 37 L80 33" stroke="#333" stroke-width="3.5" stroke-linecap="round"/>
-    <!-- 볼터치 -->
-    ${BL(41,56)}${BL(79,56)}
-    <!-- 큰 눈 (강인) -->
-    ${EYE(49,47,11.5,'#222')}${EYE(71,47,11.5,'#222')}
-    <!-- 콧수염 -->
-    <path d="M50 60 Q55 64 60 60 Q65 64 70 60" stroke="#555" stroke-width="2.3" fill="none" stroke-linecap="round"/>
-    ${MO(60,58,8)}
-  </svg>`;
-
-  // ════════════════════════
-  //  전설 👑 — 부자왕 (무지개 헤어+왕관+금목걸이+다이아)
-  // ════════════════════════
-  return `<svg width="${size}" height="${size}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="60" cy="60" r="54" fill="#FFF0FA" stroke="#FF50B0" stroke-width="4"/>
-    <ellipse cx="60" cy="111" rx="29" ry="6.5" fill="rgba(0,0,0,0.1)"/>
-    <!-- 발 (매우 큼!) -->
-    <ellipse cx="42" cy="101" rx="16.5" ry="10" fill="#FFAAD8" stroke="#333" stroke-width="3.2"/>
-    <ellipse cx="78" cy="101" rx="16.5" ry="10" fill="#FFAAD8" stroke="#333" stroke-width="3.2"/>
-    <!-- 몸통 (원 가득!) -->
-    <ellipse cx="60" cy="84" rx="28.5" ry="23" fill="#FFB8DC" stroke="#333" stroke-width="3.5"/>
-    <!-- 드레스 장식 -->
-    <path d="M39 76 Q60 70 81 76" stroke="#FF1888" stroke-width="3.2" fill="none"/>
-    <path d="M42 88 Q60 82 78 88" stroke="#FF1888" stroke-width="2.8" fill="none"/>
-    <!-- 금 목걸이 체인 -->
-    <path d="M38 73 Q60 85 82 73" fill="none" stroke="#FFD700" stroke-width="5" stroke-linecap="round"/>
-    <!-- 목걸이 광택 -->
-    <path d="M43 72 Q60 82 77 72" fill="none" stroke="#FFF0A0" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
-    <!-- 다이아 팬던트 -->
-    <circle cx="60" cy="85.5" r="6" fill="#FFD700" stroke="#CC9900" stroke-width="2.2"/>
-    <polygon points="60,91.5 55.5,85.5 60,79.5 64.5,85.5" fill="#88EEFF" stroke="#44AACC" stroke-width="1.8"/>
-    <circle cx="60" cy="85.5" r="2.8" fill="white" opacity="0.55"/>
-    <!-- 팔 -->
-    <ellipse cx="31" cy="80" rx="9" ry="6" fill="#FFAAD8" stroke="#333" stroke-width="2.8" transform="rotate(-22 31 80)"/>
-    <ellipse cx="89" cy="80" rx="9" ry="6" fill="#FFAAD8" stroke="#333" stroke-width="2.8" transform="rotate(22 89 80)"/>
-    <!-- 무지개 헤어!! (6색) -->
-    <path d="M27 41 Q33 9 60 7 Q87 9 93 41" fill="#FF2222" stroke="#CC0000" stroke-width="1.5"/>
-    <path d="M31 40 Q36 11 60 9 Q84 11 89 40" fill="#FF8800" stroke="none"/>
-    <path d="M35 39 Q39 13 60 11 Q81 13 85 39" fill="#FFEE00" stroke="none"/>
-    <path d="M39 38 Q42 15 60 13 Q78 15 81 38" fill="#44DD22" stroke="none"/>
-    <path d="M43 37 Q45 17 60 15 Q75 17 77 37" fill="#2288FF" stroke="none"/>
-    <path d="M47 36 Q48 19 60 17 Q72 19 73 36" fill="#CC44FF" stroke="none"/>
-    <!-- 헤어 아웃라인 -->
-    <path d="M27 41 Q33 9 60 7 Q87 9 93 41" fill="none" stroke="#222" stroke-width="3"/>
-    <!-- 왕관 -->
-    <path d="M31,44 L43,57 L60,29 L77,57 L89,44 L87,59 L33,59 Z" fill="#FFD700" stroke="#CC8800" stroke-width="2.8"/>
-    <path d="M43 52 Q60 46 77 52" fill="none" stroke="white" stroke-width="2.2" opacity="0.52"/>
-    <!-- 왕관 보석 (크고 화려!) -->
-    <circle cx="60" cy="29" r="9" fill="#FF2222" stroke="#FF9999" stroke-width="2"/>
-    <circle cx="60" cy="29" r="5" fill="white" opacity="0.5"/>
-    <circle cx="31" cy="44" r="7" fill="#2266FF" stroke="#88BBFF" stroke-width="1.8"/>
-    <circle cx="89" cy="44" r="7" fill="#22CC44" stroke="#88FF88" stroke-width="1.8"/>
-    <circle cx="43" cy="52" r="5.5" fill="#AA22FF" stroke="#CC88FF" stroke-width="1.5"/>
-    <circle cx="77" cy="52" r="5.5" fill="#FF8800" stroke="#FFCC66" stroke-width="1.5"/>
-    <!-- 큰 머리 -->
-    <circle cx="60" cy="48" r="32" fill="#FFD8EE" stroke="#333" stroke-width="3.5"/>
-    <!-- 아이라인 (화려) -->
-    <path d="M36 40 Q48 34 60 38" stroke="#CC0066" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <path d="M60 38 Q72 34 84 40" stroke="#CC0066" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <!-- 볼터치 (크게) -->
-    ${BL(39,59)}${BL(81,59)}
-    <!-- 눈 (가장 크고 화려! 핑크 동공) -->
-    ${EYE(47,50,13,'#CC0066')}${EYE(73,50,13,'#CC0066')}
-    ${MO(60,66,9.5)}
-    <!-- 반짝 효과 -->
-    <text x="6" y="42" font-size="18" style="font-family:sans-serif">✨</text>
-    <text x="97" y="38" font-size="18" style="font-family:sans-serif">✨</text>
-    <text x="9" y="80" font-size="15" style="font-family:sans-serif">💎</text>
-    <text x="98" y="83" font-size="15" style="font-family:sans-serif">💰</text>
-  </svg>`;
-
+  // ════ 전설: LEGEND 👑 — 왕관+무지개헤어+금목걸이+다이아 ════
+  {
+    const B='#ffb8dc',O='#1a1a1a',GD='#ffd700';
+    const HC=['#ff3333','#ff8800','#ffee00','#44dd22','#2288ff','#cc44ff'];
+    return W
+      +px(10,0,3,5,O)+px(11,0,2,4,GD)+px(12,0,1,1,'#ff2222')
+      +px(14,0,3,6,O)+px(15,0,2,5,GD)+px(15,0,1,1,'#2288ff')
+      +px(19,0,3,5,O)+px(20,0,2,4,GD)+px(20,0,1,1,'#44dd22')
+      +px(9,4,14,3,O)+px(10,4,12,3,GD)
+      +px(12,5,3,1,'#ff3333')+px(16,5,2,1,'#2288ff')+px(20,5,2,1,'#44dd22')
+      +HC.map((c,i)=>px(8,6+i,16,1,c)).join('')
+      +px(8,6,1,6,O)+px(23,6,1,6,O)
+      +ov(16,18,10,8,B,O)
+      +px(8,13,4,1,'#cc0066')+px(20,13,4,1,'#cc0066')
+      +EY(11,19,15,'#cc0066')+CK(8,21,18)+MO(16,20)
+      +px(9,27,5,1,GD)+px(14,27,4,1,'#88eeff')+px(18,27,5,1,GD)
+      +px(9,27,1,1,O)+px(22,27,1,1,O)
+      +px(13,28,6,4,GD)+px(13,28,1,4,O)+px(18,28,1,4,O)+px(13,28,6,1,O)+px(13,31,6,1,O)
+      +px(15,29,3,2,'#88eeff')
+      +ov(16,28,10,3,B,O)
+      +px(9,26,14,1,'#ff1888')+px(10,29,12,1,'#ff1888')
+      +px(4,26,4,3,B)+px(4,26,1,3,O)+px(7,26,1,1,O)+px(7,28,1,1,O)
+      +px(24,26,4,3,B)+px(27,26,1,3,O)+px(24,26,1,1,O)+px(24,28,1,1,O)
+      +px(1,12,1,1,GD)+px(0,11,3,1,GD)+px(1,10,1,1,GD)
+      +px(29,10,1,1,GD)+px(28,9,3,1,GD)+px(29,8,1,1,GD)
+      +'</svg>';
+  }
 }
 
 /* ═══════════════════════════════
