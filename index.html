@@ -1524,7 +1524,15 @@ async function submitAnswer(){
     wrongAnswers.push(q);
   }
   setTimeout(()=>updateQuizChar('normal'),800);
-  document.getElementById('btn-next').classList.add('show');
+  const nb=document.getElementById('btn-next');
+  nb.classList.add('show');
+  // 버튼이 뷰포트 밖으로 밀렸을 때 자동 스크롤
+  setTimeout(()=>{
+    const rect=nb.getBoundingClientRect();
+    if(rect.bottom>window.innerHeight||rect.top<0){
+      nb.scrollIntoView({behavior:'smooth',block:'end'});
+    }
+  },150);
 }
 
 function nextQ(){ current++; if(current>=shuffled.length) showResult(); else renderQ(); }
