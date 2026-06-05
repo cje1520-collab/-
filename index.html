@@ -954,7 +954,7 @@ body {
       <div class="menu-card c-rank" onclick="showRankModal()">
         <div class="menu-icon">🏆</div>
         <div class="menu-label" id="menu-rank-label">랭킹</div>
-        <div class="menu-desc"  id="menu-rank-desc">월간 TOP 5</div>
+        <div class="menu-desc"  id="menu-rank-desc">월간 TOP 10</div>
       </div>
       <div class="menu-card c-growth" onclick="showGrowth()">
         <div class="menu-icon">🌱</div>
@@ -1134,7 +1134,7 @@ body {
       <div class="rank-my-num" id="rm-my-rank">—</div>
       <div class="rank-my-pts" id="rm-my-info"></div>
     </div>
-    <div class="rank-top-title">🥇 이달의 TOP 5</div>
+    <div class="rank-top-title">🥇 이달의 TOP 10</div>
     <div id="rm-list"><div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">불러오는 중...</div></div>
   </div>
 </div>
@@ -1163,7 +1163,7 @@ var GT = {
   feat_4_icon:'🎁', feat_4_title:'10,000pts 달성 시 상품권 지급!',feat_4_desc:'누적 포인트 기준, 전화번호로 기록 저장',
   menu_quiz_label:'상담 퀴즈',       menu_quiz_desc:'50문항 도전!',
   menu_roulette_label:'롤플레잉 룰렛', menu_roulette_desc:'거절극복 연습',
-  menu_rank_label:'랭킹',           menu_rank_desc:'월간 TOP 5',
+  menu_rank_label:'랭킹',           menu_rank_desc:'월간 TOP 10',
   menu_growth_label:'내 성장 보기',  menu_growth_desc:'직급 여정 확인',
   rank_0_emoji:'😰', rank_0_title:'신입 상담사',   rank_0_msg:'첫 발걸음! 제품 공부 열심히 해봐요!',
   rank_1_emoji:'📚', rank_1_title:'열공 상담사',   rank_1_msg:'공부하는 모습이 빛나요! 계속 달려봐요!',
@@ -1585,12 +1585,12 @@ async function renderTop5Dashboard(){
       list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px">이번 달 참여자가 없어요 😊</div>';
       return;
     }
-    const medals=['🥇','🥈','🥉','4️⃣','5️⃣'];
-    const top5=all.slice(0,5);
+    const medals=['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟'];
+    const top10=all.slice(0,10);
     const myIdx=all.findIndex(u=>u.phone===userPhone);
-    const inTop5=myIdx>=0&&myIdx<5;
+    const inTop10=myIdx>=0&&myIdx<10;
 
-    let html=top5.map((u,i)=>{
+    let html=top10.map((u,i)=>{
       const r=getRank(u.pts);
       const isMe=u.phone===userPhone;
       return `<div class="top5-row${isMe?' top5-me':''}">
@@ -1602,8 +1602,8 @@ async function renderTop5Dashboard(){
       </div>`;
     }).join('');
 
-    // 내가 TOP5 밖이면 구분선 + 내 순위 블록
-    if(!inTop5){
+    // 내가 TOP10 밖이면 구분선 + 내 순위 블록
+    if(!inTop10){
       html+=`<div style="border-top:1px dashed #FFD699;margin-top:6px;padding-top:6px">`;
       if(myIdx>=0){
         const me=all[myIdx]; const mr=getRank(me.pts);
@@ -2032,9 +2032,9 @@ async function showRankModal(){
   list.innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">불러오는 중...</div>';
   try{
     const data = await sbMonthlyRanking();
-    const MEDALS = ['🥇','🥈','🥉'];
+    const MEDALS = ['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟'];
     let myRank = '—';
-    list.innerHTML = data.slice(0,5).map((r,i)=>{
+    list.innerHTML = data.slice(0,10).map((r,i)=>{
       const isMe = r.phone===userPhone;
       if(isMe) myRank = `${i+1}위`;
       const rank = getRank(r.pts);

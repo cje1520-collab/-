@@ -1478,14 +1478,19 @@ async function deleteUser(phone, name){
 
 /* ── 랭킹 리셋 ── */
 async function resetRanking(){
-  const ans=prompt('랭킹을 전체 리셋할까요?\n\n⚠️ 모든 포인트와 기록이 삭제됩니다.\n확인하려면 "리셋" 이라고 입력해주세요.');
+  const ans=prompt('랭킹 기준일을 오늘로 변경할까요?\n\n✅ 누적 포인트와 기록은 삭제되지 않습니다.\n확인하려면 "리셋" 이라고 입력해주세요.');
   if(ans!=='리셋') return;
-  showLoading('랭킹 리셋 중...');
+  showLoading('랭킹 기준일 변경 중...');
   try{
-    await fetch(`${SB_URL}/rest/v1/quiz_results`,{method:'DELETE',headers:{...HDR,'Prefer':'return=minimal'}});
-    toast('🔃 랭킹이 리셋됐어요!');
+    const today=new Date().toISOString().slice(0,10);
+    await fetch(`${SB_URL}/rest/v1/settings`,{
+      method:'POST',
+      headers:{...HDR,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({key:'rank_reset_at',value:JSON.stringify(today),updated_at:new Date().toISOString()})
+    });
+    toast('✅ 랭킹 기준일이 오늘('+today+')로 변경됐어요. 누적 포인트는 유지됩니다.');
     await loadAll();
-  }catch(e){ alert('리셋 실패: '+e.message); }
+  }catch(e){ alert('변경 실패: '+e.message); }
   hideLoading();
 }
 
