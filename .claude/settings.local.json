@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_in_Chrome__computer",
+      "mcp__Claude_in_Chrome__navigate",
+      "Bash(ipconfig)",
+      "Bash(findstr \"IPv4\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(git --version)",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "WebFetch(domain:cje1520-collab.github.io)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(gh repo *)",
+      "Bash(git config *)",
+      "Bash(Get-Content \"D:\\\\MEGA\\\\Desktop\\\\상담퀴즈너굴게임\\\\files\\\\.git\\\\refs\\\\remotes\\\\origin\\\\main\")",
+      "Bash(git commit *)",
+      "Bash(git checkout *)",
+      "Bash(sed -n '866,888p')",
+      "Read(//tmp/**)",
+      "Bash(head -n 1162 /tmp/trimmed.html)",
+      "Bash(cat /tmp/orig_char.txt)",
+      "Bash(tail -n +1163 /tmp/trimmed.html)",
+      "Bash(cp /tmp/final3.html \"D:\\\\MEGA\\\\Desktop\\\\상담퀴즈너굴게임\\\\files\\\\index.html\" && echo \"Copied OK\")",
+      "Bash(curl -s \"https://cje1520-collab.github.io/-/\")",
+      "Bash(curl -s -I \"https://cje1520-collab.github.io/-/\")",
+      "PowerShell(\\(Get-Content \"D:\\\\MEGA\\\\Desktop\\\\상담퀴즈너굴게임\\\\quiz_game_supabase.html\" | Measure-Object -Line\\).Lines; \\(Get-Content \"D:\\\\MEGA\\\\Desktop\\\\상담퀴즈너굴게임\\\\files\\\\index.html\" | Measure-Object -Line\\).Lines)",
+      "Bash(git init *)",
+      "Bash(git remote *)",
+      "Bash(git fetch *)",
+      "Bash(git pull *)",
+      "Bash(cp files/index.html index.html)",
+      "Bash(cp files/sw.js sw.js)",
+      "Bash(cp files/admin.html admin.html)"
+    ]
+  }
+}

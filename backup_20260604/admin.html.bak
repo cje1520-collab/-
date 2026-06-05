@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>상담왕 어드민 🏆</title>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFF9F0;
+  --card: #FFFFFF;
+  --card2: #FFF3E0;
+  --border: #FFD699;
+  --primary: #FF6B35;
+  --primary-light: rgba(255,107,53,0.1);
+  --gold: #F4A017;
+  --green: #06D6A0;
+  --red: #EF4444;
+  --text: #2D2D2D;
+  --muted: #9E8C78;
+  --radius: 16px;
+  --shadow: 0 4px 20px rgba(255,107,53,0.1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nanum Gothic', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  padding: 24px 16px 60px;
+  background-image: radial-gradient(circle at 10% 10%, rgba(255,217,61,0.1) 0%, transparent 40%);
+}
+.wrap { max-width: 760px; margin: 0 auto; }
+
+/* ── 로그인 ── */
+.login-card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 28px;
+  padding: 48px 36px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  max-width: 400px;
+  margin: 80px auto 0;
+  position: relative;
+  overflow: hidden;
+}
+.login-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  background: linear-gradient(90deg, #FF6B35, #FFD93D, #FF9F1C);
+}
+.login-title { font-family: 'Jua', sans-serif; font-size: 28px; color: var(--text); margin-bottom: 8px; }
+.login-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+.login-input {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--card2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: 'Nanum Gothic', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  outline: none;
+  text-align: center;
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.login-input:focus { border-color: var(--primary); }
+.btn-login {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #FF6B35, #FF9F1C);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Jua', sans-serif;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255,107,53,0.35);
+  transition: all 0.2s;
+}
+.btn-login:hover { transform: translateY(-2px); }
+
+/* ── 헤더 ── */
+.admin-header {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 24px;
+  padding: 18px 22px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.admin-header::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, #FF6B35, #FFD93D, #FF9F1C);
+}
+.admin-title { font-family: 'Jua', sans-serif; font-size: 20px; color: var(--text); }
+.admin-title span { color: var(--primary); }
+.header-btns { display: flex; gap: 8px; }
+.btn-sm {
+  padding: 7px 14px;
+  background: var(--primary-light);
+  border: 1.5px solid rgba(255,107,53,0.3);
+  border-radius: 99px;
+  font-family: 'Jua', sans-serif;
+  font-size: 12px;
+  color: var(--primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-sm:hover { background: rgba(255,107,53,0.18); }
+
+/* ── 탭 ── */
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 9px 18px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 99px;
+  font-family: 'Jua', sans-serif;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: 0 3px 12px rgba(255,107,53,0.35);
+}
+.tab-pane { display: none; }
+.tab-pane.active { display: block; animation: fadeUp 0.3s ease; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── 통계 카드 ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 16px 12px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.stat-card-emoji { font-size: 26px; margin-bottom: 5px; }
+.stat-card-num { font-family: 'Jua', sans-serif; font-size: 24px; color: var(--primary); line-height: 1; margin-bottom: 4px; }
+.stat-card-label { font-size: 11px; color: var(--muted); font-weight: 700; }
+
+/* ── 섹션 ── */
+.section {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 24px;
+  padding: 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+.section-title {
+  font-family: 'Jua', sans-serif;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.badge {
+  font-size: 11px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid rgba(255,107,53,0.25);
+  padding: 2px 10px;
+  border-radius: 99px;
+}
+.badge-green { background: rgba(6,214,160,0.12); color: #059669; border-color: rgba(6,214,160,0.35); }
+
+/* ── 테이블 ── */
+.rank-table { width: 100%; border-collapse: collapse; }
+.rank-table th {
+  font-size: 11px; font-weight: 800; color: var(--muted);
+  letter-spacing: 1px; text-align: left;
+  padding: 0 8px 10px; border-bottom: 1.5px solid var(--border);
+}
+.rank-table td {
+  padding: 11px 8px;
+  border-bottom: 1px solid #FFE0B2;
+  font-size: 13px;
+  vertical-align: middle;
+}
+.rank-table tr:last-child td { border-bottom: none; }
+.rank-num { font-family: 'Jua', sans-serif; font-size: 17px; color: var(--muted); width: 30px; }
+.rank-num.gold { color: #F59E0B; }
+.rank-num.silver { color: #94A3B8; }
+.rank-num.bronze { color: #B45309; }
+.user-name { font-weight: 800; color: var(--text); }
+.pts-val { font-family: 'Jua', sans-serif; font-size: 15px; color: var(--primary); font-weight: 800; }
+.gift-status {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 800; padding: 4px 10px;
+  border-radius: 99px; cursor: pointer; border: none; transition: all 0.2s;
+}
+.gift-status.pending { background: rgba(244,160,23,0.15); color: #B45309; border: 1px solid rgba(244,160,23,0.4); }
+.gift-status.done    { background: rgba(6,214,160,0.12); color: #059669; border: 1px solid rgba(6,214,160,0.35); }
+.gift-row { background: rgba(255,217,61,0.06); }
+.empty { text-align: center; padding: 28px; color: var(--muted); font-size: 14px; }
+
+/* ── 문제 관리 ── */
+.q-form {
+  background: var(--card2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.q-form-title {
+  font-family: 'Jua', sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.form-row.full { grid-template-columns: 1fr; }
+.form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'Nanum Gothic', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-group textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(255,107,53,0.12);
+}
+.form-group input::placeholder, .form-group textarea::placeholder { color: #C9B99A; font-weight: 400; }
+.hint-guide {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  font-weight: 700;
+}
+.btn-add {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #FF6B35, #FF9F1C);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Jua', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 3px 14px rgba(255,107,53,0.35);
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+.btn-add:hover { transform: translateY(-1px); }
+.btn-add:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+/* 문제 목록 */
+.q-item {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  background: white;
+  transition: all 0.2s;
+}
+.q-item:hover { border-color: rgba(255,107,53,0.4); box-shadow: 0 2px 10px rgba(255,107,53,0.08); }
+.q-item.inactive { opacity: 0.5; background: #F9F9F9; }
+.q-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.q-item-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.q-cat-tag {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 99px;
+  letter-spacing: 0.5px;
+}
+.q-id-tag { font-size: 11px; color: var(--muted); font-weight: 700; }
+.q-pts-tag { font-size: 11px; color: var(--gold); font-weight: 800; }
+.q-inactive-tag { font-size: 10px; color: var(--muted); background: #F3F4F6; padding: 2px 8px; border-radius: 99px; }
+.q-item-btns { display: flex; gap: 6px; flex-shrink: 0; }
+.btn-edit, .btn-del, .btn-toggle {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-edit { background: rgba(99,102,241,0.12); color: #6366F1; border: 1px solid rgba(99,102,241,0.3); }
+.btn-edit:hover { background: rgba(99,102,241,0.22); }
+.btn-del { background: rgba(239,68,68,0.1); color: #EF4444; border: 1px solid rgba(239,68,68,0.3); }
+.btn-del:hover { background: rgba(239,68,68,0.2); }
+.btn-toggle { background: rgba(6,214,160,0.1); color: #059669; border: 1px solid rgba(6,214,160,0.3); }
+.btn-toggle:hover { background: rgba(6,214,160,0.2); }
+.btn-toggle.off { background: rgba(156,163,175,0.12); color: var(--muted); border-color: #E5E7EB; }
+.q-text-preview {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 6px;
+}
+.q-answer-row {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+.q-answer-row span { color: var(--muted); font-weight: 700; }
+.q-answer-row strong { color: var(--text); }
+
+/* 인라인 편집 폼 */
+.q-edit-form {
+  background: var(--card2);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 10px;
+  display: none;
+}
+.q-edit-form.show { display: block; animation: fadeUp 0.2s ease; }
+.q-edit-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.q-edit-row.full { grid-template-columns: 1fr; }
+.q-edit-label {
+  font-size: 10px; font-weight: 800; color: var(--muted);
+  letter-spacing: 1px; margin-bottom: 4px; display: block;
+  text-transform: uppercase;
+}
+.q-edit-input, .q-edit-select, .q-edit-textarea {
+  width: 100%;
+  padding: 9px 12px;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'Nanum Gothic', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  outline: none;
+}
+.q-edit-textarea { min-height: 60px; resize: vertical; line-height: 1.5; }
+.q-edit-input:focus, .q-edit-select:focus, .q-edit-textarea:focus { border-color: var(--primary); }
+.q-edit-btns { display: flex; gap: 8px; margin-top: 8px; }
+.btn-save {
+  padding: 9px 20px;
+  background: linear-gradient(135deg, #FF6B35, #FF9F1C);
+  color: white; border: none;
+  border-radius: 10px;
+  font-family: 'Jua', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255,107,53,0.3);
+}
+.btn-cancel {
+  padding: 9px 16px;
+  background: transparent;
+  color: var(--muted);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'Jua', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* 로딩 */
+.loading-overlay {
+  position: fixed; inset: 0;
+  background: rgba(255,249,240,0.9);
+  display: none; align-items: center; justify-content: center;
+  z-index: 9999;
+  font-family: 'Jua', sans-serif;
+  font-size: 16px;
+  color: var(--primary);
+  gap: 10px;
+  flex-direction: column;
+}
+.loading-overlay.show { display: flex; }
+.spinner {
+  width: 32px; height: 32px;
+  border: 4px solid #FFE0B2;
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 토스트 */
+.toast {
+  position: fixed;
+  bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: #2D2D2D;
+  color: white;
+  font-family: 'Jua', sans-serif;
+  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 99px;
+  z-index: 10000;
+  transition: transform 0.3s ease;
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ── 로그인 ── -->
+<div id="login-wrap" class="wrap">
+  <div class="login-card">
+    <div style="font-size:48px;margin-bottom:12px">🏆</div>
+    <div class="login-title">관리자 대시보드</div>
+    <div class="login-sub">비밀번호를 입력해주세요</div>
+    <input class="login-input" type="password" id="pw-input" placeholder="••••••"
+           onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="btn-login" onclick="checkPw()">입장하기</button>
+  </div>
+</div>
+
+<!-- ── 대시보드 ── -->
+<div id="admin-wrap" class="wrap" style="display:none">
+
+  <div class="admin-header">
+    <div class="admin-title">📊 <span>상담왕</span> 관리자</div>
+    <div class="header-btns">
+      <button class="btn-sm" onclick="loadAll()">🔄 새로고침</button>
+    </div>
+  </div>
+
+  <!-- 탭 -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('tab-stats',this)">📈 현황</button>
+    <button class="tab-btn" onclick="switchTab('tab-questions',this)">📝 문제 관리</button>
+    <button class="tab-btn" onclick="switchTab('tab-ranking',this)">🏆 랭킹</button>
+    <button class="tab-btn" onclick="switchTab('tab-monthly',this)">📅 이번 달</button>
+    <button class="tab-btn" onclick="switchTab('tab-texts',this)">✏️ 텍스트</button>
+    <button class="tab-btn" onclick="switchTab('tab-config',this)">⚙️ 설정</button>
+    <button class="tab-btn" onclick="switchTab('tab-notice',this)">📢 공지</button>
+  </div>
+
+  <!-- ▶ 탭 1: 현황 -->
+  <div class="tab-pane active" id="tab-stats">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-emoji">👩‍💼</div>
+        <div class="stat-card-num" id="stat-total">0</div>
+        <div class="stat-card-label">전체 참여자</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-emoji">🎁</div>
+        <div class="stat-card-num" id="stat-gift">0</div>
+        <div class="stat-card-label">상품권 대상</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-emoji">⭐</div>
+        <div class="stat-card-num" id="stat-avg">0</div>
+        <div class="stat-card-label">평균 포인트</div>
+      </div>
+    </div>
+
+    <!-- 상품권 대상자 -->
+    <div class="section" id="gift-section" style="display:none">
+      <div class="section-title">🎁 상품권 지급 대상 <span class="badge" id="gift-count-badge">0명</span></div>
+      <table class="rank-table">
+        <thead><tr><th>순위</th><th>이름 / 전화번호</th><th>포인트</th><th>지급</th></tr></thead>
+        <tbody id="gift-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📊 직급별 분포</div>
+      <div id="rank-dist"></div>
+    </div>
+    <div class="section">
+      <div class="section-title">
+        📋 문제별 정답 통계
+        <button class="btn-sm" style="margin-left:auto" onclick="loadQuestionStats()">🔄 불러오기</button>
+      </div>
+      <div id="q-stats-list"><div class="empty" style="padding:16px;font-size:13px">위 버튼을 눌러 통계를 불러오세요</div></div>
+    </div>
+  </div>
+
+  <!-- ▶ 탭 2: 문제 관리 -->
+  <div class="tab-pane" id="tab-questions">
+
+    <!-- 문제 추가 폼 -->
+    <div class="q-form">
+      <div class="q-form-title">➕ 새 문제 추가</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>카테고리</label>
+          <input list="cat-list" id="new-cat" placeholder="가격" value="가격">
+          <datalist id="cat-list">
+            <option value="가격">
+            <option value="문제집">
+            <option value="학습앱">
+            <option value="상담전략">
+            <option value="비교">
+          </datalist>
+        </div>
+        <div class="form-group">
+          <label>배점 (pts)</label>
+          <input type="number" id="new-pts" value="200" min="50" max="1000" step="50">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label>문제</label>
+          <textarea id="new-q" placeholder="예) 엘리하이 프라임 종합반 12개월 한달 학습비는?"></textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>정답</label>
+          <input type="text" id="new-ans" placeholder="예) 149000 또는 백점">
+        </div>
+        <div class="form-group">
+          <label>힌트</label>
+          <input type="text" id="new-hint" placeholder="예) ㅂㅈ 또는 숫자로 입력">
+          <div class="hint-guide">초성이면 'ㅂㅈ' / 숫자 문제면 '숫자로 입력'</div>
+        </div>
+      </div>
+      <button class="btn-add" id="btn-add" onclick="addQuestion()">✅ 문제 추가하기</button>
+    </div>
+
+    <!-- 문제 목록 -->
+    <div class="section">
+      <div class="section-title">
+        📋 전체 문제 목록
+        <span class="badge" id="q-count-badge">0문제</span>
+        <span class="badge badge-green" id="q-active-badge">활성 0</span>
+        <button class="btn-sm" style="margin-left:auto" onclick="exportExcel()">📥 엑셀 내보내기</button>
+      </div>
+      <div id="q-list"><div class="empty">문제를 불러오는 중...</div></div>
+    </div>
+  </div>
+
+  <!-- ▶ 탭 3: 랭킹 -->
+  <div class="tab-pane" id="tab-ranking">
+    <div class="section">
+      <div class="section-title">
+        🏆 전체 포인트 랭킹 <span class="badge" id="rank-count-badge">0명</span>
+        <button class="btn-sm" style="margin-left:auto;background:rgba(239,68,68,0.1);color:#EF4444;border-color:rgba(239,68,68,0.3)" onclick="resetRanking()">🔃 랭킹 리셋</button>
+      </div>
+      <table class="rank-table">
+        <thead><tr><th>순위</th><th>이름</th><th>직급</th><th>누적 포인트</th><th>삭제</th></tr></thead>
+        <tbody id="rank-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ▶ 탭 4: 이번 달 -->
+  <div class="tab-pane" id="tab-monthly">
+    <div class="stats-grid" id="monthly-stats-grid">
+      <div class="stat-card"><div class="stat-card-emoji">🆕</div><div class="stat-card-num" id="m-new">0</div><div class="stat-card-label">이번 달 신규</div></div>
+      <div class="stat-card"><div class="stat-card-emoji">⭐</div><div class="stat-card-num" id="m-pts">0</div><div class="stat-card-label">이번 달 총 pts</div></div>
+      <div class="stat-card"><div class="stat-card-emoji">🎯</div><div class="stat-card-num" id="m-active">0</div><div class="stat-card-label">활동 참여자</div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">📅 이번 달 활동 TOP <span class="badge" id="m-count-badge">0명</span></div>
+      <table class="rank-table">
+        <thead><tr><th>순위</th><th>이름</th><th>이번 달 pts</th><th>직급</th></tr></thead>
+        <tbody id="monthly-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ▶ 탭 5: 텍스트 관리 -->
+  <div class="tab-pane" id="tab-texts">
+    <div class="section">
+      <div class="section-title">✏️ 게임 문구 직접 수정</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;font-weight:700;line-height:1.7">
+        아래 내용을 수정하고 <strong style="color:var(--primary)">💾 저장하기</strong>를 누르면 게임에 바로 반영돼요.<br>
+        ※ Supabase settings 테이블이 필요해요 (미생성 시 공지 탭 참고).
+      </p>
+
+      <!-- 호칭 -->
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border)">🏷️ 매니저 호칭</div>
+      <div class="form-group" style="margin-bottom:16px">
+        <label class="q-edit-label">선생님 대신 표시할 호칭</label>
+        <input class="q-edit-input" id="t-manager-title" value="선생님" placeholder="예) 선생님, 매니저, 상담사">
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">인트로·대시보드·결과 화면 등 '선생님' 위치에 표시됩니다</div>
+      </div>
+
+      <!-- 인트로 화면 -->
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border)">📱 인트로 화면</div>
+      <div class="form-row" style="margin-bottom:10px">
+        <div class="form-group">
+          <label class="q-edit-label">뱃지 문구</label>
+          <input class="q-edit-input" id="t-badge" value="✦ 엘리하이 상담왕 퀴즈">
+        </div>
+        <div class="form-group">
+          <label class="q-edit-label">인트로 제목</label>
+          <input class="q-edit-input" id="t-intro-title" value="안녕하세요!&#10;선생님" placeholder="줄바꿈은 \n 으로">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:10px">
+        <label class="q-edit-label">인트로 부제목</label>
+        <input class="q-edit-input" id="t-intro-sub" value="상담 퀴즈를 풀며 상담력도 기르고 포인트도 모아요!">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
+        <div><label class="q-edit-label">특징1 아이콘</label><input class="q-edit-input" id="t-f1i" value="📚"></div>
+        <div><label class="q-edit-label">특징1 제목</label><input class="q-edit-input" id="t-f1t" value="퀴즈로 상담 지식 UP"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:10px"><label class="q-edit-label">특징1 설명</label><input class="q-edit-input" id="t-f1d" value="가격·상품·앱·문제집 50문항 도전!"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
+        <div><label class="q-edit-label">특징2 아이콘</label><input class="q-edit-input" id="t-f2i" value="💰"></div>
+        <div><label class="q-edit-label">특징2 제목</label><input class="q-edit-input" id="t-f2t" value="정답 맞추면 포인트 적립"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:10px"><label class="q-edit-label">특징2 설명</label><input class="q-edit-input" id="t-f2d" value="알수록 상담이 달라지고, 계약률이 올라가요"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
+        <div><label class="q-edit-label">특징3 아이콘</label><input class="q-edit-input" id="t-f3i" value="👑"></div>
+        <div><label class="q-edit-label">특징3 제목</label><input class="q-edit-input" id="t-f3t" value="캐릭터가 함께 성장해요"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:10px"><label class="q-edit-label">특징3 설명</label><input class="q-edit-input" id="t-f3d" value="신입 → 열공 → 여유 → 베테랑 → 전설의 상담왕"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px">
+        <div><label class="q-edit-label">특징4 아이콘</label><input class="q-edit-input" id="t-f4i" value="🎁"></div>
+        <div><label class="q-edit-label">특징4 제목</label><input class="q-edit-input" id="t-f4t" value="10,000pts 달성 시 상품권 지급!"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:16px"><label class="q-edit-label">특징4 설명</label><input class="q-edit-input" id="t-f4d" value="누적 포인트 기준, 전화번호로 기록 저장"></div>
+
+      <!-- 직급 이름 -->
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border)">👑 직급 이름 & 메시지</div>
+      <div id="rank-text-fields"></div>
+
+      <!-- 응원 메시지 -->
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin:16px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--border)">💬 정답 응원 메시지</div>
+      <div id="ok-msg-fields"></div>
+
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin:16px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--border)">❌ 오답 응원 메시지</div>
+      <div id="ng-msg-fields"></div>
+
+      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin:16px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--border)">💰 결과화면 동기부여 문구</div>
+      <div id="money-msg-fields"></div>
+
+      <button class="btn-add" style="margin-top:16px" onclick="saveTexts()">💾 저장하기</button>
+    </div>
+  </div>
+
+  <!-- ▶ 탭 6: 게임 설정 -->
+  <div class="tab-pane" id="tab-config">
+    <div class="section">
+      <div class="section-title">⚙️ 게임 설정</div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="q-edit-label">상품권 지급 기준 포인트</label>
+        <input type="number" class="q-edit-input" id="cfg-gift" value="10000" min="1000" step="500">
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">현재: 10,000pts 달성 시 상품권 지급</div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="q-edit-label">⏱️ 일일 최대 문항 수 (0 = 무제한)</label>
+        <input type="number" class="q-edit-input" id="cfg-daily" value="10" min="0" step="5">
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">하루에 풀 수 있는 최대 문항 수 (기본 10문항)</div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="q-edit-label">1회 출제 문제 수 (0 = 전체)</label>
+        <input type="number" class="q-edit-input" id="cfg-qcount" value="0" min="0" step="5">
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">0 입력 시 전체 문제 랜덤 출제</div>
+      </div>
+      <button class="btn-add" onclick="saveConfig()">💾 게임 설정 저장</button>
+    </div>
+    <div class="section">
+      <div class="section-title">🔐 어드민 비밀번호 변경</div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="q-edit-label">현재 비밀번호</label>
+        <input type="password" class="q-edit-input" id="pw-old" placeholder="현재 비밀번호">
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="q-edit-label">새 비밀번호</label>
+        <input type="password" class="q-edit-input" id="pw-new" placeholder="새 비밀번호 (6자 이상)">
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="q-edit-label">새 비밀번호 확인</label>
+        <input type="password" class="q-edit-input" id="pw-new2" placeholder="동일하게 입력">
+      </div>
+      <button class="btn-add" onclick="changePw()">🔐 비밀번호 변경</button>
+    </div>
+  </div>
+
+  <!-- ▶ 탭 7: 공지사항 -->
+  <div class="tab-pane" id="tab-notice">
+    <div class="section">
+      <div class="section-title">📢 공지사항 관리</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;font-weight:700;line-height:1.6">
+        여기서 작성한 공지는 게임 대시보드에 노출돼요.<br>
+        ※ 먼저 아래 SQL을 Supabase에서 한 번 실행해주세요.
+      </p>
+      <div style="background:#F3F4F6;border-radius:12px;padding:12px;margin-bottom:16px;font-size:12px;font-family:monospace;color:#374151;line-height:1.6">
+        create table if not exists settings (key text primary key, value text, updated_at timestamptz default now());<br>
+        alter table settings enable row level security;<br>
+        create policy "anon_all" on settings for all to anon using (true) with check (true);
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="q-edit-label">공지 내용</label>
+        <textarea class="q-edit-textarea" id="notice-input" placeholder="예) 이번 주 퀴즈 왕은 상품권 2장 지급합니다! 🎁" rows="3"></textarea>
+      </div>
+      <button class="btn-add" onclick="saveNotice()">📢 공지 게시하기</button>
+      <button style="width:100%;padding:12px;margin-top:8px;background:transparent;color:var(--muted);border:1.5px solid #E5E7EB;border-radius:var(--radius);font-family:'Jua',sans-serif;font-size:14px;cursor:pointer" onclick="clearNotice()">🗑️ 공지 삭제</button>
+    </div>
+    <div class="section" id="notice-preview-section" style="display:none">
+      <div class="section-title">👁️ 현재 공지</div>
+      <div id="notice-preview" style="font-size:14px;font-weight:700;color:var(--text);line-height:1.7;padding:4px 0"></div>
+    </div>
+  </div>
+
+</div><!-- /admin-wrap -->
+
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <span id="loading-msg">불러오는 중...</span>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── 설정 ── */
+const ADMIN_PW = 'mega2025';
+const SB_URL = 'https://nwmtsywdeixlpdtukems.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53bXRzeXdkZWl4bHBkdHVrZW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTY0NzYsImV4cCI6MjA5NTUzMjQ3Nn0.8tIDYOyn-L-mxrQAKqBG7Q00R1ZX_DCfBl9EyT3g0Uc';
+const HDR = { 'Content-Type':'application/json', 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY };
+
+const RANKS = [
+  { min:0,     emoji:'😰', title:'신입 상담사',   color:'#22C55E' },
+  { min:1000,  emoji:'📚', title:'열공 상담사',   color:'#3B82F6' },
+  { min:3000,  emoji:'☕', title:'여유 상담사',   color:'#8B5CF6' },
+  { min:6000,  emoji:'🏅', title:'베테랑 상담사', color:'#F59E0B' },
+  { min:10000, emoji:'👑', title:'전설의 상담왕', color:'#EF4444' },
+];
+function getRank(pts){ return [...RANKS].reverse().find(r=>pts>=r.min)||RANKS[0]; }
+
+let giftDone = JSON.parse(localStorage.getItem('giftDone')||'{}');
+function saveGift(){ localStorage.setItem('giftDone', JSON.stringify(giftDone)); }
+
+var allQ = [];
+
+/* ── 유틸 ── */
+function showLoading(m='불러오는 중...'){ document.getElementById('loading-msg').textContent=m; document.getElementById('loading').classList.add('show'); }
+function hideLoading(){ document.getElementById('loading').classList.remove('show'); }
+function maskPhone(p){ return p.slice(0,3)+'****'+p.slice(-4); }
+
+/* ── 이번 달 통계 ── */
+async function loadMonthlyStats(){
+  const now=new Date();
+  const firstDay=new Date(now.getFullYear(),now.getMonth(),1).toISOString();
+  const res=await fetch(`${SB_URL}/rest/v1/quiz_results?created_at=gte.${firstDay}&select=name,phone,points`,{headers:HDR});
+  const rows=await res.json();
+  if(!Array.isArray(rows)) return;
+
+  // 이번 달 전화번호별 집계
+  const map={};
+  rows.forEach(r=>{
+    if(!map[r.phone]) map[r.phone]={name:r.name,phone:r.phone,pts:0};
+    map[r.phone].pts+=(r.points||0);
+  });
+  const users=Object.values(map).sort((a,b)=>b.pts-a.pts);
+
+  // 전체 데이터에서 신규 판별 (이번 달 첫 참여자)
+  const allRes=await fetch(`${SB_URL}/rest/v1/quiz_results?select=phone,created_at`,{headers:HDR});
+  const allRows=await allRes.json();
+  if(!Array.isArray(allRows)) return;
+  const firstSeen={};
+  allRows.forEach(r=>{ if(!firstSeen[r.phone]||r.created_at<firstSeen[r.phone]) firstSeen[r.phone]=r.created_at; });
+  const newUsers=users.filter(u=>firstSeen[u.phone]>=firstDay).length;
+
+  document.getElementById('m-new').textContent=newUsers;
+  document.getElementById('m-pts').textContent=users.reduce((s,u)=>s+u.pts,0).toLocaleString();
+  document.getElementById('m-active').textContent=users.length;
+  document.getElementById('m-count-badge').textContent=users.length+'명';
+
+  const tbody=document.getElementById('monthly-tbody');
+  if(!users.length){ tbody.innerHTML='<tr><td colspan="4" class="empty">이번 달 참여자가 없어요</td></tr>'; return; }
+  tbody.innerHTML=users.map((u,i)=>{
+    const rank=getRank(u.pts);
+    return `<tr>
+      <td class="rank-num ${['gold','silver','bronze'][i]||''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</td>
+      <td><span class="user-name">${u.name}</span></td>
+      <td class="pts-val">${u.pts.toLocaleString()} pts</td>
+      <td><span style="font-size:12px;font-weight:800;color:${rank.color}">${rank.emoji} ${rank.title}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+/* ── 공지사항 ── */
+async function loadNotice(){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.notice&select=value`,{headers:HDR});
+    const d=await r.json();
+    if(Array.isArray(d)&&d[0]&&d[0].value){
+      document.getElementById('notice-input').value=d[0].value;
+      document.getElementById('notice-preview').textContent=d[0].value;
+      document.getElementById('notice-preview-section').style.display='block';
+    }
+  }catch(e){}
+}
+
+async function saveNotice(){
+  const val=document.getElementById('notice-input').value.trim();
+  if(!val){ alert('공지 내용을 입력해주세요!'); return; }
+  try{
+    // upsert
+    await fetch(`${SB_URL}/rest/v1/settings`,{
+      method:'POST',
+      headers:{...HDR,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({key:'notice',value:val,updated_at:new Date().toISOString()})
+    });
+    document.getElementById('notice-preview').textContent=val;
+    document.getElementById('notice-preview-section').style.display='block';
+    toast('📢 공지가 게시됐어요!');
+  }catch(e){ alert('저장 실패. Supabase settings 테이블을 먼저 생성해주세요.'); }
+}
+
+async function clearNotice(){
+  if(!confirm('공지를 삭제할까요?')) return;
+  try{
+    await fetch(`${SB_URL}/rest/v1/settings?key=eq.notice`,{method:'DELETE',headers:HDR});
+    document.getElementById('notice-input').value='';
+    document.getElementById('notice-preview-section').style.display='none';
+    toast('🗑️ 공지가 삭제됐어요');
+  }catch(e){ alert('삭제 실패'); }
+}
+function toast(msg, dur=2200){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), dur);
+}
+
+/* ── 탭 ── */
+function switchTab(id, btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const el = btn || (event && event.target);
+  if(el) el.classList.add('active');
+  if(id==='tab-monthly') loadMonthlyStats();
+  if(id==='tab-notice')  loadNotice();
+  if(id==='tab-texts')   loadTexts();
+  if(id==='tab-config')  loadConfig();
+}
+
+/* ════════════════════════════
+   텍스트 관리
+════════════════════════════ */
+const RANK_DEFAULTS = [
+  {emoji:'😰', title:'신입 상담사',   msg:'첫 발걸음! 제품 공부 열심히 해봐요!'},
+  {emoji:'📚', title:'열공 상담사',   msg:'공부하는 모습이 빛나요! 계속 달려봐요!'},
+  {emoji:'☕', title:'여유 상담사',   msg:'학부모 마음을 읽기 시작했어요!'},
+  {emoji:'🏅', title:'베테랑 상담사', msg:'계약률 탑! 이제 전설이 보여요!'},
+  {emoji:'👑', title:'전설의 상담왕', msg:'전설이 되셨습니다! 당신이 최고예요!'},
+];
+const MOT_OK_DEFAULTS = {
+  '가격':  ['💰 가격 정확히 알면 학부모 신뢰 쑥!','🎯 숫자 막힘없이 말하면 계약이 달라져요!'],
+  '상품':  ['🔥 상품 잘 알면 설명이 달라져요!','💎 이거 아는 선생님 계약률 진짜 달라요!'],
+  '문제집':['📚 교재 지식이 학부모 마음을 열어요!','🎯 이런 디테일이 계약을 만들어요!'],
+  '학습앱':['📱 앱 기능 설명하면 학부모가 감탄해요!','🚀 기능 알면 체험 상담이 완전 달라져요!'],
+};
+const MOT_NG_DEFAULTS = ['💪 한 번 더 보면 꼭 기억해요!','🌱 틀린 문제가 진짜 실력을 만들어요!','📚 이 내용 알면 다음 상담이 달라져요!','🎯 다시 도전하면 반드시 맞출 수 있어요!'];
+const MONEY_DEFAULTS = ['💰 제품을 잘 알수록 학부모 신뢰가 높아지고 계약률이 올라가요!','🔥 오늘 배운 지식이 내일 상담에서 바로 돈이 돼요!','👑 상담 잘하는 선생님은 제품을 꿰고 있어요. 당신이 그 주인공!','💎 이 문제들 다 맞추는 날, 진짜 상담왕이 됩니다!'];
+
+function buildTextFields(gt){
+  // 직급 필드
+  const rf=document.getElementById('rank-text-fields');
+  rf.innerHTML=RANK_DEFAULTS.map((r,i)=>`
+    <div style="background:var(--card2);border-radius:12px;padding:12px;margin-bottom:8px">
+      <div style="display:grid;grid-template-columns:60px 1fr 1fr;gap:8px;margin-bottom:6px">
+        <div><label class="q-edit-label">이모지</label><input class="q-edit-input" id="rk${i}e" value="${gt?gt[`rank_${i}_emoji`]||r.emoji:r.emoji}"></div>
+        <div><label class="q-edit-label">직급명</label><input class="q-edit-input" id="rk${i}t" value="${gt?gt[`rank_${i}_title`]||r.title:r.title}"></div>
+        <div><label class="q-edit-label">달성 메시지</label><input class="q-edit-input" id="rk${i}m" value="${gt?gt[`rank_${i}_msg`]||r.msg:r.msg}"></div>
+      </div>
+    </div>`).join('');
+  // 정답 응원 메시지
+  const of=document.getElementById('ok-msg-fields');
+  of.innerHTML=Object.entries(MOT_OK_DEFAULTS).map(([cat,msgs])=>`
+    <div style="margin-bottom:10px">
+      <div style="font-size:12px;font-weight:800;color:var(--primary);margin-bottom:6px">[${cat}]</div>
+      ${msgs.map((m,i)=>`<div class="form-group" style="margin-bottom:6px"><input class="q-edit-input" id="ok_${cat}_${i}" value="${gt?gt[`mot_ok_${cat}_${i+1}`]||m:m}"></div>`).join('')}
+    </div>`).join('');
+  // 오답 메시지
+  const ngf=document.getElementById('ng-msg-fields');
+  ngf.innerHTML=MOT_NG_DEFAULTS.map((m,i)=>`<div class="form-group" style="margin-bottom:6px"><input class="q-edit-input" id="ng_${i}" value="${gt?gt[`mot_ng_${i+1}`]||m:m}"></div>`).join('');
+  // 동기부여 메시지
+  const mf=document.getElementById('money-msg-fields');
+  mf.innerHTML=MONEY_DEFAULTS.map((m,i)=>`<div class="form-group" style="margin-bottom:6px"><input class="q-edit-input" id="mn_${i}" value="${gt?gt[`money_${i+1}`]||m:m}"></div>`).join('');
+}
+
+async function loadTexts(){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.game_texts&select=value`,{headers:HDR});
+    const d=await r.json();
+    const gt=Array.isArray(d)&&d[0]?JSON.parse(d[0].value):null;
+    // 기본 필드
+    if(gt){
+      if(gt.intro_badge) document.getElementById('t-badge').value=gt.intro_badge;
+      if(gt.intro_title) document.getElementById('t-intro-title').value=gt.intro_title;
+      if(gt.intro_sub)   document.getElementById('t-intro-sub').value=gt.intro_sub;
+      for(let i=1;i<=4;i++){
+        if(gt[`feat_${i}_icon`]) document.getElementById(`t-f${i}i`).value=gt[`feat_${i}_icon`];
+        if(gt[`feat_${i}_title`])document.getElementById(`t-f${i}t`).value=gt[`feat_${i}_title`];
+        if(gt[`feat_${i}_desc`]) document.getElementById(`t-f${i}d`).value=gt[`feat_${i}_desc`];
+      }
+    }
+    buildTextFields(gt);
+    if(gt&&gt.manager_title) document.getElementById('t-manager-title').value=gt.manager_title;
+  }catch(e){ buildTextFields(null); }
+}
+
+async function saveTexts(){
+  const gt={
+    manager_title: document.getElementById('t-manager-title').value.trim()||'선생님',
+    intro_badge: document.getElementById('t-badge').value.trim(),
+    intro_title: document.getElementById('t-intro-title').value.trim(),
+    intro_sub:   document.getElementById('t-intro-sub').value.trim(),
+  };
+  for(let i=1;i<=4;i++){
+    gt[`feat_${i}_icon`] =document.getElementById(`t-f${i}i`).value.trim();
+    gt[`feat_${i}_title`]=document.getElementById(`t-f${i}t`).value.trim();
+    gt[`feat_${i}_desc`] =document.getElementById(`t-f${i}d`).value.trim();
+  }
+  RANK_DEFAULTS.forEach((_,i)=>{
+    gt[`rank_${i}_emoji`]=document.getElementById(`rk${i}e`).value.trim();
+    gt[`rank_${i}_title`]=document.getElementById(`rk${i}t`).value.trim();
+    gt[`rank_${i}_msg`]  =document.getElementById(`rk${i}m`).value.trim();
+  });
+  Object.keys(MOT_OK_DEFAULTS).forEach(cat=>{
+    MOT_OK_DEFAULTS[cat].forEach((_,i)=>{ gt[`mot_ok_${cat}_${i+1}`]=document.getElementById(`ok_${cat}_${i}`).value.trim(); });
+  });
+  MOT_NG_DEFAULTS.forEach((_,i)=>{ gt[`mot_ng_${i+1}`]=document.getElementById(`ng_${i}`).value.trim(); });
+  MONEY_DEFAULTS.forEach((_,i)=>{ gt[`money_${i+1}`]=document.getElementById(`mn_${i}`).value.trim(); });
+
+  try{
+    await fetch(`${SB_URL}/rest/v1/settings`,{
+      method:'POST',
+      headers:{...HDR,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({key:'game_texts',value:JSON.stringify(gt),updated_at:new Date().toISOString()})
+    });
+    toast('✅ 텍스트가 저장됐어요! 게임에 바로 반영됩니다.');
+  }catch(e){ alert('저장 실패. Supabase settings 테이블을 먼저 생성해주세요.'); }
+}
+
+/* ════════════════════════════
+   게임 설정
+════════════════════════════ */
+var ADMIN_PW_CURRENT = ADMIN_PW;
+
+async function loadConfig(){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.game_config&select=value`,{headers:HDR});
+    const d=await r.json();
+    if(Array.isArray(d)&&d[0]){
+      const c=JSON.parse(d[0].value);
+      if(c.gift_threshold) document.getElementById('cfg-gift').value=c.gift_threshold;
+      if(c.daily_limit!==undefined) document.getElementById('cfg-daily').value=c.daily_limit;
+      if(c.questions_per_session!==undefined) document.getElementById('cfg-qcount').value=c.questions_per_session;
+    }
+  }catch(e){}
+}
+
+async function saveConfig(){
+  const cfg={
+    gift_threshold: parseInt(document.getElementById('cfg-gift').value)||10000,
+    daily_limit: parseInt(document.getElementById('cfg-daily').value)||0,
+    questions_per_session: parseInt(document.getElementById('cfg-qcount').value)||0,
+  };
+  try{
+    await fetch(`${SB_URL}/rest/v1/settings`,{
+      method:'POST',
+      headers:{...HDR,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({key:'game_config',value:JSON.stringify(cfg),updated_at:new Date().toISOString()})
+    });
+    toast('✅ 게임 설정이 저장됐어요!');
+  }catch(e){ alert('저장 실패. Supabase settings 테이블을 먼저 생성해주세요.'); }
+}
+
+function changePw(){
+  const old=document.getElementById('pw-old').value;
+  const n1=document.getElementById('pw-new').value;
+  const n2=document.getElementById('pw-new2').value;
+  if(old!==ADMIN_PW_CURRENT){ alert('현재 비밀번호가 틀렸어요!'); return; }
+  if(n1.length<6){ alert('새 비밀번호는 6자 이상이어야 해요!'); return; }
+  if(n1!==n2){ alert('새 비밀번호가 일치하지 않아요!'); return; }
+  ADMIN_PW_CURRENT=n1;
+  document.getElementById('pw-old').value='';
+  document.getElementById('pw-new').value='';
+  document.getElementById('pw-new2').value='';
+  toast('🔐 비밀번호가 변경됐어요! (새로고침 전까지 유효)');
+}
+
+/* ── 로그인 ── */
+function checkPw(){
+  const pw=document.getElementById('pw-input').value;
+  if(pw===ADMIN_PW){
+    document.getElementById('login-wrap').style.display='none';
+    document.getElementById('admin-wrap').style.display='block';
+    loadAll();
+  } else {
+    alert('비밀번호가 틀렸어요!');
+    document.getElementById('pw-input').value='';
+  }
+}
+
+/* ── 전체 데이터 로드 ── */
+async function loadAll(){
+  showLoading('데이터 불러오는 중...');
+  try { await Promise.all([loadStats(), loadQuestions()]); }
+  catch(e){ alert('로드 실패: '+e.message); }
+  hideLoading();
+}
+
+/* ── 현황 통계 ── */
+async function loadStats(){
+  const res=await fetch(`${SB_URL}/rest/v1/quiz_results?select=name,phone,points`,{headers:HDR});
+  const rows=await res.json();
+
+  const map={};
+  rows.forEach(r=>{
+    if(!map[r.phone]) map[r.phone]={name:r.name, phone:r.phone, pts:0};
+    map[r.phone].pts+=(r.points||0);
+  });
+  const users=Object.values(map).sort((a,b)=>b.pts-a.pts);
+
+  // 통계
+  document.getElementById('stat-total').textContent=users.length;
+  const giftCount=users.filter(u=>u.pts>=10000).length;
+  document.getElementById('stat-gift').textContent=giftCount;
+  const avg=users.length?Math.round(users.reduce((s,u)=>s+u.pts,0)/users.length):0;
+  document.getElementById('stat-avg').textContent=avg.toLocaleString();
+
+  // 직급 분포
+  const dist={};
+  RANKS.forEach(r=>dist[r.title]=0);
+  users.forEach(u=>{ const r=getRank(u.pts); dist[r.title]++; });
+  const distEl=document.getElementById('rank-dist');
+  distEl.innerHTML=RANKS.map(r=>{
+    const cnt=dist[r.title]||0;
+    const pct=users.length?Math.round(cnt/users.length*100):0;
+    return `<div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:800;margin-bottom:4px">
+        <span>${r.emoji} ${r.title}</span>
+        <span style="color:var(--primary)">${cnt}명 (${pct}%)</span>
+      </div>
+      <div style="height:6px;background:#FFE0B2;border-radius:99px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${r.color};border-radius:99px;transition:width 0.8s ease"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // 상품권 대상자
+  const giftUsers=users.filter(u=>u.pts>=10000);
+  document.getElementById('gift-count-badge').textContent=giftUsers.length+'명';
+  if(giftUsers.length>0){
+    document.getElementById('gift-section').style.display='block';
+    const tbody=document.getElementById('gift-tbody');
+    tbody.innerHTML='';
+    giftUsers.forEach((u,i)=>{
+      const done=giftDone[u.phone];
+      const tr=document.createElement('tr');
+      tr.className='gift-row';
+      tr.innerHTML=`
+        <td class="rank-num ${['gold','silver','bronze'][i]||''}">${i+1}</td>
+        <td>
+          <div class="user-name">${u.name}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">${maskPhone(u.phone)}</div>
+        </td>
+        <td class="pts-val">${u.pts.toLocaleString()} pts</td>
+        <td><button class="gift-status ${done?'done':'pending'}" onclick="toggleGift('${u.phone}',this)">${done?'✅ 지급완료':'🎁 미지급'}</button></td>`;
+      tbody.appendChild(tr);
+    });
+  } else {
+    document.getElementById('gift-section').style.display='none';
+  }
+
+  // 랭킹 탭
+  document.getElementById('rank-count-badge').textContent=users.length+'명';
+  const tbody2=document.getElementById('rank-tbody');
+  tbody2.innerHTML='';
+  if(!users.length){ tbody2.innerHTML='<tr><td colspan="5" class="empty">아직 참여자가 없어요 😊</td></tr>'; }
+  else {
+    users.forEach((u,i)=>{
+      const rank=getRank(u.pts);
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td class="rank-num ${['gold','silver','bronze'][i]||''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</td>
+        <td><span class="user-name">${u.name}</span><div style="font-size:11px;color:var(--muted)">${maskPhone(u.phone)}</div></td>
+        <td><span style="font-size:12px;font-weight:800;color:${rank.color}">${rank.emoji} ${rank.title}</span></td>
+        <td class="pts-val">${u.pts.toLocaleString()} pts</td>
+        <td><button class="btn-del" style="white-space:nowrap" onclick="deleteUser('${u.phone}','${u.name.replace(/'/g,"\\'")}')">🗑️ 삭제</button></td>`;
+      tbody2.appendChild(tr);
+    });
+  }
+}
+
+function toggleGift(phone, btn){
+  if(giftDone[phone]){ delete giftDone[phone]; btn.className='gift-status pending'; btn.textContent='🎁 미지급'; }
+  else { giftDone[phone]=true; btn.className='gift-status done'; btn.textContent='✅ 지급완료'; }
+  saveGift();
+  document.getElementById('stat-gift').textContent=Object.keys(giftDone).length;
+}
+
+/* ═══════════════════════════════
+   문제 관리
+═══════════════════════════════ */
+async function loadQuestions(){
+  const res=await fetch(`${SB_URL}/rest/v1/questions?order=sort_order.asc,id.asc`,{headers:HDR});
+  const data=await res.json();
+  allQ=Array.isArray(data)?data:[];
+  renderQuestions();
+}
+
+function renderQuestions(){
+  const active=allQ.filter(q=>q.active).length;
+  document.getElementById('q-count-badge').textContent=allQ.length+'문제';
+  document.getElementById('q-active-badge').textContent='활성 '+active;
+
+  const container=document.getElementById('q-list');
+  if(!allQ.length){ container.innerHTML='<div class="empty">등록된 문제가 없어요.<br>위에서 첫 번째 문제를 추가해보세요! 📝</div>'; return; }
+
+  container.innerHTML=allQ.map(q=>{
+    const catColor = {
+      '가격':'rgba(6,214,160,0.12);color:#059669;border:1px solid rgba(6,214,160,0.35)',
+      '문제집':'rgba(155,93,229,0.12);color:#9B5DE5;border:1px solid rgba(155,93,229,0.35)',
+      '학습앱':'rgba(255,107,53,0.12);color:#FF6B35;border:1px solid rgba(255,107,53,0.3)',
+      '상담전략':'rgba(244,160,23,0.12);color:#F4A017;border:1px solid rgba(244,160,23,0.35)',
+      '비교':'rgba(99,102,241,0.12);color:#6366F1;border:1px solid rgba(99,102,241,0.35)',
+    }[q.cat]||'background:#F3F4F6;color:#6B7280;border:1px solid #E5E7EB';
+
+    return `<div class="q-item ${q.active?'':'inactive'}" id="qitem-${q.id}">
+      <div class="q-item-head">
+        <div class="q-item-meta">
+          <span class="q-cat-tag" style="background:${catColor}">${q.cat}</span>
+          <span class="q-id-tag">#${q.id}</span>
+          <span class="q-pts-tag">⭐${q.points}pts</span>
+          ${!q.active?'<span class="q-inactive-tag">비활성</span>':''}
+        </div>
+        <div class="q-item-btns">
+          <button class="btn-toggle ${q.active?'':'off'}" onclick="toggleActive(${q.id},${q.active})">${q.active?'✓ 활성':'○ 비활성'}</button>
+          <button class="btn-edit" onclick="toggleEdit(${q.id})">✏️ 수정</button>
+          <button class="btn-del" onclick="deleteQuestion(${q.id})">🗑️</button>
+        </div>
+      </div>
+      <div class="q-text-preview">${q.q}</div>
+      <div class="q-answer-row">
+        <span>정답: <strong>${q.answer}</strong></span>
+        <span>힌트: <strong>${q.hint||'-'}</strong></span>
+      </div>
+
+      <!-- 인라인 수정 폼 -->
+      <div class="q-edit-form" id="edit-${q.id}">
+        <div class="q-edit-row">
+          <div>
+            <label class="q-edit-label">카테고리</label>
+            <input list="cat-list" class="q-edit-input" id="ec-${q.id}" value="${q.cat}">
+          </div>
+          <div>
+            <label class="q-edit-label">배점</label>
+            <input type="number" class="q-edit-input" id="ep-${q.id}" value="${q.points}" min="50" max="1000" step="50">
+          </div>
+        </div>
+        <div class="q-edit-row full">
+          <div>
+            <label class="q-edit-label">문제</label>
+            <textarea class="q-edit-textarea" id="eq-${q.id}">${q.q}</textarea>
+          </div>
+        </div>
+        <div class="q-edit-row">
+          <div>
+            <label class="q-edit-label">정답</label>
+            <input class="q-edit-input" id="ea-${q.id}" value="${q.answer}">
+          </div>
+          <div>
+            <label class="q-edit-label">힌트</label>
+            <input class="q-edit-input" id="eh-${q.id}" value="${q.hint||''}">
+          </div>
+        </div>
+        <div class="q-edit-btns">
+          <button class="btn-save" onclick="saveEdit(${q.id})">💾 저장</button>
+          <button class="btn-cancel" onclick="toggleEdit(${q.id})">취소</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── 문제 추가 ── */
+async function addQuestion(){
+  const cat=document.getElementById('new-cat').value.trim();
+  const q=document.getElementById('new-q').value.trim();
+  const ans=document.getElementById('new-ans').value.trim();
+  const hint=document.getElementById('new-hint').value.trim();
+  const pts=parseInt(document.getElementById('new-pts').value)||200;
+
+  if(!cat||!q||!ans){ alert('카테고리, 문제, 정답은 필수예요!'); return; }
+
+  const btn=document.getElementById('btn-add');
+  btn.disabled=true; btn.textContent='추가 중...';
+  try {
+    const res=await fetch(`${SB_URL}/rest/v1/questions`,{
+      method:'POST',
+      headers:{...HDR,'Prefer':'return=minimal'},
+      body:JSON.stringify({cat,q,answer:ans,hint,points:pts,active:true,sort_order:(Array.isArray(allQ)?allQ.length:0)+1})
+    });
+    if(!res.ok) throw new Error('저장 실패');
+    // 폼 초기화
+    document.getElementById('new-q').value='';
+    document.getElementById('new-ans').value='';
+    document.getElementById('new-hint').value='';
+    document.getElementById('new-pts').value='200';
+    await loadQuestions();
+    toast('✅ 문제가 추가됐어요!');
+  } catch(e){ alert('추가 실패: '+e.message); }
+  btn.disabled=false; btn.textContent='✅ 문제 추가하기';
+}
+
+/* ── 수정 토글 ── */
+function toggleEdit(id){
+  const el=document.getElementById('edit-'+id);
+  el.classList.toggle('show');
+}
+
+/* ── 수정 저장 ── */
+async function saveEdit(id){
+  const cat=document.getElementById('ec-'+id).value.trim();
+  const q=document.getElementById('eq-'+id).value.trim();
+  const ans=document.getElementById('ea-'+id).value.trim();
+  const hint=document.getElementById('eh-'+id).value.trim();
+  const pts=parseInt(document.getElementById('ep-'+id).value)||200;
+  if(!cat||!q||!ans){ alert('카테고리, 문제, 정답은 필수예요!'); return; }
+  try {
+    const res=await fetch(`${SB_URL}/rest/v1/questions?id=eq.${id}`,{
+      method:'PATCH',
+      headers:{...HDR,'Prefer':'return=minimal'},
+      body:JSON.stringify({cat,q,answer:ans,hint,points:pts})
+    });
+    if(!res.ok) throw new Error('수정 실패');
+    await loadQuestions();
+    toast('✅ 문제가 수정됐어요!');
+  } catch(e){ alert('수정 실패: '+e.message); }
+}
+
+/* ── 활성/비활성 토글 ── */
+async function toggleActive(id, current){
+  try {
+    await fetch(`${SB_URL}/rest/v1/questions?id=eq.${id}`,{
+      method:'PATCH',
+      headers:{...HDR,'Prefer':'return=minimal'},
+      body:JSON.stringify({active:!current})
+    });
+    await loadQuestions();
+    toast(current?'문제를 비활성화했어요':'문제를 활성화했어요');
+  } catch(e){ alert('변경 실패'); }
+}
+
+/* ── 삭제 ── */
+async function deleteQuestion(id){
+  if(!confirm('이 문제를 삭제할까요?\n삭제하면 복구할 수 없어요.')) return;
+  try {
+    await fetch(`${SB_URL}/rest/v1/questions?id=eq.${id}`,{method:'DELETE',headers:HDR});
+    await loadQuestions();
+    toast('🗑️ 문제가 삭제됐어요');
+  } catch(e){ alert('삭제 실패'); }
+}
+
+/* ── 유저 삭제 ── */
+async function deleteUser(phone, name){
+  if(!confirm(`'${name}' 선생님의 모든 기록을 삭제할까요?\n삭제하면 포인트와 랭킹이 모두 사라져요.`)) return;
+  showLoading('삭제 중...');
+  try{
+    await fetch(`${SB_URL}/rest/v1/quiz_results?phone=eq.${encodeURIComponent(phone)}`,{method:'DELETE',headers:HDR});
+    toast('🗑️ 삭제됐어요!');
+    await loadAll();
+  }catch(e){ alert('삭제 실패: '+e.message); }
+  hideLoading();
+}
+
+/* ── 랭킹 리셋 ── */
+async function resetRanking(){
+  const ans=prompt('랭킹을 전체 리셋할까요?\n\n⚠️ 모든 포인트와 기록이 삭제됩니다.\n확인하려면 "리셋" 이라고 입력해주세요.');
+  if(ans!=='리셋') return;
+  showLoading('랭킹 리셋 중...');
+  try{
+    await fetch(`${SB_URL}/rest/v1/quiz_results`,{method:'DELETE',headers:{...HDR,'Prefer':'return=minimal'}});
+    toast('🔃 랭킹이 리셋됐어요!');
+    await loadAll();
+  }catch(e){ alert('리셋 실패: '+e.message); }
+  hideLoading();
+}
+
+/* ── 문제별 정답 통계 ── */
+async function loadQuestionStats(){
+  const el=document.getElementById('q-stats-list');
+  el.innerHTML='<div class="empty">불러오는 중...</div>';
+  try{
+    // 모든 정답 기록 가져오기
+    const res=await fetch(`${SB_URL}/rest/v1/quiz_results?select=question_id,points`,{headers:HDR});
+    const rows=await res.json();
+    if(!Array.isArray(rows)||!allQ.length){ el.innerHTML='<div class="empty">데이터 없음</div>'; return; }
+    // 참여자 수
+    const userRes=await fetch(`${SB_URL}/rest/v1/quiz_results?select=phone`,{headers:HDR});
+    const uRows=await userRes.json();
+    const totalUsers=Array.isArray(uRows)?new Set(uRows.map(r=>r.phone)).size:1;
+    // question_id별 정답 횟수 집계
+    const cntMap={};
+    rows.forEach(r=>{ cntMap[r.question_id]=(cntMap[r.question_id]||0)+1; });
+    // 정답률 = 정답 횟수 / 전체 참여자 수 (근사치)
+    const sorted=[...allQ].sort((a,b)=>(cntMap[b.id]||0)-(cntMap[a.id]||0));
+    el.innerHTML=`<table class="rank-table" style="font-size:12px">
+      <thead><tr><th>#</th><th>문제</th><th>카테고리</th><th>정답 횟수</th><th>정답률(근사)</th></tr></thead>
+      <tbody>${sorted.map((q,i)=>{
+        const cnt=cntMap[q.id]||0;
+        const rate=totalUsers?Math.min(100,Math.round(cnt/totalUsers*100)):0;
+        const bar=`<div style="height:4px;background:#FFE0B2;border-radius:99px;margin-top:3px"><div style="height:100%;width:${rate}%;background:var(--primary);border-radius:99px"></div></div>`;
+        return `<tr>
+          <td style="color:var(--muted);width:28px">${i+1}</td>
+          <td style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${q.q}</td>
+          <td><span class="q-cat-tag" style="background:var(--primary-light);color:var(--primary);border:none">${q.cat}</span></td>
+          <td style="font-weight:800;color:var(--primary);text-align:center">${cnt}회</td>
+          <td style="min-width:80px">${rate}%${bar}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>`;
+  }catch(e){ el.innerHTML='<div class="empty">불러오기 실패: '+e.message+'</div>'; }
+}
+
+/* ── 엑셀 내보내기 ── */
+function exportExcel(){
+  if(!allQ.length){ alert('내보낼 문제가 없어요!'); return; }
+  const BOM = '﻿';
+  const header = '번호,카테고리,문제,정답,힌트,배점,활성여부';
+  const rows = allQ.map((q,i) =>
+    [i+1, q.cat, `"${q.q.replace(/"/g,'""')}"`, `"${q.answer.replace(/"/g,'""')}"`, q.hint||'', q.points, q.active?'활성':'비활성'].join(',')
+  );
+  const csv = BOM + [header, ...rows].join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '상담왕_문제목록_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('📥 엑셀 파일 다운로드됐어요!');
+}
+</script>
+</body>
+</html>

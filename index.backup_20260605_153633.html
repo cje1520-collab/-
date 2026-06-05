@@ -761,27 +761,6 @@ body {
 }
 .quiz-body { padding-bottom: 20px; }
 
-/* ════ 퀴즈 타이머 ════ */
-.quiz-timer {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  margin: 0 12px 8px;
-  padding: 10px 16px;
-  background: var(--card2); border: 1.5px solid var(--border); border-radius: 14px;
-  font-family: 'Jua', sans-serif; font-size: 15px; color: var(--muted);
-}
-.quiz-timer-count {
-  font-size: 24px; font-weight: 900; color: var(--text);
-  min-width: 34px; text-align: center; transition: color 0.3s;
-}
-.quiz-timer-count.danger {
-  color: var(--red);
-  animation: timerPulse 0.5s ease-in-out infinite;
-}
-@keyframes timerPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-}
-
 /* ════ 강화된 퀴즈 UI ════ */
 .quiz-nav {
   background: linear-gradient(135deg,rgba(255,107,53,0.08),rgba(255,217,61,0.07));
@@ -1023,9 +1002,6 @@ body {
       <button class="btn-exit" id="btn-nav-action" onclick="navAction()">💾 나가기</button>
     </div>
     <div class="quiz-progress"><div class="quiz-progress-fill" id="prog"></div></div>
-    <div class="quiz-timer" id="quiz-timer">
-      ⏱ 남은 시간 <span class="quiz-timer-count" id="timer-count">30</span>초
-    </div>
     <div class="char-bar">
       <div class="char-bar-mini" id="q-mini-char"></div>
       <div class="char-bar-info">
@@ -1467,7 +1443,6 @@ var hintUsed=false, answered=false;
 var shuffled=[], allQuestions=[], doneMap={}, totalPts=0, prevRank=null;
 var wrongAnswers=[], reviewIndex=0;
 var dailyLimit=10, todayAttempts=0;
-var quizTimerInterval=null, timeLeft=30;
 
 // 일일 제한 헬퍼
 function getDailyKey(ph){ return 'daily_'+ph+'_'+new Date().toISOString().slice(0,10); }
@@ -1729,8 +1704,6 @@ function renderQ(){
   // 나가기 버튼 리셋
   const nav=document.getElementById('btn-nav-action');
   if(nav){ nav.textContent='💾 나가기'; nav.style.cssText=''; nav.disabled=false; }
-  // 타이머 시작
-  startTimer();
 }
 
 function revealHint(){
@@ -1760,7 +1733,6 @@ async function submitAnswer(){
   const val=inp.value.trim();
   if(!val){inp.focus();return;}
   answered=true;
-  stopTimer();
   document.getElementById('btn-submit').disabled=true; inp.disabled=true;
   // 나가기 버튼 즉시 비활성화 (answered 설정 직후 클릭 방지)
   const navBtn=document.getElementById('btn-nav-action');
@@ -1814,61 +1786,12 @@ async function submitAnswer(){
   if(navBtn) navBtn.disabled=false;
 }
 
-function nextQ(){ stopTimer(); current++; if(current>=shuffled.length) showResult(); else renderQ(); }
+function nextQ(){ current++; if(current>=shuffled.length) showResult(); else renderQ(); }
 
 function navAction(){
   if(confirm('지금까지 맞춘 문제는 자동으로 저장됐어요.\n홈으로 돌아갈까요?')) showDashboard();
 }
 function exitQuiz(){ navAction(); }
-
-/* ═══ 퀴즈 제한시간 타이머 ═══ */
-function startTimer(){
-  timeLeft=30;
-  const countEl=document.getElementById('timer-count');
-  if(countEl){ countEl.textContent=30; countEl.classList.remove('danger'); }
-  clearInterval(quizTimerInterval);
-  quizTimerInterval=setInterval(()=>{
-    timeLeft--;
-    if(countEl){ countEl.textContent=timeLeft; }
-    if(timeLeft<=10 && countEl) countEl.classList.add('danger');
-    if(timeLeft<=0){ clearInterval(quizTimerInterval); timeoutAnswer(); }
-  },1000);
-}
-
-function stopTimer(){
-  clearInterval(quizTimerInterval);
-  quizTimerInterval=null;
-  const countEl=document.getElementById('timer-count');
-  if(countEl) countEl.classList.remove('danger');
-}
-
-function timeoutAnswer(){
-  if(answered) return;
-  answered=true;
-  const q=shuffled[current];
-  const inp=document.getElementById('ans-input');
-  inp.disabled=true;
-  document.getElementById('btn-submit').disabled=true;
-  const navBtn=document.getElementById('btn-nav-action');
-  if(navBtn) navBtn.disabled=true;
-  streak=0;
-  document.getElementById('streak-tag').style.display='none';
-  inp.className='ans-input ng';
-  const fb=document.getElementById('feedback');
-  fb.className='feedback ng show';
-  fb.innerHTML=`⏰ 시간 초과! 정답은 '<strong>${q.answer}</strong>'이에요.`;
-  const mot=document.getElementById('motivate');
-  mot.textContent=rand(MOT_NG); mot.className='motivate show';
-  updateQuizChar('sad');
-  wrongAnswers.push(q);
-  incTodayAttempts(userPhone);
-  setTimeout(()=>updateQuizChar('normal'),800);
-  const isLast=current===shuffled.length-1;
-  const nb=document.getElementById('btn-next');
-  nb.textContent=isLast?'결과 보기 🎯':'다음 문제 →';
-  nb.classList.add('show');
-  if(navBtn) navBtn.disabled=false;
-}
 
 /* ═══════════════════════════════
    결과

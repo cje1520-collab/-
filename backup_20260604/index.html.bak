@@ -222,164 +222,6 @@ body {
 .next-level-txt { font-size: 12px; color: var(--muted); font-weight: 700; text-align: center; margin-bottom: 16px; }
 .next-level-txt strong { color: var(--primary); }
 
-/* 메뉴 그리드 */
-.menu-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin: 0 12px 12px;
-}
-.menu-card {
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: 18px;
-  padding: 18px 12px;
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 2px 10px rgba(255,107,53,0.08);
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-.menu-card:active { transform: scale(0.96); }
-.menu-card.c-quiz     { background: linear-gradient(135deg,#FFF3E0,#FFDDB8); border-color: var(--primary); }
-.menu-card.c-roulette { background: linear-gradient(135deg,#F0FDF9,#C6F7EE); border-color: var(--green); }
-.menu-card.c-rank     { background: linear-gradient(135deg,#FFFBEB,#FFF3CC); border-color: var(--gold); }
-.menu-card.c-growth   { background: linear-gradient(135deg,#F5F3FF,#E9D5FF); border-color: #A78BFA; }
-.menu-icon  { font-size: 30px; margin-bottom: 6px; }
-.menu-label { font-family: 'Jua', sans-serif; font-size: 15px; color: var(--text); margin-bottom: 3px; }
-.menu-desc  { font-size: 11px; color: var(--muted); }
-
-/* 랭킹 모달 */
-.rank-modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.45); z-index: 500;
-  align-items: flex-end; justify-content: center;
-}
-.rank-modal-overlay.show { display: flex; }
-.rank-modal-sheet {
-  width: 100%; max-width: 480px;
-  background: white; border-radius: 28px 28px 0 0;
-  padding: 0 0 36px; max-height: 85vh; overflow-y: auto;
-  animation: slideUp 0.3s cubic-bezier(.22,.68,0,1.2);
-}
-@keyframes slideUp {
-  from { transform: translateY(100%); opacity:0; }
-  to   { transform: translateY(0);    opacity:1; }
-}
-.rank-modal-handle { width:40px; height:4px; background:#E0D0BC; border-radius:99px; margin:12px auto 14px; }
-.rank-modal-header {
-  padding: 0 20px 14px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1.5px solid var(--border);
-}
-.rank-modal-title { font-family:'Jua',sans-serif; font-size:20px; color:var(--text); }
-.rank-modal-close {
-  width:32px; height:32px; border-radius:50%;
-  background:var(--card2); border:1.5px solid var(--border);
-  font-size:16px; cursor:pointer;
-  display:flex; align-items:center; justify-content:center; color:var(--muted);
-}
-.rank-my-box {
-  margin: 14px 16px 10px;
-  background: linear-gradient(135deg,#FFF3E0,#FFDDB8);
-  border: 2px solid var(--primary); border-radius: 16px;
-  padding: 16px; text-align: center;
-}
-.rank-my-label { font-size:11px; color:var(--muted); font-weight:800; letter-spacing:1px; margin-bottom:4px; }
-.rank-my-num   { font-family:'Jua',sans-serif; font-size:32px; color:var(--primary); margin-bottom:2px; }
-.rank-my-pts   { font-size:13px; color:var(--muted); font-weight:700; }
-.rank-top-title { font-size:12px; font-weight:800; color:var(--muted); letter-spacing:1px; padding:0 16px; margin-bottom:8px; }
-.rank-row {
-  display:flex; align-items:center; gap:12px;
-  padding:11px 14px; border-radius:14px; margin:0 12px 6px;
-  background:var(--card2); border:1.5px solid var(--border);
-}
-.rank-row.top1 { background:linear-gradient(135deg,#FFFBEB,#FFF3CC); border-color:var(--gold); }
-.rank-row.me   { background:rgba(255,107,53,0.06); border-color:var(--primary); }
-.rank-num  { font-family:'Jua',sans-serif; font-size:17px; width:24px; text-align:center; color:var(--muted); }
-.rank-emoji { font-size:21px; }
-.rank-info { flex:1; }
-.rank-info-name { font-family:'Jua',sans-serif; font-size:14px; color:var(--text); }
-.rank-info-pts  { font-size:11px; color:var(--muted); font-weight:700; }
-.rank-badge { font-size:18px; }
-
-/* 룰렛 화면 */
-.roulette-nav {
-  background: linear-gradient(135deg,rgba(6,214,160,0.08),rgba(255,107,53,0.06));
-  border-radius: 0 0 24px 24px;
-  padding: 14px 14px 12px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.roulette-back {
-  background: var(--card2); border: 1.5px solid var(--border);
-  border-radius: 10px; padding: 8px 14px;
-  font-family: 'Jua', sans-serif; font-size: 13px; color: var(--text);
-  cursor: pointer;
-}
-.roulette-head-title { font-family:'Jua',sans-serif; font-size:18px; color:var(--text); }
-.roulette-cat-wrap { padding: 12px 12px 4px; display:flex; gap:8px; overflow-x:auto; }
-.roulette-cat-wrap::-webkit-scrollbar { display:none; }
-.roulette-cat-btn {
-  flex-shrink:0; padding:8px 18px; border-radius:99px;
-  font-family:'Jua',sans-serif; font-size:13px;
-  border:1.5px solid var(--border); background:var(--card2); color:var(--muted);
-  cursor:pointer; transition:all 0.2s;
-}
-.roulette-cat-btn.active { background:var(--green); color:white; border-color:var(--green); }
-.drum-outer {
-  margin:12px; background:white; border:2px solid var(--green);
-  border-radius:24px; overflow:hidden;
-  box-shadow:0 6px 24px rgba(6,214,160,0.2);
-  position:relative;
-}
-.drum-fade-top, .drum-fade-bot {
-  position:absolute; left:0; right:0; height:56px; z-index:2; pointer-events:none;
-}
-.drum-fade-top { top:0;    background:linear-gradient(to bottom,rgba(255,255,255,1),rgba(255,255,255,0)); }
-.drum-fade-bot { bottom:0; background:linear-gradient(to top,rgba(255,255,255,1),rgba(255,255,255,0)); }
-.drum-center-hl {
-  position:absolute; left:12px; right:12px; top:50%; transform:translateY(-50%);
-  height:58px; background:linear-gradient(135deg,rgba(6,214,160,0.1),rgba(255,107,53,0.06));
-  border:2px solid rgba(6,214,160,0.35); border-radius:14px; z-index:1; pointer-events:none;
-}
-.drum-items { padding:56px 0; }
-.drum-row {
-  height:58px; display:flex; align-items:center; justify-content:center;
-  font-family:'Jua',sans-serif; font-size:19px; color:#C9B99A; transition:all 0.1s;
-}
-.drum-row.active { font-size:24px; color:var(--green); font-weight:900; }
-.drum-stop-btn {
-  display:block; width:calc(100% - 24px); margin:0 12px 10px;
-  padding:20px; background:linear-gradient(135deg,#06D6A0,#0BB490);
-  color:white; border:none; border-radius:var(--radius);
-  font-family:'Jua',sans-serif; font-size:22px; letter-spacing:3px;
-  cursor:pointer; box-shadow:0 6px 24px rgba(6,214,160,0.5);
-  animation:drumPulse 1.2s ease-in-out infinite;
-}
-.drum-stop-btn.stopped {
-  background:linear-gradient(135deg,#FF6B35,#FF9F1C);
-  animation:none;
-  box-shadow:0 6px 24px rgba(255,107,53,0.5);
-}
-@keyframes drumPulse {
-  0%,100% { transform:scale(1); }
-  50% { transform:scale(1.025); box-shadow:0 8px 32px rgba(6,214,160,0.7); }
-}
-.drum-result-card {
-  display:none; margin:0 12px 10px;
-  background:linear-gradient(135deg,#F0FDF9,#C6F7EE);
-  border:2px solid var(--green); border-radius:20px;
-  padding:20px; text-align:center;
-}
-.drum-result-card.show { display:block; animation:popIn 0.4s ease; }
-.drum-result-label { font-size:12px; color:var(--muted); font-weight:800; letter-spacing:1px; margin-bottom:8px; }
-.drum-result-topic { font-family:'Jua',sans-serif; font-size:28px; color:var(--green); margin-bottom:6px; }
-.drum-retry-btn {
-  display:inline-block; padding:10px 24px;
-  background:white; color:var(--green);
-  border:2px solid var(--green); border-radius:99px;
-  font-family:'Jua',sans-serif; font-size:14px; cursor:pointer;
-}
-
 /* 공지사항 */
 .notice-banner {
   margin: 0 12px 10px;
@@ -750,37 +592,26 @@ body {
 }
 @keyframes spin { to{transform:rotate(360deg)} }
 
-/* ════ btn-next 문제 아래 중앙 인라인 ════ */
+/* ════ btn-next 항상 화면 하단 고정 ════ */
 .btn-next.show {
-  display: block;
-  animation: popIn 0.35s cubic-bezier(.22,.68,0,1.2);
-  font-size: 18px !important;
-  padding: 18px !important;
-  border-radius: var(--radius) !important;
-  margin-top: 16px !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  max-width: 480px !important;
+  width: 100% !important;
+  z-index: 6000 !important;
+  border-radius: 20px 20px 0 0 !important;
+  margin: 0 !important;
+  padding: 22px !important;
+  animation: slideUpBtn 0.3s ease forwards !important;
 }
-.quiz-body { padding-bottom: 20px; }
-
-/* ════ 퀴즈 타이머 ════ */
-.quiz-timer {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  margin: 0 12px 8px;
-  padding: 10px 16px;
-  background: var(--card2); border: 1.5px solid var(--border); border-radius: 14px;
-  font-family: 'Jua', sans-serif; font-size: 15px; color: var(--muted);
+@keyframes slideUpBtn {
+  from { transform: translateX(-50%) translateY(100%); opacity:0; }
+  to   { transform: translateX(-50%) translateY(0);   opacity:1; }
 }
-.quiz-timer-count {
-  font-size: 24px; font-weight: 900; color: var(--text);
-  min-width: 34px; text-align: center; transition: color 0.3s;
-}
-.quiz-timer-count.danger {
-  color: var(--red);
-  animation: timerPulse 0.5s ease-in-out infinite;
-}
-@keyframes timerPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-}
+/* btn-next가 떠있을 때 아래 여백 확보 */
+.quiz-body { padding-bottom: 80px; }
 
 /* ════ 강화된 퀴즈 UI ════ */
 .quiz-nav {
@@ -938,29 +769,15 @@ body {
       <strong id="notice-text"></strong>
       <span id="notice-sub"></span>
     </div>
-    <div class="menu-grid">
-      <div class="menu-card c-quiz" onclick="startQuiz()">
-        <div class="menu-icon">📚</div>
-        <div class="menu-label" id="menu-quiz-label">상담 퀴즈</div>
-        <div class="menu-desc"  id="menu-quiz-desc">50문항 도전!</div>
-      </div>
-      <div class="menu-card c-roulette" onclick="showRoulette()">
-        <div class="menu-icon">🎰</div>
-        <div class="menu-label" id="menu-roulette-label">롤플레잉 룰렛</div>
-        <div class="menu-desc"  id="menu-roulette-desc">거절극복 연습</div>
-      </div>
-      <div class="menu-card c-rank" onclick="showRankModal()">
-        <div class="menu-icon">🏆</div>
-        <div class="menu-label" id="menu-rank-label">랭킹</div>
-        <div class="menu-desc"  id="menu-rank-desc">월간 TOP 5</div>
-      </div>
-      <div class="menu-card c-growth" onclick="showGrowth()">
-        <div class="menu-icon">🌱</div>
-        <div class="menu-label" id="menu-growth-label">내 성장 보기</div>
-        <div class="menu-desc"  id="menu-growth-desc">직급 여정 확인</div>
+    <button class="btn-main" onclick="startQuiz()">🎯 퀴즈 시작하기</button>
+    <button class="btn-sub" onclick="showGrowth()">🌱 내 성장 보기</button>
+    <button class="btn-ghost" id="btn-dash-review" onclick="startReviewFromDash()" style="display:none">📖 오답노트 보기</button>
+    <div class="section-card">
+      <div class="top5-card">
+        <div class="top5-title">🏆 이번 달 TOP 5 <span style="font-size:11px;color:var(--muted);font-weight:700">매월 자동 리셋</span></div>
+        <div id="d-top5"><div style="text-align:center;color:var(--muted);font-size:13px;padding:8px">불러오는 중...</div></div>
       </div>
     </div>
-    <button class="btn-ghost" id="btn-dash-review" onclick="startReviewFromDash()" style="display:none">📖 오답노트 (틀린 문제)</button>
     <button class="btn-ghost" onclick="showScreen('s-login')">🔄 다른 계정으로</button>
   </div>
 
@@ -986,34 +803,19 @@ body {
       <div class="journey-progress"><div class="journey-progress-fill" id="g-overall-bar" style="width:0%"></div></div>
     </div>
     <div class="journey-wrap" id="g-journey"></div>
-    <button class="btn-main" onclick="showDashboard()">🏠 홈으로</button>
+    <button class="btn-main" onclick="showScreen('s-dashboard')">← 대시보드로</button>
   </div>
 
-  <!-- ══ 롤플레잉 룰렛 ══ -->
-  <div class="screen" id="s-roulette">
-    <div class="roulette-nav">
-      <button class="roulette-back" onclick="showDashboard()">← 홈으로</button>
-      <div class="roulette-head-title">🎰 롤플레잉 룰렛</div>
-      <div style="width:70px"></div>
-    </div>
-    <div class="roulette-cat-wrap" id="roulette-cats"></div>
-    <div class="drum-outer">
-      <div class="drum-fade-top"></div>
-      <div class="drum-center-hl"></div>
-      <div class="drum-fade-bot"></div>
-      <div class="drum-items" id="drum-items"></div>
-    </div>
-    <div class="drum-result-card" id="drum-result">
-      <div class="drum-result-label">TODAY'S TOPIC</div>
-      <div class="drum-result-topic" id="drum-result-topic"></div>
-      <button class="drum-retry-btn" onclick="restartDrum()">🔄 다시 돌리기</button>
-    </div>
-    <button class="drum-stop-btn" id="drum-stop-btn" onclick="toggleDrum()">■ STOP</button>
-    <div class="section-card" style="text-align:center;font-size:13px;color:var(--muted);margin-top:4px">
-      💡 STOP을 누르면 주제가 선택돼요!
-    </div>
-  </div>
-
+  <!-- ══ 다음문제 플로팅 버튼 (정답 후 화면 하단 고정) ══ -->
+  <button id="floating-next" onclick="navAction()" style="
+    display:none; position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:480px; padding:22px 20px;
+    background:linear-gradient(135deg,#FF6B35,#FF9F1C);
+    color:white; border:none; border-radius:24px 24px 0 0;
+    font-family:'Jua',sans-serif; font-size:20px; letter-spacing:1px;
+    cursor:pointer; z-index:9000;
+    box-shadow:0 -4px 24px rgba(255,107,53,0.4);
+  ">다음 문제 →</button>
 
   <!-- ══ 퀴즈 ══ -->
   <div class="screen" id="s-quiz">
@@ -1023,9 +825,6 @@ body {
       <button class="btn-exit" id="btn-nav-action" onclick="navAction()">💾 나가기</button>
     </div>
     <div class="quiz-progress"><div class="quiz-progress-fill" id="prog"></div></div>
-    <div class="quiz-timer" id="quiz-timer">
-      ⏱ 남은 시간 <span class="quiz-timer-count" id="timer-count">30</span>초
-    </div>
     <div class="char-bar">
       <div class="char-bar-mini" id="q-mini-char"></div>
       <div class="char-bar-info">
@@ -1084,7 +883,7 @@ body {
     </div>
     <button class="btn-main" id="btn-review" onclick="startReview()" style="display:none">📖 틀린 문제 복습하기</button>
     <button class="btn-sub" onclick="shareResult()">📤 결과 공유하기</button>
-    <button class="btn-main" onclick="showDashboard()">🏠 홈으로</button>
+    <button class="btn-main" onclick="showDashboard()">🏠 대시보드로</button>
     <button class="btn-ghost" onclick="retryGame()">🔄 다시 도전하기</button>
   </div>
 
@@ -1118,24 +917,6 @@ body {
   <span id="loading-msg">불러오는 중...</span>
 </div>
 <div class="share-toast" id="share-toast">📋 클립보드에 복사됐어요!</div>
-
-<!-- ══ 랭킹 모달 ══ -->
-<div class="rank-modal-overlay" id="rank-modal" onclick="if(event.target===this)closeRankModal()">
-  <div class="rank-modal-sheet">
-    <div class="rank-modal-handle"></div>
-    <div class="rank-modal-header">
-      <div class="rank-modal-title">🏆 이달의 랭킹</div>
-      <div class="rank-modal-close" onclick="closeRankModal()">✕</div>
-    </div>
-    <div class="rank-my-box">
-      <div class="rank-my-label">나의 순위</div>
-      <div class="rank-my-num" id="rm-my-rank">—</div>
-      <div class="rank-my-pts" id="rm-my-info"></div>
-    </div>
-    <div class="rank-top-title">🥇 이달의 TOP 5</div>
-    <div id="rm-list"><div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">불러오는 중...</div></div>
-  </div>
-</div>
 <div class="confetti-wrap" id="confetti"></div>
 <button id="bgm-btn" onclick="BGM.toggle()" title="배경음악 켜기/끄기" style="
   position:fixed;bottom:20px;right:16px;z-index:8000;
@@ -1154,15 +935,11 @@ var GT = {
   intro_badge:'✦ 엘리하이 상담왕 퀴즈',
   intro_title:'안녕하세요!\n선생님',
   intro_sub:'상담 퀴즈를 풀며\n상담력도 기르고 포인트도 모아요!',
-  manager_title:'매니저',
+  manager_title:'선생님',
   feat_1_icon:'📚', feat_1_title:'퀴즈로 상담 지식 UP',         feat_1_desc:'가격·상품·앱·문제집 50문항 도전!',
   feat_2_icon:'💰', feat_2_title:'정답 맞추면 포인트 적립',      feat_2_desc:'알수록 상담이 달라지고, 계약률이 올라가요',
   feat_3_icon:'👑', feat_3_title:'캐릭터가 함께 성장해요',        feat_3_desc:'신입 → 열공 → 여유 → 베테랑 → 전설의 상담왕',
   feat_4_icon:'🎁', feat_4_title:'10,000pts 달성 시 상품권 지급!',feat_4_desc:'누적 포인트 기준, 전화번호로 기록 저장',
-  menu_quiz_label:'상담 퀴즈',       menu_quiz_desc:'50문항 도전!',
-  menu_roulette_label:'롤플레잉 룰렛', menu_roulette_desc:'거절극복 연습',
-  menu_rank_label:'랭킹',           menu_rank_desc:'월간 TOP 5',
-  menu_growth_label:'내 성장 보기',  menu_growth_desc:'직급 여정 확인',
   rank_0_emoji:'😰', rank_0_title:'신입 상담사',   rank_0_msg:'첫 발걸음! 제품 공부 열심히 해봐요!',
   rank_1_emoji:'📚', rank_1_title:'열공 상담사',   rank_1_msg:'공부하는 모습이 빛나요! 계속 달려봐요!',
   rank_2_emoji:'☕', rank_2_title:'여유 상담사',   rank_2_msg:'학부모 마음을 읽기 시작했어요!',
@@ -1213,14 +990,6 @@ function applyTexts(){
     const tt=document.getElementById(`feat-${i}-title`); if(tt) tt.textContent=GT[`feat_${i}_title`];
     const dc=document.getElementById(`feat-${i}-desc`); if(dc) dc.textContent=GT[`feat_${i}_desc`];
   }
-  // 메뉴 카드 텍스트
-  const menuMap = {
-    'menu-quiz-label':GT.menu_quiz_label, 'menu-quiz-desc':GT.menu_quiz_desc,
-    'menu-roulette-label':GT.menu_roulette_label, 'menu-roulette-desc':GT.menu_roulette_desc,
-    'menu-rank-label':GT.menu_rank_label, 'menu-rank-desc':GT.menu_rank_desc,
-    'menu-growth-label':GT.menu_growth_label, 'menu-growth-desc':GT.menu_growth_desc,
-  };
-  Object.entries(menuMap).forEach(([id,val])=>{ const el=document.getElementById(id); if(el&&val) el.textContent=val; });
   // 직급 업데이트
   for(let i=0;i<5;i++){
     RANKS[i].emoji=GT[`rank_${i}_emoji`];
@@ -1403,7 +1172,6 @@ async function sbAllRanking(){
 }
 async function sbNotice(){ try{ const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.notice&select=value,updated_at`,{headers:HDR}); const d=await r.json(); return Array.isArray(d)&&d[0]?d[0]:null; }catch(e){ return null; } }
 async function sbGameConfig(){ try{ const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.game_config&select=value`,{headers:HDR}); const d=await r.json(); return Array.isArray(d)&&d[0]?JSON.parse(d[0].value):{}; }catch(e){ return {}; } }
-async function sbRouletteConfig(){ try{ const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.roulette_config&select=value`,{headers:HDR}); const d=await r.json(); return Array.isArray(d)&&d[0]?JSON.parse(d[0].value):null; }catch(e){ return null; } }
 
 /* ═══════════════════════════════
    직급 시스템
@@ -1467,7 +1235,6 @@ var hintUsed=false, answered=false;
 var shuffled=[], allQuestions=[], doneMap={}, totalPts=0, prevRank=null;
 var wrongAnswers=[], reviewIndex=0;
 var dailyLimit=10, todayAttempts=0;
-var quizTimerInterval=null, timeLeft=30;
 
 // 일일 제한 헬퍼
 function getDailyKey(ph){ return 'daily_'+ph+'_'+new Date().toISOString().slice(0,10); }
@@ -1726,11 +1493,12 @@ function renderQ(){
   nb.textContent=current===tot-1?'결과 보기 🎯':'다음 문제 →';
   updateQuizChar('normal');
   setTimeout(()=>inp.focus(),150);
+  // 플로팅 버튼 숨기기
+  const fb2=document.getElementById('floating-next');
+  if(fb2) fb2.style.display='none';
   // 나가기 버튼 리셋
   const nav=document.getElementById('btn-nav-action');
-  if(nav){ nav.textContent='💾 나가기'; nav.style.cssText=''; nav.disabled=false; }
-  // 타이머 시작
-  startTimer();
+  if(nav){ nav.textContent='💾 나가기'; nav.style.cssText=''; }
 }
 
 function revealHint(){
@@ -1760,11 +1528,7 @@ async function submitAnswer(){
   const val=inp.value.trim();
   if(!val){inp.focus();return;}
   answered=true;
-  stopTimer();
   document.getElementById('btn-submit').disabled=true; inp.disabled=true;
-  // 나가기 버튼 즉시 비활성화 (answered 설정 직후 클릭 방지)
-  const navBtn=document.getElementById('btn-nav-action');
-  if(navBtn) navBtn.disabled=true;
   const isOk=norm(val)===norm(q.answer);
   const pts=calcPts(q); // 회차별 포인트
   const fbOk=q.fb_ok||`✅ 정답! 정답은 '${q.answer}'입니다.`;
@@ -1805,70 +1569,29 @@ async function submitAnswer(){
     wrongAnswers.push(q);
   }
   setTimeout(()=>updateQuizChar('normal'),800);
-  // 다음 문제 버튼 표시 (문제 아래 중앙 인라인)
+  document.getElementById('btn-next').classList.add('show');
+  // 플로팅 버튼 표시 (화면 하단 고정, 항상 보임)
   const isLast=current===shuffled.length-1;
-  const nb=document.getElementById('btn-next');
-  nb.textContent=isLast?'결과 보기 🎯':'다음 문제 →';
-  nb.classList.add('show');
-  // 나가기 버튼 다시 활성화
-  if(navBtn) navBtn.disabled=false;
+  const fb2=document.getElementById('floating-next');
+  if(fb2){
+    fb2.textContent=isLast?'결과 보기 🎯':'다음 문제 →';
+    fb2.style.display='block';
+  }
+  // 상단 nav 버튼도 변경
+  const nav=document.getElementById('btn-nav-action');
+  if(nav){
+    nav.textContent=isLast?'결과 🎯':'다음 →';
+    nav.style.cssText='background:linear-gradient(135deg,#FF6B35,#FF9F1C);color:white;border:none;font-size:12px;font-weight:900;padding:7px 12px;border-radius:99px;cursor:pointer;';
+  }
 }
 
-function nextQ(){ stopTimer(); current++; if(current>=shuffled.length) showResult(); else renderQ(); }
+function nextQ(){ current++; if(current>=shuffled.length) showResult(); else renderQ(); }
 
 function navAction(){
-  if(confirm('지금까지 맞춘 문제는 자동으로 저장됐어요.\n홈으로 돌아갈까요?')) showDashboard();
+  if(answered){ nextQ(); }
+  else { if(confirm('지금까지 맞춘 문제는 자동으로 저장됐어요.\n대시보드로 돌아갈까요?')) showDashboard(); }
 }
 function exitQuiz(){ navAction(); }
-
-/* ═══ 퀴즈 제한시간 타이머 ═══ */
-function startTimer(){
-  timeLeft=30;
-  const countEl=document.getElementById('timer-count');
-  if(countEl){ countEl.textContent=30; countEl.classList.remove('danger'); }
-  clearInterval(quizTimerInterval);
-  quizTimerInterval=setInterval(()=>{
-    timeLeft--;
-    if(countEl){ countEl.textContent=timeLeft; }
-    if(timeLeft<=10 && countEl) countEl.classList.add('danger');
-    if(timeLeft<=0){ clearInterval(quizTimerInterval); timeoutAnswer(); }
-  },1000);
-}
-
-function stopTimer(){
-  clearInterval(quizTimerInterval);
-  quizTimerInterval=null;
-  const countEl=document.getElementById('timer-count');
-  if(countEl) countEl.classList.remove('danger');
-}
-
-function timeoutAnswer(){
-  if(answered) return;
-  answered=true;
-  const q=shuffled[current];
-  const inp=document.getElementById('ans-input');
-  inp.disabled=true;
-  document.getElementById('btn-submit').disabled=true;
-  const navBtn=document.getElementById('btn-nav-action');
-  if(navBtn) navBtn.disabled=true;
-  streak=0;
-  document.getElementById('streak-tag').style.display='none';
-  inp.className='ans-input ng';
-  const fb=document.getElementById('feedback');
-  fb.className='feedback ng show';
-  fb.innerHTML=`⏰ 시간 초과! 정답은 '<strong>${q.answer}</strong>'이에요.`;
-  const mot=document.getElementById('motivate');
-  mot.textContent=rand(MOT_NG); mot.className='motivate show';
-  updateQuizChar('sad');
-  wrongAnswers.push(q);
-  incTodayAttempts(userPhone);
-  setTimeout(()=>updateQuizChar('normal'),800);
-  const isLast=current===shuffled.length-1;
-  const nb=document.getElementById('btn-next');
-  nb.textContent=isLast?'결과 보기 🎯':'다음 문제 →';
-  nb.classList.add('show');
-  if(navBtn) navBtn.disabled=false;
-}
 
 /* ═══════════════════════════════
    결과
@@ -1943,115 +1666,6 @@ function retryGame(){
 }
 
 /* ═══════════════════════════════
-   롤플레잉 룰렛
-═══════════════════════════════ */
-var rouletteData = [{ name:'거절극복', items:['🤚 탭싫어요','⏰ 바빠요','📚 애가 공부 안해요','🏫 학원 다녀요','🕐 시간 없어요'] }];
-var rouletteCatIdx = 0, drumIdx = 0, drumTimer = null, drumSpinning = false;
-
-async function showRoulette(){
-  showLoading('룰렛 불러오는 중...');
-  const cfg = await sbRouletteConfig();
-  if(cfg && Array.isArray(cfg.categories) && cfg.categories.length) rouletteData = cfg.categories;
-  hideLoading();
-  rouletteCatIdx = 0; drumIdx = 0; drumSpinning = false;
-  renderRouletteCats();
-  renderDrumItems();
-  const btn = document.getElementById('drum-stop-btn');
-  btn.textContent = '■ STOP'; btn.className = 'drum-stop-btn';
-  document.getElementById('drum-result').classList.remove('show');
-  showScreen('s-roulette');
-}
-
-function renderRouletteCats(){
-  const wrap = document.getElementById('roulette-cats');
-  wrap.innerHTML = rouletteData.map((c,i)=>
-    `<button class="roulette-cat-btn${i===rouletteCatIdx?' active':''}" onclick="selectRouletteCat(${i})">${c.name}</button>`
-  ).join('');
-}
-
-function selectRouletteCat(i){
-  rouletteCatIdx = i; drumIdx = 0;
-  if(drumSpinning){ clearInterval(drumTimer); drumSpinning = false; }
-  renderRouletteCats();
-  renderDrumItems();
-  document.getElementById('drum-result').classList.remove('show');
-  const btn = document.getElementById('drum-stop-btn');
-  btn.textContent = '■ STOP'; btn.className = 'drum-stop-btn';
-}
-
-function renderDrumItems(){
-  const items = rouletteData[rouletteCatIdx]?.items || [];
-  const n = items.length;
-  const wrap = document.getElementById('drum-items');
-  wrap.innerHTML = '';
-  for(let i = -2; i <= 2; i++){
-    const item = items[(drumIdx + i + n) % n];
-    const div = document.createElement('div');
-    div.className = 'drum-row' + (i === 0 ? ' active' : '');
-    div.textContent = item;
-    wrap.appendChild(div);
-  }
-}
-
-function toggleDrum(){
-  const btn = document.getElementById('drum-stop-btn');
-  if(!drumSpinning){
-    drumSpinning = true;
-    btn.textContent = '■ STOP'; btn.className = 'drum-stop-btn';
-    document.getElementById('drum-result').classList.remove('show');
-    const items = rouletteData[rouletteCatIdx]?.items || [];
-    drumTimer = setInterval(()=>{ drumIdx=(drumIdx+1)%items.length; renderDrumItems(); }, 100);
-  } else {
-    clearInterval(drumTimer); drumSpinning = false;
-    const items = rouletteData[rouletteCatIdx]?.items || [];
-    const selected = items[drumIdx];
-    document.getElementById('drum-result-topic').textContent = selected;
-    document.getElementById('drum-result').classList.add('show');
-    btn.textContent = '🔄 다시 돌리기'; btn.className = 'drum-stop-btn stopped';
-  }
-}
-
-function restartDrum(){
-  const btn = document.getElementById('drum-stop-btn');
-  btn.textContent = '■ STOP'; btn.className = 'drum-stop-btn';
-  document.getElementById('drum-result').classList.remove('show');
-  drumSpinning = false;
-}
-
-/* ═══════════════════════════════
-   랭킹 모달
-═══════════════════════════════ */
-async function showRankModal(){
-  document.getElementById('rank-modal').classList.add('show');
-  const list = document.getElementById('rm-list');
-  list.innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">불러오는 중...</div>';
-  try{
-    const data = await sbMonthlyRanking();
-    const MEDALS = ['🥇','🥈','🥉'];
-    let myRank = '—';
-    list.innerHTML = data.slice(0,5).map((r,i)=>{
-      const isMe = r.phone===userPhone;
-      if(isMe) myRank = `${i+1}위`;
-      const rank = getRank(r.pts);
-      return `<div class="rank-row${i===0?' top1':''}${isMe?' me':''}">
-        <div class="rank-num">${i+1}</div>
-        <div class="rank-emoji">${rank.emoji}</div>
-        <div class="rank-info">
-          <div class="rank-info-name">${r.name} ${GT.manager_title||'매니저'}</div>
-          <div class="rank-info-pts">${r.pts.toLocaleString()} pts</div>
-        </div>
-        <div class="rank-badge">${MEDALS[i]||''}</div>
-      </div>`;
-    }).join('');
-    document.getElementById('rm-my-rank').textContent = myRank;
-    document.getElementById('rm-my-info').textContent = `${userName} ${GT.manager_title||'매니저'} · ${totalPts.toLocaleString()} pts`;
-  }catch(e){
-    list.innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px">랭킹을 불러올 수 없어요</div>';
-  }
-}
-function closeRankModal(){ document.getElementById('rank-modal').classList.remove('show'); }
-
-/* ═══════════════════════════════
    오답 복습
 ═══════════════════════════════ */
 function startReview(){
@@ -2071,7 +1685,7 @@ function renderReview(){
   document.getElementById('rv-hint').textContent=q.hint?`힌트: ${q.hint}`:'';
   document.getElementById('rv-fb').textContent=q.fb_ng||`정답은 '${q.answer}'이에요. 다음 번엔 꼭 기억해요! 💪`;
   const btn=document.getElementById('btn-rv-next');
-  btn.textContent=reviewIndex===wrongAnswers.length-1?'✓ 복습 완료! 홈으로':'✓ 확인했어요! 다음';
+  btn.textContent=reviewIndex===wrongAnswers.length-1?'✓ 복습 완료! 대시보드로':'✓ 확인했어요! 다음';
 }
 
 function nextReview(){ reviewIndex++; renderReview(); }
