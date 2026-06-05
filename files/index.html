@@ -530,6 +530,8 @@ body {
 .cat-문제집  { background: rgba(155,93,229,0.12); color: #9B5DE5; border: 1px solid rgba(155,93,229,0.35); }
 .cat-학습앱  { background: rgba(255,107,53,0.12); color: var(--primary); border: 1px solid rgba(255,107,53,0.3); }
 .cat-상품    { background: rgba(244,160,23,0.12); color: var(--gold); border: 1px solid rgba(244,160,23,0.35); }
+.cat-중등    { background: rgba(17,138,178,0.12); color: #118AB2; border: 1px solid rgba(17,138,178,0.35); }
+.cat-키즈    { background: rgba(239,71,111,0.12); color: #EF476F; border: 1px solid rgba(239,71,111,0.35); }
 .q-text { font-size: 17px; font-weight: 800; color: var(--text); line-height: 1.7; margin-bottom: 16px; }
 .hint-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
 .hint-lbl { font-size: 11px; font-weight: 800; color: var(--muted); flex-shrink: 0; }
@@ -1947,6 +1949,7 @@ function retryGame(){
 ═══════════════════════════════ */
 var rouletteData = [{ name:'거절극복', items:['🤚 탭싫어요','⏰ 바빠요','📚 애가 공부 안해요','🏫 학원 다녀요','🕐 시간 없어요'] }];
 var rouletteCatIdx = 0, drumIdx = 0, drumTimer = null, drumSpinning = false;
+var ROULETTE_COLORS = ['#FF6B35','#06D6A0','#118AB2','#FFD166','#EF476F','#7B2FBE'];
 
 async function showRoulette(){
   showLoading('룰렛 불러오는 중...');
@@ -1983,11 +1986,13 @@ function renderDrumItems(){
   const items = rouletteData[rouletteCatIdx]?.items || [];
   const n = items.length;
   const wrap = document.getElementById('drum-items');
+  const catColor = ROULETTE_COLORS[rouletteCatIdx % ROULETTE_COLORS.length];
   wrap.innerHTML = '';
   for(let i = -2; i <= 2; i++){
     const item = items[(drumIdx + i + n) % n];
     const div = document.createElement('div');
     div.className = 'drum-row' + (i === 0 ? ' active' : '');
+    if(i === 0) div.style.color = catColor;
     div.textContent = item;
     wrap.appendChild(div);
   }
