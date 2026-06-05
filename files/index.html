@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -39,6 +39,7 @@ body {
   display: flex;
   justify-content: center;
   padding: 0;
+  padding-bottom: env(safe-area-inset-bottom);
   background-image:
     radial-gradient(circle at 15% 15%, rgba(255,217,61,0.15) 0%, transparent 40%),
     radial-gradient(circle at 85% 85%, rgba(255,107,53,0.1) 0%, transparent 40%);
@@ -49,7 +50,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 0 0 80px 0;
+  padding: 0 0 max(80px, calc(80px + env(safe-area-inset-bottom))) 0;
 }
 .screen { display: none; flex-direction: column; flex: 1; }
 .screen.active { display: flex; animation: popIn 0.4s cubic-bezier(.22,.68,0,1.2); }
@@ -131,7 +132,7 @@ body {
   padding: 6px 18px; border-radius: 99px; margin-bottom: 20px;
 }
 .intro-title {
-  font-family: 'Jua', sans-serif; font-size: 34px;
+  font-family: 'Jua', sans-serif; font-size: clamp(24px, 8vw, 34px);
   color: var(--text); line-height: 1.25; margin-bottom: 10px;
 }
 .intro-title em { color: var(--primary); font-style: normal; }
@@ -372,7 +373,7 @@ body {
 }
 .drum-result-card.show { display:block; animation:popIn 0.4s ease; }
 .drum-result-label { font-size:12px; color:var(--muted); font-weight:800; letter-spacing:1px; margin-bottom:8px; }
-.drum-result-topic { font-family:'Jua',sans-serif; font-size:28px; color:var(--green); margin-bottom:6px; }
+.drum-result-topic { font-family:'Jua',sans-serif; font-size:clamp(18px, 6vw, 28px); color:var(--green); margin-bottom:6px; word-break:keep-all; }
 .drum-retry-btn {
   display:inline-block; padding:10px 24px;
   background:white; color:var(--green);
@@ -762,6 +763,13 @@ body {
   margin-top: 16px !important;
 }
 .quiz-body { padding-bottom: 20px; }
+
+@media (max-height: 700px) {
+  .quiz-card { padding: 14px; }
+  .btn-main, .btn-submit, .btn-next { padding: 13px; }
+  .q-text { font-size: 15px !important; }
+  .ans-input { padding: 12px 18px; font-size: 20px !important; }
+}
 
 /* ════ 퀴즈 타이머 ════ */
 .quiz-timer {
