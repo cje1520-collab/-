@@ -487,6 +487,7 @@ body {
     <button class="tab-btn" onclick="switchTab('tab-config',this)">⚙️ 설정</button>
     <button class="tab-btn" onclick="switchTab('tab-notice',this)">📢 공지</button>
     <button class="tab-btn" onclick="switchTab('tab-roulette',this);loadRouletteAdmin()">🎰 룰렛</button>
+    <button class="tab-btn" onclick="switchTab('tab-points',this);loadPointsAdmin()">💰 포인트 관리</button>
   </div>
 
   <!-- ▶ 탭 1: 현황 -->
@@ -800,6 +801,56 @@ body {
       </div>
 
       <button class="btn-add" onclick="saveRouletteAdmin()">💾 저장하기</button>
+    </div>
+  </div>
+
+  <!-- ▶ 포인트 관리 탭 -->
+  <div class="tab-pane" id="tab-points">
+    <div class="section">
+      <div class="section-title">💰 전체 누적 포인트 관리</div>
+
+      <!-- 통계 카드 -->
+      <div class="stats-grid" style="margin-bottom:16px">
+        <div class="stat-card">
+          <div class="stat-card-emoji">👥</div>
+          <div class="stat-card-num" id="pt-total-users">—</div>
+          <div class="stat-card-label">전체 참여자</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-emoji">🎁</div>
+          <div class="stat-card-num" id="pt-gift-users">—</div>
+          <div class="stat-card-label">10,000pt 달성자</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-emoji">⭐</div>
+          <div class="stat-card-num" id="pt-sum">—</div>
+          <div class="stat-card-label">전체 포인트 합산</div>
+        </div>
+      </div>
+
+      <!-- 내보내기 버튼 -->
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+        <button class="btn-sm" style="background:rgba(6,214,160,0.1);color:#059669;border-color:rgba(6,214,160,0.4)"
+          onclick="exportPointsCSV()">📥 CSV 다운로드</button>
+      </div>
+
+      <!-- 테이블 -->
+      <div style="overflow-x:auto">
+        <table class="rank-table" id="pt-table">
+          <thead>
+            <tr>
+              <th style="width:44px">순위</th>
+              <th>이름</th>
+              <th>전화번호</th>
+              <th>누적 포인트</th>
+              <th>달성 여부</th>
+            </tr>
+          </thead>
+          <tbody id="pt-tbody">
+            <tr><td colspan="5" class="empty">탭을 클릭하면 불러와요</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -1492,6 +1543,73 @@ async function resetRanking(){
     await loadAll();
   }catch(e){ alert('변경 실패: '+e.message); }
   hideLoading();
+}
+
+/* ── 포인트 관리 ── */
+async function loadPointsAdmin(){
+  const tbody=document.getElementById('pt-tbody');
+  tbody.innerHTML='<tr><td colspan="5" class="empty">불러오는 중...</td></tr>';
+  try{
+    const res=await fetch(`${SB_URL}/rest/v1/quiz_results?select=name,phone,points`,{headers:HDR});
+    const rows=await res.json();
+    if(!Array.isArray(rows)||!rows.length){
+      tbody.innerHTML='<tr><td colspan="5" class="empty">데이터가 없어요</td></tr>';
+      document.getElementById('pt-total-users').textContent='0';
+      document.getElementById('pt-gift-users').textContent='0';
+      document.getElementById('pt-sum').textContent='0';
+      return;
+    }
+    // phone 기준 그룹핑
+    const map={};
+    rows.forEach(r=>{
+      if(!map[r.phone]) map[r.phone]={name:r.name,phone:r.phone,pts:0};
+      map[r.phone].pts+=(r.points||0);
+    });
+    const users=Object.values(map).sort((a,b)=>b.pts-a.pts);
+    const giftUsers=users.filter(u=>u.pts>=10000);
+    const totalPts=users.reduce((s,u)=>s+u.pts,0);
+    // 통계 카드
+    document.getElementById('pt-total-users').textContent=users.length+'명';
+    document.getElementById('pt-gift-users').textContent=giftUsers.length+'명';
+    document.getElementById('pt-sum').textContent=totalPts.toLocaleString()+'pts';
+    // 테이블 렌더
+    tbody.innerHTML=users.map((u,i)=>{
+      const rank=getRank(u.pts);
+      const isGift=u.pts>=10000;
+      return `<tr${isGift?' style="background:rgba(244,160,23,0.07)"':''}>
+        <td style="text-align:center;font-family:'Jua',sans-serif">${i+1}</td>
+        <td><strong>${u.name}</strong> <span style="font-size:11px;color:var(--muted)">${rank.emoji} ${rank.title}</span></td>
+        <td style="font-size:12px;color:var(--muted)">${maskPhone(u.phone)}</td>
+        <td style="font-family:'Jua',sans-serif;color:var(--primary);font-weight:900">${u.pts.toLocaleString()} pts</td>
+        <td style="text-align:center">${isGift?'<span style="background:rgba(244,160,23,0.15);color:#B45309;border:1px solid rgba(244,160,23,0.4);border-radius:99px;padding:3px 10px;font-size:11px;font-weight:800;white-space:nowrap">🎁 지급 대상</span>':'<span style="color:var(--muted);font-size:12px">—</span>'}</td>
+      </tr>`;
+    }).join('');
+  }catch(e){
+    tbody.innerHTML='<tr><td colspan="5" class="empty">불러오기 실패: '+e.message+'</td></tr>';
+  }
+}
+
+function exportPointsCSV(){
+  const tbody=document.getElementById('pt-tbody');
+  const rows=[...tbody.querySelectorAll('tr')];
+  if(!rows.length||rows[0].querySelector('.empty')){alert('먼저 데이터를 불러와주세요!');return;}
+  const header='순위,이름,전화번호,누적포인트,지급대상\n';
+  const csv=rows.map((tr,i)=>{
+    const tds=[...tr.querySelectorAll('td')];
+    if(tds.length<5) return '';
+    const rank=i+1;
+    const name=tds[1].querySelector('strong')?.textContent||'';
+    const phone=tds[2].textContent.trim();
+    const pts=tds[3].textContent.replace(/[^0-9]/g,'');
+    const gift=tds[4].textContent.includes('지급')? 'Y':'N';
+    return `${rank},"${name}",${phone},${pts},${gift}`;
+  }).filter(Boolean).join('\n');
+  const blob=new Blob(['﻿'+header+csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const today=new Date().toISOString().slice(0,10);
+  a.href=url; a.download=`포인트관리_${today}.csv`;
+  a.click(); URL.revokeObjectURL(url);
 }
 
 /* ── 문제별 정답 통계 ── */

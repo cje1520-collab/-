@@ -35,7 +35,9 @@
       "Bash(cp files/admin.html admin.html)",
       "Bash(git rm *)",
       "Bash(rm -rf \"D:\\\\MEGA\\\\Desktop\\\\상담퀴즈너굴게임\\\\files\\\\.git\")",
-      "Bash(cd \"D:\\\\MEGA\\\\Desktop\\\\상담퀴즈너굴게임\" && rm -f index.backup_*.html admin.backup_*.html files.zip mockup_roulette.html quiz_game_supabase.html && rm -rf backup_20260604)"
+      "Bash(cd \"D:\\\\MEGA\\\\Desktop\\\\상담퀴즈너굴게임\" && rm -f index.backup_*.html admin.backup_*.html files.zip mockup_roulette.html quiz_game_supabase.html && rm -rf backup_20260604)",
+      "Bash(cp index.html files/index.html)",
+      "Bash(cp admin.html files/admin.html)"
     ]
   }
 }
