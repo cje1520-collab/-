@@ -1,4 +1,4 @@
-const VERSION = '2026-06-04-v5';
+const VERSION = '2026-07-06-v1';
 const CACHE = 'quiz-' + VERSION;
 
 self.addEventListener('install', e => {
@@ -21,7 +21,12 @@ self.addEventListener('fetch', e => {
     );
     return;
   }
-  // 나머지는 캐시 우선, 없으면 네트워크
+  // Supabase API 요청(랭킹/문제/설정 등 동적 데이터)은 절대 캐싱하지 않고 항상 네트워크로 직접 호출
+  if (e.request.url.includes('supabase.co')) {
+    e.respondWith(fetch(e.request));
+    return;
+  }
+  // 나머지 정적 리소스는 캐시 우선, 없으면 네트워크
   e.respondWith(
     caches.match(e.request).then(cached => {
       return cached || fetch(e.request).then(res => {
