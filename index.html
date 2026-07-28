@@ -580,6 +580,11 @@ body {
 }
 .btn-submit:active { background: var(--primary-light); }
 .btn-submit:disabled { opacity: 0.4; }
+.choice-list{display:none;gap:10px;flex-direction:column;margin-bottom:12px}
+.choice-list.show{display:flex}
+.choice-btn{width:100%;padding:14px 16px;text-align:left;border:2px solid var(--border);border-radius:14px;background:var(--card2);color:var(--text);font-family:'Nanum Gothic',sans-serif;font-size:15px;font-weight:800;cursor:pointer}
+.choice-btn.selected{border-color:var(--primary);background:var(--primary-light)}
+.choice-btn:disabled{cursor:default;opacity:.75}.choice-btn.correct{border-color:var(--green);background:#F0FDF9}.choice-btn.wrong{border-color:var(--red);background:#FFF5F5}
 .feedback {
   margin-top: 12px; padding: 14px 16px; border-radius: var(--radius);
   font-size: 14px; font-weight: 700; line-height: 1.7; display: none;
@@ -1060,6 +1065,7 @@ body {
         </div>
         <input class="ans-input" id="ans-input" placeholder="정답 입력" autocomplete="off"
                onkeydown="if(event.key==='Enter')submitAnswer()">
+        <div class="choice-list" id="choice-list"></div>
         <button class="btn-submit" id="btn-submit" onclick="submitAnswer()">정답 제출</button>
         <div class="feedback" id="feedback"></div>
         <div class="motivate" id="motivate"></div>
@@ -1488,7 +1494,9 @@ var current=0, sessionScore=0, correct=0, streak=0;
 var hintUsed=false, answered=false;
 var shuffled=[], allQuestions=[], doneMap={}, totalPts=0, prevRank=null;
 var wrongAnswers=[], reviewIndex=0;
-var dailyLimit=10, todayAttempts=0;
+var dailyLimit=10, questionsPerSession=0, todayAttempts=0;
+var pointFirst=20, pointReview=10, pointRepeat=5;
+var giftThreshold=10000;
 var quizTimerInterval=null, timeLeft=30;
 
 // 일일 제한 헬퍼
@@ -1541,9 +1549,9 @@ function buildShuffled(allQ, doneM){
 // 포인트 계산: 1회차 20pts, 2·3회차 10pts, 4회차+ 5pts
 function calcPts(q){
   const times=doneMap[q.id]||0;
-  if(times===0) return 20;
-  if(times<=2)  return 10;
-  return 5;
+  if(times===0) return pointFirst;
+  if(times<=2)  return pointReview;
+  return pointRepeat;
 }
 
 function norm(s){ return s.replace(/[\s\-,]/g,'').toLowerCase(); }
@@ -1584,6 +1592,11 @@ async function loginUser(){
     const [dm, tp, aq, cfg] = await Promise.all([sbDoneMap(userPhone), sbTotal(userPhone), sbQuestions(), sbGameConfig()]);
     doneMap=dm; totalPts=tp; allQuestions=aq;
     if(cfg.daily_limit!==undefined) dailyLimit=cfg.daily_limit;
+    if(cfg.questions_per_session!==undefined) questionsPerSession=cfg.questions_per_session;
+    if(cfg.point_first!==undefined) pointFirst=cfg.point_first;
+    if(cfg.point_review!==undefined) pointReview=cfg.point_review;
+    if(cfg.point_repeat!==undefined) pointRepeat=cfg.point_repeat;
+    if(cfg.gift_threshold!==undefined) giftThreshold=cfg.gift_threshold;
   }catch(e){ doneMap={}; totalPts=0; allQuestions=[]; }
   // 접속 기록 테이블이 아직 없어도 기존 로그인은 정상 동작합니다.
   try{ await sbLogAccess(userName,userPhone); }catch(e){ console.warn(e.message); }
@@ -1737,6 +1750,7 @@ async function startQuiz(){
   current=0; sessionScore=0; correct=0; streak=0; wrongAnswers=[];
   prevRank=getRank(totalPts);
   shuffled=buildShuffled(allQuestions, doneMap);
+  if(questionsPerSession>0) shuffled=shuffled.slice(0,questionsPerSession);
   // 일일 제한 적용
   if(dailyLimit>0){
     const remaining=dailyLimit-todayAttempts;
@@ -1769,6 +1783,12 @@ function renderQ(){
   }
   const inp=document.getElementById('ans-input');
   inp.value=''; inp.className='ans-input'; inp.disabled=false;
+  const choices=Array.isArray(q.choices)?q.choices:[];
+  const isChoice=q.question_type==='choice'&&q.mcq_published===true&&choices.length===4;
+  const choiceList=document.getElementById('choice-list');
+  choiceList.className='choice-list'+(isChoice?' show':'');
+  choiceList.innerHTML=isChoice?choices.map((choice,i)=>`<button class="choice-btn" data-value="${escapeAttr(choice)}" onclick="selectChoice(this)">${i+1}. ${escapeHtml(choice)}</button>`).join(''):'';
+  inp.style.display=isChoice?'none':'block';
   document.getElementById('btn-submit').disabled=false;
   document.getElementById('feedback').className='feedback';
   document.getElementById('feedback').innerHTML='';
@@ -1777,12 +1797,20 @@ function renderQ(){
   const nb=document.getElementById('btn-next'); nb.className='btn-next';
   nb.textContent=current===tot-1?'결과 보기 🎯':'다음 문제 →';
   updateQuizChar('normal');
-  setTimeout(()=>inp.focus(),150);
+  if(!isChoice) setTimeout(()=>inp.focus(),150);
   // 나가기 버튼 리셋
   const nav=document.getElementById('btn-nav-action');
   if(nav){ nav.textContent='💾 나가기'; nav.style.cssText=''; nav.disabled=false; }
   // 타이머 시작
   startTimer();
+}
+
+function escapeHtml(v){ const d=document.createElement('div'); d.textContent=String(v??''); return d.innerHTML; }
+function escapeAttr(v){ return escapeHtml(v).replace(/`/g,'&#96;'); }
+function selectChoice(btn){
+  if(answered)return;
+  document.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected'); document.getElementById('ans-input').value=btn.dataset.value;
 }
 
 function revealHint(){
@@ -1810,10 +1838,11 @@ async function submitAnswer(){
   const q=shuffled[current];
   const inp=document.getElementById('ans-input');
   const val=inp.value.trim();
-  if(!val){inp.focus();return;}
+  if(!val){ if(inp.style.display!=='none') inp.focus(); else alert('보기를 선택해주세요!'); return; }
   answered=true;
   stopTimer();
   document.getElementById('btn-submit').disabled=true; inp.disabled=true;
+  document.querySelectorAll('.choice-btn').forEach(b=>{ b.disabled=true; if(norm(b.dataset.value)===norm(q.answer)) b.classList.add('correct'); else if(b.classList.contains('selected')) b.classList.add('wrong'); });
   // 나가기 버튼 즉시 비활성화 (answered 설정 직후 클릭 방지)
   const navBtn=document.getElementById('btn-nav-action');
   if(navBtn) navBtn.disabled=true;
@@ -1901,6 +1930,7 @@ function timeoutAnswer(){
   const inp=document.getElementById('ans-input');
   inp.disabled=true;
   document.getElementById('btn-submit').disabled=true;
+  document.querySelectorAll('.choice-btn').forEach(b=>{ b.disabled=true; if(norm(b.dataset.value)===norm(q.answer)) b.classList.add('correct'); });
   const navBtn=document.getElementById('btn-nav-action');
   if(navBtn) navBtn.disabled=true;
   streak=0;
@@ -1963,7 +1993,7 @@ function showResult(){
   // 오답 복습 버튼
   if(wrongAnswers.length){ document.getElementById('btn-review').style.display='block'; document.getElementById('btn-review').textContent=`📖 틀린 문제 복습하기 (${wrongAnswers.length}문제)`; }
   // 상품권
-  if(totalPts>=10000){ document.getElementById('gift-box').style.display='block'; launchConfetti(); }
+  if(totalPts>=giftThreshold){ document.getElementById('gift-box').style.display='block'; launchConfetti(); }
   if(rate>=80) launchConfetti();
 }
 

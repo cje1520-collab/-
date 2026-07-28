@@ -8,6 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>상담왕 어드민 🏆</title>
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root {
   --bg: #FFF9F0;
@@ -554,10 +555,6 @@ body {
             <option value="비교">
           </datalist>
         </div>
-        <div class="form-group">
-          <label>배점 (pts)</label>
-          <input type="number" id="new-pts" value="200" min="50" max="1000" step="50">
-        </div>
       </div>
       <div class="form-row full">
         <div class="form-group">
@@ -585,8 +582,11 @@ body {
         📋 전체 문제 목록
         <span class="badge" id="q-count-badge">0문제</span>
         <span class="badge badge-green" id="q-active-badge">활성 0</span>
-        <button class="btn-sm" style="margin-left:auto" onclick="exportExcel()">📥 엑셀 내보내기</button>
+        <button class="btn-sm" style="margin-left:auto" onclick="exportExcel()">📥 관리용 엑셀 다운로드</button>
+        <button class="btn-sm" onclick="document.getElementById('excel-upload').click()">📤 수정 엑셀 업로드</button>
+        <input id="excel-upload" type="file" accept=".xlsx,.xls" style="display:none" onchange="previewExcelUpload(event)">
       </div>
+      <div id="excel-preview" style="display:none;margin-bottom:16px"></div>
       <div id="q-list"><div class="empty">문제를 불러오는 중...</div></div>
     </div>
   </div>
@@ -726,6 +726,12 @@ body {
         <input type="number" class="q-edit-input" id="cfg-gift" value="10000" min="1000" step="500">
         <div style="font-size:11px;color:var(--muted);margin-top:4px">현재: 10,000pts 달성 시 상품권 지급</div>
       </div>
+      <div style="font-family:'Jua',sans-serif;font-size:15px;margin:18px 0 10px">⭐ 실제 정답 포인트</div>
+      <div class="form-row">
+        <div class="form-group"><label class="q-edit-label">첫 정답</label><input type="number" class="q-edit-input" id="cfg-point-first" value="20" min="0"></div>
+        <div class="form-group"><label class="q-edit-label">2~3회차</label><input type="number" class="q-edit-input" id="cfg-point-review" value="10" min="0"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px"><label class="q-edit-label">4회차 이상</label><input type="number" class="q-edit-input" id="cfg-point-repeat" value="5" min="0"></div>
       <div class="form-group" style="margin-bottom:12px">
         <label class="q-edit-label">⏱️ 일일 최대 문항 수 (0 = 무제한)</label>
         <input type="number" class="q-edit-input" id="cfg-daily" value="10" min="0" step="5">
@@ -896,6 +902,7 @@ const RANKS = [
   { min:6000,  emoji:'🏅', title:'베테랑 상담사', color:'#F59E0B' },
   { min:10000, emoji:'👑', title:'전설의 상담왕', color:'#EF4444' },
 ];
+var giftThreshold=10000;
 function getRank(pts){ return [...RANKS].reverse().find(r=>pts>=r.min)||RANKS[0]; }
 
 let giftDone = JSON.parse(localStorage.getItem('giftDone')||'{}');
@@ -1134,9 +1141,12 @@ async function loadConfig(){
     const d=await r.json();
     if(Array.isArray(d)&&d[0]){
       const c=JSON.parse(d[0].value);
-      if(c.gift_threshold) document.getElementById('cfg-gift').value=c.gift_threshold;
+      if(c.gift_threshold){ document.getElementById('cfg-gift').value=c.gift_threshold; giftThreshold=c.gift_threshold; }
       if(c.daily_limit!==undefined) document.getElementById('cfg-daily').value=c.daily_limit;
       if(c.questions_per_session!==undefined) document.getElementById('cfg-qcount').value=c.questions_per_session;
+      if(c.point_first!==undefined) document.getElementById('cfg-point-first').value=c.point_first;
+      if(c.point_review!==undefined) document.getElementById('cfg-point-review').value=c.point_review;
+      if(c.point_repeat!==undefined) document.getElementById('cfg-point-repeat').value=c.point_repeat;
     }
   }catch(e){}
 }
@@ -1146,6 +1156,9 @@ async function saveConfig(){
     gift_threshold: parseInt(document.getElementById('cfg-gift').value)||10000,
     daily_limit: parseInt(document.getElementById('cfg-daily').value)||0,
     questions_per_session: parseInt(document.getElementById('cfg-qcount').value)||0,
+    point_first: Math.max(0,parseInt(document.getElementById('cfg-point-first').value)||0),
+    point_review: Math.max(0,parseInt(document.getElementById('cfg-point-review').value)||0),
+    point_repeat: Math.max(0,parseInt(document.getElementById('cfg-point-repeat').value)||0),
   };
   try{
     await fetch(`${SB_URL}/rest/v1/settings`,{
@@ -1187,7 +1200,7 @@ function checkPw(){
 /* ── 전체 데이터 로드 ── */
 async function loadAll(){
   showLoading('데이터 불러오는 중...');
-  try { await Promise.all([loadStats(), loadQuestions()]); }
+  try { await loadConfig(); await Promise.all([loadStats(), loadQuestions()]); }
   catch(e){ alert('로드 실패: '+e.message); }
   hideLoading();
 }
@@ -1301,7 +1314,7 @@ async function loadStats(){
 
   // 통계
   document.getElementById('stat-total').textContent=users.length;
-  const giftCount=users.filter(u=>u.pts>=10000).length;
+  const giftCount=users.filter(u=>u.pts>=giftThreshold).length;
   document.getElementById('stat-gift').textContent=giftCount;
   const avg=users.length?Math.round(users.reduce((s,u)=>s+u.pts,0)/users.length):0;
   document.getElementById('stat-avg').textContent=avg.toLocaleString();
@@ -1326,7 +1339,7 @@ async function loadStats(){
   }).join('');
 
   // 상품권 대상자
-  const giftUsers=users.filter(u=>u.pts>=10000);
+  const giftUsers=users.filter(u=>u.pts>=giftThreshold);
   document.getElementById('gift-count-badge').textContent=giftUsers.length+'명';
   if(giftUsers.length>0){
     document.getElementById('gift-section').style.display='block';
@@ -1409,7 +1422,7 @@ function renderQuestions(){
         <div class="q-item-meta">
           <span class="q-cat-tag" style="background:${catColor}">${q.cat}</span>
           <span class="q-id-tag">#${q.id}</span>
-          <span class="q-pts-tag">⭐${q.points}pts</span>
+          <span class="q-pts-tag">${q.question_type==='choice'&&q.mcq_published?'🔘 객관식 공개':'✍️ 주관식'}</span>
           ${!q.active?'<span class="q-inactive-tag">비활성</span>':''}
         </div>
         <div class="q-item-btns">
@@ -1430,10 +1443,6 @@ function renderQuestions(){
           <div>
             <label class="q-edit-label">카테고리</label>
             <input list="cat-list" class="q-edit-input" id="ec-${q.id}" value="${q.cat}">
-          </div>
-          <div>
-            <label class="q-edit-label">배점</label>
-            <input type="number" class="q-edit-input" id="ep-${q.id}" value="${q.points}" min="50" max="1000" step="50">
           </div>
         </div>
         <div class="q-edit-row full">
@@ -1467,7 +1476,6 @@ async function addQuestion(){
   const q=document.getElementById('new-q').value.trim();
   const ans=document.getElementById('new-ans').value.trim();
   const hint=document.getElementById('new-hint').value.trim();
-  const pts=parseInt(document.getElementById('new-pts').value)||200;
 
   if(!cat||!q||!ans){ alert('카테고리, 문제, 정답은 필수예요!'); return; }
 
@@ -1477,14 +1485,13 @@ async function addQuestion(){
     const res=await fetch(`${SB_URL}/rest/v1/questions`,{
       method:'POST',
       headers:{...HDR,'Prefer':'return=minimal'},
-      body:JSON.stringify({cat,q,answer:ans,hint,points:pts,active:true,sort_order:(Array.isArray(allQ)?allQ.length:0)+1})
+      body:JSON.stringify({cat,q,answer:ans,hint,points:200,active:true,sort_order:(Array.isArray(allQ)?allQ.length:0)+1})
     });
     if(!res.ok) throw new Error('저장 실패');
     // 폼 초기화
     document.getElementById('new-q').value='';
     document.getElementById('new-ans').value='';
     document.getElementById('new-hint').value='';
-    document.getElementById('new-pts').value='200';
     await loadQuestions();
     toast('✅ 문제가 추가됐어요!');
   } catch(e){ alert('추가 실패: '+e.message); }
@@ -1503,13 +1510,12 @@ async function saveEdit(id){
   const q=document.getElementById('eq-'+id).value.trim();
   const ans=document.getElementById('ea-'+id).value.trim();
   const hint=document.getElementById('eh-'+id).value.trim();
-  const pts=parseInt(document.getElementById('ep-'+id).value)||200;
   if(!cat||!q||!ans){ alert('카테고리, 문제, 정답은 필수예요!'); return; }
   try {
     const res=await fetch(`${SB_URL}/rest/v1/questions?id=eq.${id}`,{
       method:'PATCH',
       headers:{...HDR,'Prefer':'return=minimal'},
-      body:JSON.stringify({cat,q,answer:ans,hint,points:pts})
+      body:JSON.stringify({cat,q,answer:ans,hint})
     });
     if(!res.ok) throw new Error('수정 실패');
     await loadQuestions();
@@ -1573,7 +1579,7 @@ async function loadPointsAdmin(){
       map[r.phone].pts+=(r.points||0);
     });
     const users=Object.values(map).sort((a,b)=>b.pts-a.pts);
-    const giftUsers=users.filter(u=>u.pts>=10000);
+    const giftUsers=users.filter(u=>u.pts>=giftThreshold);
     const totalPts=users.reduce((s,u)=>s+u.pts,0);
     // 통계 카드
     document.getElementById('pt-total-users').textContent=users.length+'명';
@@ -1582,7 +1588,7 @@ async function loadPointsAdmin(){
     // 테이블 렌더
     tbody.innerHTML=users.map((u,i)=>{
       const rank=getRank(u.pts);
-      const isGift=u.pts>=10000;
+      const isGift=u.pts>=giftThreshold;
       return `<tr${isGift?' style="background:rgba(244,160,23,0.07)"':''}>
         <td style="text-align:center;font-family:'Jua',sans-serif">${i+1}</td>
         <td><strong>${u.name}</strong> <span style="font-size:11px;color:var(--muted)">${rank.emoji} ${rank.title}</span></td>
@@ -1726,20 +1732,46 @@ async function loadQuestionStats(){
 /* ── 엑셀 내보내기 ── */
 function exportExcel(){
   if(!allQ.length){ alert('내보낼 문제가 없어요!'); return; }
-  const BOM = '﻿';
-  const header = '번호,카테고리,문제,정답,힌트,배점,활성여부';
-  const rows = allQ.map((q,i) =>
-    [i+1, q.cat, `"${q.q.replace(/"/g,'""')}"`, `"${q.answer.replace(/"/g,'""')}"`, q.hint||'', q.points, q.active?'활성':'비활성'].join(',')
-  );
-  const csv = BOM + [header, ...rows].join('\n');
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = '상담왕_문제목록_' + new Date().toISOString().slice(0,10) + '.csv';
-  a.click();
-  URL.revokeObjectURL(url);
-  toast('📥 엑셀 파일 다운로드됐어요!');
+  if(typeof XLSX==='undefined'){ alert('엑셀 기능을 불러오지 못했습니다. 인터넷 연결 후 다시 시도해주세요.'); return; }
+  const rows=allQ.map(q=>{ const c=Array.isArray(q.choices)?q.choices:[]; return {
+    '문제ID':q.id,'카테고리':q.cat,'문제':q.q,'기존정답':q.answer,'힌트':q.hint||'',
+    '문제유형':q.question_type==='choice'?'객관식':'주관식','보기1':c[0]||'','보기2':c[1]||'','보기3':c[2]||'','보기4':c[3]||'',
+    '정답번호':c.findIndex(v=>normExcel(v)===normExcel(q.answer))+1||'','객관식공개':q.mcq_published?'공개':'작성중','활성여부':q.active?'활성':'비활성'
+  };});
+  const ws=XLSX.utils.json_to_sheet(rows); ws['!cols']=[10,12,50,20,25,12,20,20,20,20,10,12,10].map(w=>({wch:w}));
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'문항관리');
+  XLSX.writeFile(wb,'상담왕_문항관리_'+new Date().toISOString().slice(0,10)+'.xlsx');
+  toast('📥 관리용 엑셀을 다운로드했어요!');
+}
+
+var excelChanges=[];
+function normExcel(v){ return String(v??'').replace(/[\s\-,]/g,'').toLowerCase(); }
+function previewExcelUpload(event){
+  const file=event.target.files[0]; if(!file)return;
+  const reader=new FileReader(); reader.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array'}); const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+      const current=new Map(allQ.map(q=>[String(q.id),q])); const errors=[]; excelChanges=[];
+      rows.forEach((r,i)=>{
+        const id=String(r['문제ID']).trim(), old=current.get(id); if(!old){ errors.push(`${i+2}행: 존재하지 않는 문제ID`); return; }
+        const type=String(r['문제유형']).trim()==='객관식'?'choice':'text';
+        const choices=[r['보기1'],r['보기2'],r['보기3'],r['보기4']].map(v=>String(v).trim());
+        const answerNo=Number(r['정답번호']); const publish=String(r['객관식공개']).trim()==='공개';
+        if(!String(r['카테고리']).trim()||!String(r['문제']).trim()||(type==='text'&&!String(r['기존정답']).trim())){ errors.push(`${i+2}행 (#${id}): 카테고리, 문제, 정답은 필수입니다`); return; }
+        if(type==='choice'&&(choices.some(v=>!v)||!Number.isInteger(answerNo)||answerNo<1||answerNo>4)){ errors.push(`${i+2}행 (#${id}): 객관식 보기 4개와 정답번호 1~4가 필요합니다`); return; }
+        excelChanges.push({id:Number(id),cat:String(r['카테고리']).trim(),q:String(r['문제']).trim(),answer:type==='choice'?choices[answerNo-1]:String(r['기존정답']).trim(),hint:String(r['힌트']).trim(),question_type:type,choices:type==='choice'?choices:[],mcq_published:type==='choice'&&publish,active:String(r['활성여부']).trim()!=='비활성'});
+      });
+      const box=document.getElementById('excel-preview'); box.style.display='block';
+      box.innerHTML=`<div class="section" style="margin:0"><strong>업로드 미리보기</strong><p style="font-size:13px;margin:8px 0">변경 후보 ${excelChanges.length}개 · 오류 ${errors.length}개</p>${errors.length?`<div style="color:var(--red);font-size:12px;max-height:120px;overflow:auto">${errors.map(escapeHtml).join('<br>')}</div>`:''}<button class="btn-add" style="margin-top:12px" onclick="applyExcelChanges()" ${excelChanges.length?'':'disabled'}>✅ 검증된 문항 반영</button></div>`;
+    }catch(err){ alert('엑셀 읽기 실패: '+err.message); }
+  }; reader.readAsArrayBuffer(file); event.target.value='';
+}
+async function applyExcelChanges(){
+  if(!excelChanges.length||!confirm(`${excelChanges.length}개 문항을 반영할까요? 삭제되는 문제는 없습니다.`))return;
+  showLoading('문항 반영 중...'); let ok=0,fail=0;
+  for(const row of excelChanges){ const id=row.id; delete row.id; try{ const r=await fetch(`${SB_URL}/rest/v1/questions?id=eq.${id}`,{method:'PATCH',headers:{...HDR,'Prefer':'return=minimal'},body:JSON.stringify(row)}); if(!r.ok)throw Error(); ok++; }catch(e){fail++;} }
+  hideLoading(); await loadQuestions(); document.getElementById('excel-preview').style.display='none'; excelChanges=[];
+  alert(`반영 완료: 성공 ${ok}개, 실패 ${fail}개${fail?'\nSupabase 객관식 SQL 적용 여부를 확인해주세요.':''}`);
 }
 </script>
 </body>
