@@ -488,6 +488,7 @@ body {
     <button class="tab-btn" onclick="switchTab('tab-notice',this)">📢 공지</button>
     <button class="tab-btn" onclick="switchTab('tab-roulette',this);loadRouletteAdmin()">🎰 룰렛</button>
     <button class="tab-btn" onclick="switchTab('tab-points',this);loadPointsAdmin()">💰 포인트 관리</button>
+    <button class="tab-btn" onclick="switchTab('tab-participants',this)">👥 참여자 조회</button>
   </div>
 
   <!-- ▶ 탭 1: 현황 -->
@@ -853,6 +854,26 @@ body {
     </div>
   </div>
 
+  <!-- ▶ 관리자 전용 참여자 조회 탭 -->
+  <div class="tab-pane" id="tab-participants">
+    <div class="section">
+      <div class="section-title">
+        👥 참여자 및 접속 현황 <span class="badge" id="participant-count">0명</span>
+        <button class="btn-sm" style="margin-left:auto" onclick="exportParticipantsCSV()">📥 참여자 엑셀</button>
+        <button class="btn-sm" onclick="exportAccessCSV()">📅 일별 접속 엑셀</button>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">
+        로그인 기록과 기존 퀴즈 기록을 합쳐 표시합니다. 접속 기록 도입 전 참여자는 퀴즈 활동일을 기준으로 계산됩니다.
+      </p>
+      <div style="overflow-x:auto">
+        <table class="rank-table">
+          <thead><tr><th>이름</th><th>전화번호</th><th>누적 포인트</th><th>이번 달</th><th>최초 접속</th><th>최근 접속</th><th>접속 일수</th></tr></thead>
+          <tbody id="participant-tbody"><tr><td colspan="7" class="empty">불러오기 버튼을 눌러주세요.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /admin-wrap -->
 
 <div class="loading-overlay" id="loading">
@@ -904,11 +925,15 @@ async function loadMonthlyStats(){
   const users=Object.values(map).sort((a,b)=>b.pts-a.pts);
 
   // 전체 데이터에서 신규 판별 (이번 달 첫 참여자)
-  const allRes=await fetch(`${SB_URL}/rest/v1/quiz_results?select=phone,created_at`,{headers:HDR});
+  const allRes=await fetch(`${SB_URL}/rest/v1/quiz_results?select=phone,points,created_at`,{headers:HDR});
   const allRows=await allRes.json();
   if(!Array.isArray(allRows)) return;
   const firstSeen={};
-  allRows.forEach(r=>{ if(!firstSeen[r.phone]||r.created_at<firstSeen[r.phone]) firstSeen[r.phone]=r.created_at; });
+  const cumulative={};
+  allRows.forEach(r=>{
+    if(!firstSeen[r.phone]||r.created_at<firstSeen[r.phone]) firstSeen[r.phone]=r.created_at;
+    cumulative[r.phone]=(cumulative[r.phone]||0)+(r.points||0);
+  });
   const newUsers=users.filter(u=>firstSeen[u.phone]>=firstDay).length;
 
   document.getElementById('m-new').textContent=newUsers;
@@ -919,7 +944,7 @@ async function loadMonthlyStats(){
   const tbody=document.getElementById('monthly-tbody');
   if(!users.length){ tbody.innerHTML='<tr><td colspan="4" class="empty">이번 달 참여자가 없어요</td></tr>'; return; }
   tbody.innerHTML=users.map((u,i)=>{
-    const rank=getRank(u.pts);
+    const rank=getRank(cumulative[u.phone]||0);
     return `<tr>
       <td class="rank-num ${['gold','silver','bronze'][i]||''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</td>
       <td><span class="user-name">${u.name}</span></td>
@@ -983,6 +1008,7 @@ function switchTab(id, btn){
   if(id==='tab-monthly') loadMonthlyStats();
   if(id==='tab-notice')  loadNotice();
   if(id==='tab-texts')   loadTexts();
+  if(id==='tab-participants') loadParticipants();
   if(id==='tab-config')  loadConfig();
 }
 
@@ -1591,6 +1617,74 @@ function exportPointsCSV(){
   const today=new Date().toISOString().slice(0,10);
   a.href=url; a.download=`포인트관리_${today}.csv`;
   a.click(); URL.revokeObjectURL(url);
+}
+
+/* ── 참여자 및 접속 기록 ── */
+var participantRows=[];
+var accessLogRows=[];
+function kstMonthStart(){
+  const now=new Date(Date.now()+9*60*60*1000);
+  return now.toISOString().slice(0,7)+'-01';
+}
+function csvCell(value){
+  let s=String(value??'');
+  if(/^[=+@-]/.test(s)) s="'"+s;
+  return '"'+s.replace(/"/g,'""')+'"';
+}
+function downloadCSV(filename,header,rows){
+  const csv='\uFEFF'+[header.map(csvCell).join(','),...rows.map(row=>row.map(csvCell).join(','))].join('\n');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  const a=document.createElement('a'); a.href=url; a.download=filename; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),0);
+}
+async function loadParticipants(){
+  const tbody=document.getElementById('participant-tbody');
+  tbody.innerHTML='<tr><td colspan="7" class="empty">불러오는 중...</td></tr>';
+  try{
+    const [quizRes,accessRes]=await Promise.all([
+      fetch(`${SB_URL}/rest/v1/quiz_results?select=name,phone,points,created_at`,{headers:HDR}),
+      fetch(`${SB_URL}/rest/v1/access_logs?select=name,phone,access_date,created_at&order=created_at.asc`,{headers:HDR})
+    ]);
+    const quiz=await quizRes.json();
+    const access=accessRes.ok?await accessRes.json():[];
+    const map={};
+    const monthStart=kstMonthStart();
+    (Array.isArray(quiz)?quiz:[]).forEach(r=>{
+      if(!map[r.phone]) map[r.phone]={name:r.name,phone:r.phone,total:0,monthly:0,dates:new Set()};
+      const u=map[r.phone]; u.name=r.name||u.name; u.total+=(r.points||0);
+      const day=String(r.created_at||'').slice(0,10);
+      if(day){ u.dates.add(day); if(day>=monthStart) u.monthly+=(r.points||0); }
+    });
+    accessLogRows=Array.isArray(access)?access:[];
+    accessLogRows.forEach(r=>{
+      if(!map[r.phone]) map[r.phone]={name:r.name,phone:r.phone,total:0,monthly:0,dates:new Set()};
+      const u=map[r.phone]; u.name=r.name||u.name;
+      const day=r.access_date||String(r.created_at||'').slice(0,10); if(day) u.dates.add(day);
+    });
+    participantRows=Object.values(map).map(u=>{
+      const dates=[...u.dates].sort();
+      return {...u,first:dates[0]||'-',last:dates[dates.length-1]||'-',days:dates.length};
+    }).sort((a,b)=>b.last.localeCompare(a.last)||b.total-a.total);
+    document.getElementById('participant-count').textContent=participantRows.length+'명';
+    if(!participantRows.length){ tbody.innerHTML='<tr><td colspan="7" class="empty">참여자 데이터가 없습니다.</td></tr>'; return; }
+    tbody.innerHTML=participantRows.map(u=>`<tr>
+      <td><strong>${escapeHtml(u.name)}</strong></td><td>${escapeHtml(u.phone)}</td>
+      <td class="pts-val">${u.total.toLocaleString()} pts</td><td>${u.monthly.toLocaleString()} pts</td>
+      <td>${u.first}</td><td>${u.last}</td><td>${u.days}일</td></tr>`).join('');
+  }catch(e){ tbody.innerHTML='<tr><td colspan="7" class="empty">불러오기 실패: '+escapeHtml(e.message)+'</td></tr>'; }
+}
+function escapeHtml(value){
+  const d=document.createElement('div'); d.textContent=String(value??''); return d.innerHTML;
+}
+function exportParticipantsCSV(){
+  if(!participantRows.length){ alert('먼저 참여자 데이터를 불러와주세요!'); return; }
+  const rows=participantRows.map(u=>[u.name,u.phone,u.total,u.monthly,u.first,u.last,u.days]);
+  downloadCSV(`상담왕_참여자_${new Date().toISOString().slice(0,10)}.csv`,['이름','전화번호','누적포인트','이번달포인트','최초접속일','최근접속일','접속일수'],rows);
+}
+function exportAccessCSV(){
+  if(!accessLogRows.length){ alert('저장된 접속 기록이 없습니다. Supabase SQL 적용 여부를 확인해주세요.'); return; }
+  const rows=accessLogRows.map(r=>[r.access_date||String(r.created_at||'').slice(0,10),r.name,r.phone,r.created_at||'']);
+  downloadCSV(`상담왕_일별접속_${new Date().toISOString().slice(0,10)}.csv`,['접속일','이름','전화번호','접속시각'],rows);
 }
 
 /* ── 문제별 정답 통계 ── */

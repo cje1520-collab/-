@@ -1394,6 +1394,14 @@ async function sbDoneMap(phone){
   return map;
 }
 async function sbQuestions(){ const r=await fetch(`${SB_URL}/rest/v1/questions?active=eq.true&order=sort_order.asc,id.asc`,{headers:HDR}); return r.json(); }
+async function sbLogAccess(name,phone){
+  const accessDate=new Date(Date.now()+9*60*60*1000).toISOString().slice(0,10);
+  const r=await fetch(`${SB_URL}/rest/v1/access_logs`,{
+    method:'POST',headers:{...HDR,'Prefer':'return=minimal'},
+    body:JSON.stringify({name,phone,access_date:accessDate})
+  });
+  if(!r.ok) throw new Error('접속 기록 저장 실패');
+}
 // 이번 달 랭킹 반환 (TOP5 대시보드용)
 async function sbMonthlyRanking(){
   const now=new Date();
@@ -1488,11 +1496,39 @@ function getDailyKey(ph){ return 'daily_'+ph+'_'+new Date().toISOString().slice(
 function loadTodayAttempts(ph){ return parseInt(localStorage.getItem(getDailyKey(ph))||'0'); }
 function incTodayAttempts(ph){ const k=getDailyKey(ph); localStorage.setItem(k,(parseInt(localStorage.getItem(k)||'0')+1).toString()); todayAttempts++; }
 
-// 반복학습 셔플: 신규 문제 10개마다 기존 문제 1개 삽입
+function shuffleArray(items){
+  const arr=[...items];
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// 카테고리를 번갈아 뽑아 특정 문제 유형이 앞부분에 몰리지 않게 구성
+function balanceByCategory(items){
+  const groups={};
+  items.forEach(q=>{
+    const cat=(q.cat||'기타').trim()||'기타';
+    if(!groups[cat]) groups[cat]=[];
+    groups[cat].push(q);
+  });
+  Object.keys(groups).forEach(cat=>groups[cat]=shuffleArray(groups[cat]));
+  const result=[];
+  let cats=shuffleArray(Object.keys(groups));
+  while(cats.length){
+    cats.forEach(cat=>{ if(groups[cat].length) result.push(groups[cat].pop()); });
+    cats=shuffleArray(cats.filter(cat=>groups[cat].length));
+  }
+  return result;
+}
+
+// 반복학습 셔플: 카테고리 균형을 유지하며 신규 문제 10개마다 기존 문제 1개 삽입
 function buildShuffled(allQ, doneM){
-  const fresh=[...allQ].filter(q=>!(q.id in doneM)).sort(()=>Math.random()-0.5);
+  const fresh=balanceByCategory(allQ.filter(q=>!(q.id in doneM)));
   // 적게 틀린(= 적게 맞춘) 순으로 반복 삽입
-  const repeat=[...allQ].filter(q=>q.id in doneM).sort((a,b)=>(doneM[a.id]||0)-(doneM[b.id]||0));
+  const repeat=balanceByCategory(allQ.filter(q=>q.id in doneM))
+    .sort((a,b)=>(doneM[a.id]||0)-(doneM[b.id]||0));
   const result=[];
   let fi=0, ri=0;
   while(fi<fresh.length||ri<repeat.length){
@@ -1549,6 +1585,8 @@ async function loginUser(){
     doneMap=dm; totalPts=tp; allQuestions=aq;
     if(cfg.daily_limit!==undefined) dailyLimit=cfg.daily_limit;
   }catch(e){ doneMap={}; totalPts=0; allQuestions=[]; }
+  // 접속 기록 테이블이 아직 없어도 기존 로그인은 정상 동작합니다.
+  try{ await sbLogAccess(userName,userPhone); }catch(e){ console.warn(e.message); }
   todayAttempts=loadTodayAttempts(userPhone);
   hideLoading();
   btn.disabled=false; btn.textContent='🚀 내 기록 불러오기';
