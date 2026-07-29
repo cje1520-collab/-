@@ -1769,22 +1769,25 @@ function renderQ(){
   const tag=document.getElementById('cat-tag');
   tag.textContent=q.cat; tag.className='cat-tag cat-'+(q.cat||'상품');
   document.getElementById('q-text').textContent=q.q;
+  const choices=Array.isArray(q.choices)?q.choices:[];
+  const isChoice=q.question_type==='choice'&&q.mcq_published===true&&choices.length===4;
   // 힌트
+  const hintRow=document.getElementById('hint-row');
   const hc=document.getElementById('hint-chars');
   const hbtn=document.getElementById('hint-btn');
   const htip=document.getElementById('hint-tip');
-  if(isConsonant(q.hint)){
+  const showHint=!isChoice&&Boolean(String(q.hint||'').trim());
+  hintRow.style.display=showHint?'flex':'none';
+  if(showHint&&isConsonant(q.hint)){
     hc.style.display='flex'; hbtn.style.display=''; htip.style.display='none';
     hc.innerHTML=''; q.hint.trim().split('').forEach(ch=>{ const el=document.createElement('div'); el.className='hint-char hidden'; el.textContent=ch; hc.appendChild(el); });
     hbtn.className='hint-btn'; hbtn.textContent='💡 힌트 보기';
-  } else {
+  } else if(showHint) {
     hc.style.display='none'; hbtn.style.display='none'; htip.style.display='';
     htip.textContent='💡 '+(q.hint||'');
   }
   const inp=document.getElementById('ans-input');
   inp.value=''; inp.className='ans-input'; inp.disabled=false;
-  const choices=Array.isArray(q.choices)?q.choices:[];
-  const isChoice=q.question_type==='choice'&&q.mcq_published===true&&choices.length===4;
   const choiceList=document.getElementById('choice-list');
   choiceList.className='choice-list'+(isChoice?' show':'');
   choiceList.innerHTML=isChoice?choices.map((choice,i)=>`<button class="choice-btn" data-value="${escapeAttr(choice)}" onclick="selectChoice(this)">${i+1}. ${escapeHtml(choice)}</button>`).join(''):'';
