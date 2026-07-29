@@ -1753,23 +1753,34 @@ function previewExcelUpload(event){
       const wb=XLSX.read(e.target.result,{type:'array'}); const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
       const current=new Map(allQ.map(q=>[String(q.id),q])); const errors=[]; excelChanges=[];
       rows.forEach((r,i)=>{
-        const id=String(r['문제ID']).trim(), old=current.get(id); if(!old){ errors.push(`${i+2}행: 존재하지 않는 문제ID`); return; }
+        const id=String(r['문제ID']).trim(), old=id?current.get(id):null;
+        if(id&&!old){ errors.push(`${i+2}행: 존재하지 않는 문제ID`); return; }
         const type=String(r['문제유형']).trim()==='객관식'?'choice':'text';
         const choices=[r['보기1'],r['보기2'],r['보기3'],r['보기4']].map(v=>String(v).trim());
         const answerNo=Number(r['정답번호']); const publish=String(r['객관식공개']).trim()==='공개';
-        if(!String(r['카테고리']).trim()||!String(r['문제']).trim()||(type==='text'&&!String(r['기존정답']).trim())){ errors.push(`${i+2}행 (#${id}): 카테고리, 문제, 정답은 필수입니다`); return; }
-        if(type==='choice'&&(choices.some(v=>!v)||!Number.isInteger(answerNo)||answerNo<1||answerNo>4)){ errors.push(`${i+2}행 (#${id}): 객관식 보기 4개와 정답번호 1~4가 필요합니다`); return; }
-        excelChanges.push({id:Number(id),cat:String(r['카테고리']).trim(),q:String(r['문제']).trim(),answer:type==='choice'?choices[answerNo-1]:String(r['기존정답']).trim(),hint:String(r['힌트']).trim(),question_type:type,choices:type==='choice'?choices:[],mcq_published:type==='choice'&&publish,active:String(r['활성여부']).trim()!=='비활성'});
+        const rowLabel=id?`#${id}`:'신규';
+        if(!String(r['카테고리']).trim()||!String(r['문제']).trim()||(type==='text'&&!String(r['기존정답']).trim())){ errors.push(`${i+2}행 (${rowLabel}): 카테고리, 문제, 정답은 필수입니다`); return; }
+        if(type==='choice'&&(choices.some(v=>!v)||!Number.isInteger(answerNo)||answerNo<1||answerNo>4)){ errors.push(`${i+2}행 (${rowLabel}): 객관식 보기 4개와 정답번호 1~4가 필요합니다`); return; }
+        excelChanges.push({_mode:id?'update':'create',id:id?Number(id):null,cat:String(r['카테고리']).trim(),q:String(r['문제']).trim(),answer:type==='choice'?choices[answerNo-1]:String(r['기존정답']).trim(),hint:String(r['힌트']).trim(),question_type:type,choices:type==='choice'?choices:[],mcq_published:type==='choice'&&publish,active:String(r['활성여부']).trim()!=='비활성'});
       });
+      const createCount=excelChanges.filter(r=>r._mode==='create').length, updateCount=excelChanges.length-createCount;
       const box=document.getElementById('excel-preview'); box.style.display='block';
-      box.innerHTML=`<div class="section" style="margin:0"><strong>업로드 미리보기</strong><p style="font-size:13px;margin:8px 0">변경 후보 ${excelChanges.length}개 · 오류 ${errors.length}개</p>${errors.length?`<div style="color:var(--red);font-size:12px;max-height:120px;overflow:auto">${errors.map(escapeHtml).join('<br>')}</div>`:''}<button class="btn-add" style="margin-top:12px" onclick="applyExcelChanges()" ${excelChanges.length?'':'disabled'}>✅ 검증된 문항 반영</button></div>`;
+      box.innerHTML=`<div class="section" style="margin:0"><strong>업로드 미리보기</strong><p style="font-size:13px;margin:8px 0">기존 수정 ${updateCount}개 · 신규 추가 ${createCount}개 · 오류 ${errors.length}개</p>${errors.length?`<div style="color:var(--red);font-size:12px;max-height:120px;overflow:auto">${errors.map(escapeHtml).join('<br>')}</div>`:''}<button class="btn-add" style="margin-top:12px" onclick="applyExcelChanges()" ${excelChanges.length?'':'disabled'}>✅ 검증된 문항 반영</button></div>`;
     }catch(err){ alert('엑셀 읽기 실패: '+err.message); }
   }; reader.readAsArrayBuffer(file); event.target.value='';
 }
 async function applyExcelChanges(){
   if(!excelChanges.length||!confirm(`${excelChanges.length}개 문항을 반영할까요? 삭제되는 문제는 없습니다.`))return;
-  showLoading('문항 반영 중...'); let ok=0,fail=0;
-  for(const row of excelChanges){ const id=row.id; delete row.id; try{ const r=await fetch(`${SB_URL}/rest/v1/questions?id=eq.${id}`,{method:'PATCH',headers:{...HDR,'Prefer':'return=minimal'},body:JSON.stringify(row)}); if(!r.ok)throw Error(); ok++; }catch(e){fail++;} }
+  showLoading('문항 반영 중...'); let ok=0,fail=0,nextSort=Math.max(0,...allQ.map(q=>Number(q.sort_order)||0));
+  for(const change of excelChanges){
+    const row={...change}, id=row.id, mode=row._mode; delete row.id; delete row._mode;
+    if(mode==='create'){ row.points=200; row.sort_order=++nextSort; }
+    try{
+      const url=mode==='create'?`${SB_URL}/rest/v1/questions`:`${SB_URL}/rest/v1/questions?id=eq.${id}`;
+      const r=await fetch(url,{method:mode==='create'?'POST':'PATCH',headers:{...HDR,'Prefer':'return=minimal'},body:JSON.stringify(row)});
+      if(!r.ok)throw Error(await r.text()); ok++;
+    }catch(e){ console.error('엑셀 문항 반영 실패',e); fail++; }
+  }
   hideLoading(); await loadQuestions(); document.getElementById('excel-preview').style.display='none'; excelChanges=[];
   alert(`반영 완료: 성공 ${ok}개, 실패 ${fail}개${fail?'\nSupabase 객관식 SQL 적용 여부를 확인해주세요.':''}`);
 }
