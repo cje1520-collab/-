@@ -1,4 +1,4 @@
-const VERSION = '2026-07-29-v8';
+const VERSION = '2026-07-29-v9';
 const CACHE = 'quiz-' + VERSION;
 
 self.addEventListener('install', e => {
