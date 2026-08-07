@@ -950,13 +950,16 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
 .growth-collection-card.current .collection-status{background:#f47753;color:#fff}.growth-collection-card.legend{grid-column:1/-1}.growth-collection-card.legend img{width:58%;margin-left:auto;margin-right:auto}
 @media(max-width:374px){#s-dashboard .dash-header{min-height:216px;padding:16px 15px 14px}#s-dashboard .cm-premium-mascot{width:37%;right:2px;top:18px}#s-dashboard .dash-name{font-size:19px}.growth-collection{gap:8px}.growth-collection-card{min-height:190px;padding:8px}.growth-collection-card strong{font-size:13px}}
 /* 캐릭터 대신 작고 직관적인 성장 심볼을 사용한다. */
-#s-dashboard .cm-premium-mascot{display:grid;width:88px;height:88px;right:18px;top:22px;place-items:center;border-radius:28px;background:linear-gradient(145deg,#fff,#f4efff);box-shadow:0 14px 28px rgba(72,55,87,.13),inset 0 1px 0 #fff;filter:none;font-size:46px}
+#s-dashboard .cm-premium-mascot{display:grid;width:64px;height:64px;right:20px;top:23px;place-items:center;border-radius:20px;background:linear-gradient(145deg,#fff,#f4efff);box-shadow:0 10px 22px rgba(72,55,87,.11),inset 0 1px 0 #fff;filter:none;font-size:34px}
 .growth-symbol{position:relative;display:grid;place-items:center;width:100%;height:100%;border-radius:24px;background:linear-gradient(145deg,#fffaf0,#f2edff);box-shadow:inset 0 0 0 1px rgba(221,211,231,.85);font-size:clamp(28px,9vw,52px)}
 .growth-symbol.stage-1{background:linear-gradient(145deg,#fff8ec,#f6ead8)}.growth-symbol.stage-2{background:linear-gradient(145deg,#f5fff4,#e5f6df)}.growth-symbol.stage-3{background:linear-gradient(145deg,#f2fff9,#ddf3e8)}.growth-symbol.stage-4{background:linear-gradient(145deg,#fff5f8,#f9e1eb)}.growth-symbol.stage-5{background:linear-gradient(145deg,#fff9df,#ffe6a3);box-shadow:inset 0 0 0 2px #efbd4f,0 9px 22px rgba(219,158,35,.18)}
 .growth-symbol .symbol-main{line-height:1}.growth-symbol .symbol-spark{position:absolute;margin:-42px 0 0 48px;font-size:.42em}
 .growth-collection{grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}.growth-collection-card{min-height:138px;padding:7px;border-radius:17px}.growth-collection-card.legend{grid-column:auto}.growth-collection-card .growth-symbol{height:72px;margin-bottom:7px;border-radius:13px;font-size:34px}.growth-collection-card strong{font-size:11px}.growth-collection-card small{font-size:9px}.growth-collection-card .collection-status{top:10px;right:9px;font-size:8px;padding:3px 5px}
 .step-char .growth-symbol{width:52px;height:52px;border-radius:15px;font-size:27px}.result-char-big .growth-symbol{border-radius:28px}.lvl-char .growth-symbol{border-radius:32px}
 @media(max-width:374px){#s-dashboard .cm-premium-mascot{width:76px;height:76px;right:14px;top:23px;font-size:40px}.growth-collection{overflow-x:auto;grid-template-columns:repeat(5,92px);padding-bottom:5px}.growth-collection-card{min-height:132px}}
+/* 사람 이모지 중심의 간결한 성장가이드 */
+.journey-wrap{margin-top:10px!important}.journey-step{min-height:72px!important;margin-bottom:8px!important;padding:10px 12px!important;border-radius:18px!important}.step-char{width:44px!important;height:44px!important}.step-char .growth-symbol{width:44px;height:44px;border-radius:13px;font-size:24px}.step-rank{font-size:14px!important}.step-pts-range{font-size:11px!important}.step-status{font-size:10px!important;padding:5px 7px!important}
+@media(max-width:374px){#s-dashboard .cm-premium-mascot{width:58px;height:58px;right:15px;top:24px;font-size:31px}.journey-step{padding:9px 10px!important}}
 </style></head>
 <body>
 <div class="wrap">
@@ -1036,7 +1039,7 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
       <div class="dash-header">
         <div class="dash-greeting">반갑습니다!</div>
         <div class="dash-name" id="d-name"><span class="mgr-title">선생님</span> 👋</div>
-        <div class="cm-premium-mascot growth-symbol stage-1" id="d-mascot" role="img" aria-label="현재 직급 성장 단계">🌰</div>
+        <div class="cm-premium-mascot growth-symbol stage-1" id="d-mascot" role="img" aria-label="현재 직급 성장 단계">🙋‍♀️</div>
         <div class="char-circle" id="d-char"></div>
         <div class="rank-pill" id="d-rank">
           <span id="d-rank-emoji">😰</span>
@@ -1075,8 +1078,6 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
       <div class="growth-cur-pts" id="g-cur-pts">0<span>pts</span></div>
       <div class="growth-next" id="g-next-txt"></div>
     </div>
-    <div class="cm-section-label" style="margin:20px 14px 8px"><span>복고양이 성장 도감</span><small>직급별 모습을 한눈에 봐요</small></div>
-    <div class="growth-collection" id="g-collection"></div>
     <div class="journey-progress-wrap section-card">
       <div class="journey-progress-label">
         <span>전체 여정</span>
@@ -1536,7 +1537,7 @@ const RANK_MASCOTS = {
 };
 function rankMascotSrc(pts){ return RANK_MASCOTS[getRank(pts).min]||RANK_MASCOTS[0]; }
 const RANK_GROWTH = {
-  0:{icon:'🌰',label:'씨앗'},1000:{icon:'🌱',label:'새싹'},3000:{icon:'🪴',label:'화분'},6000:{icon:'🌸',label:'꽃'},10000:{icon:'🌳',label:'황금나무',spark:'✨'}
+  0:{icon:'🙋‍♀️',label:'신입'},1000:{icon:'👩‍🏫',label:'열공'},3000:{icon:'😊',label:'여유'},6000:{icon:'👩‍💼',label:'베테랑'},10000:{icon:'👸',label:'상담왕',spark:'✨'}
 };
 function rankGrowth(pts){ const r=getRank(pts); return {...(RANK_GROWTH[r.min]||RANK_GROWTH[0]),stage:RANKS.findIndex(x=>x.min===r.min)+1,rank:r}; }
 function growthSymbolMarkup(pts){ const g=rankGrowth(pts); return `<div class="growth-symbol stage-${g.stage}" role="img" aria-label="${g.rank.title} ${g.label}"><span class="symbol-main">${g.icon}</span>${g.spark?`<span class="symbol-spark">${g.spark}</span>`:''}</div>`; }
@@ -1800,18 +1801,6 @@ function showGrowth(){
   const overallPct=Math.min(100,Math.round(totalPts/10000*100));
   document.getElementById('g-overall-bar').style.width=overallPct+'%';
   document.getElementById('g-overall-pct').textContent=overallPct+'%';
-  // 다섯 단계 캐릭터 전체 도감
-  document.getElementById('g-collection').innerHTML=RANKS.map((r,i)=>{
-    const isCurrent=r.title===rank.title;
-    const isDone=totalPts>=r.min;
-    const status=isCurrent?'현재':(isDone?'달성':'목표');
-    const range=r.min===10000?'10,000pts 이상':`${r.min.toLocaleString()}~${r.max.toLocaleString()}pts`;
-    return `<div class="growth-collection-card${isCurrent?' current':''}${i===RANKS.length-1?' legend':''}">
-      <span class="collection-status">${status}</span>
-      ${growthSymbolMarkup(r.min)}
-      <strong>${r.emoji} ${r.title}</strong><small>${rankGrowth(r.min).label} · ${range}</small>
-    </div>`;
-  }).join('');
   // 여정 단계
   const journey=document.getElementById('g-journey');
   journey.innerHTML=[...RANKS].reverse().map(r=>{
