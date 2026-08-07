@@ -931,6 +931,24 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
 .rank-evolution-char{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
 .result-char-big .rank-evolution-char,.lvl-char .rank-evolution-char{border-radius:28px;box-shadow:0 12px 28px rgba(72,54,45,.13)}
 .step-char .rank-evolution-char{border-radius:16px}
+/* 메인 요약 영역을 압축해 핵심 메뉴가 첫 화면에 더 많이 보이게 한다. */
+#s-dashboard .dash-header{min-height:224px;padding:18px 18px 15px;border-radius:25px}
+#s-dashboard .dash-header:before{width:160px;height:160px;right:-60px;top:-58px}
+#s-dashboard .cm-premium-mascot{width:39%;right:3px;top:16px;border-radius:21px}
+#s-dashboard .dash-greeting{font-size:12px;margin-bottom:2px}#s-dashboard .dash-name{font-size:20px;margin-bottom:8px}
+#s-dashboard .rank-pill{font-size:12px;padding:6px 10px;margin-bottom:8px}
+#s-dashboard .pts-display{font-size:28px;margin-bottom:7px}#s-dashboard .pts-gauge-wrap{margin:3px 0 5px}#s-dashboard .pts-gauge-label{font-size:11px;margin-bottom:5px}#s-dashboard .pts-gauge{height:8px}
+#s-dashboard .next-level-txt{font-size:12px;line-height:1.4}#s-dashboard .notice-banner{margin-top:10px;padding:11px 14px;border-radius:17px}#s-dashboard .notice-banner strong{font-size:13px}#s-dashboard .notice-banner span{font-size:11px}
+#s-dashboard .cm-home-sections{margin-top:13px}#s-dashboard .cm-section-label{margin-top:16px}
+/* 성장가이드에서 모든 직급 캐릭터를 한눈에 비교한다. */
+.growth-collection{margin:12px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.growth-collection-card{position:relative;overflow:hidden;min-height:206px;padding:10px;border:1px solid #e6ddea;border-radius:22px;background:linear-gradient(150deg,#fff,#fff6ed);box-shadow:0 10px 24px rgba(61,47,78,.08);text-align:center}
+.growth-collection-card.current{border:2px solid #f47a55;box-shadow:0 12px 28px rgba(232,105,65,.18)}
+.growth-collection-card img{display:block;width:100%;aspect-ratio:1;object-fit:cover;border-radius:17px;margin-bottom:7px}
+.growth-collection-card strong{display:block;font-size:14px;line-height:1.35;color:#332e3d}.growth-collection-card small{display:block;margin-top:3px;font-size:11px;color:#817989}
+.growth-collection-card .collection-status{position:absolute;top:17px;right:17px;padding:4px 7px;border-radius:999px;background:rgba(255,255,255,.88);font-size:10px;font-weight:900;color:#70647a;box-shadow:0 4px 10px rgba(53,41,68,.08)}
+.growth-collection-card.current .collection-status{background:#f47753;color:#fff}.growth-collection-card.legend{grid-column:1/-1}.growth-collection-card.legend img{width:58%;margin-left:auto;margin-right:auto}
+@media(max-width:374px){#s-dashboard .dash-header{min-height:216px;padding:16px 15px 14px}#s-dashboard .cm-premium-mascot{width:37%;right:2px;top:18px}#s-dashboard .dash-name{font-size:19px}.growth-collection{gap:8px}.growth-collection-card{min-height:190px;padding:8px}.growth-collection-card strong{font-size:13px}}
 </style></head>
 <body>
 <div class="wrap">
@@ -1049,6 +1067,8 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
       <div class="growth-cur-pts" id="g-cur-pts">0<span>pts</span></div>
       <div class="growth-next" id="g-next-txt"></div>
     </div>
+    <div class="cm-section-label" style="margin:20px 14px 8px"><span>복고양이 성장 도감</span><small>직급별 모습을 한눈에 봐요</small></div>
+    <div class="growth-collection" id="g-collection"></div>
     <div class="journey-progress-wrap section-card">
       <div class="journey-progress-label">
         <span>전체 여정</span>
@@ -1765,6 +1785,18 @@ function showGrowth(){
   const overallPct=Math.min(100,Math.round(totalPts/10000*100));
   document.getElementById('g-overall-bar').style.width=overallPct+'%';
   document.getElementById('g-overall-pct').textContent=overallPct+'%';
+  // 다섯 단계 캐릭터 전체 도감
+  document.getElementById('g-collection').innerHTML=RANKS.map((r,i)=>{
+    const isCurrent=r.title===rank.title;
+    const isDone=totalPts>=r.min;
+    const status=isCurrent?'현재':(isDone?'달성':'목표');
+    const range=r.min===10000?'10,000pts 이상':`${r.min.toLocaleString()}~${r.max.toLocaleString()}pts`;
+    return `<div class="growth-collection-card${isCurrent?' current':''}${i===RANKS.length-1?' legend':''}">
+      <span class="collection-status">${status}</span>
+      <img src="${rankMascotSrc(r.min)}" alt="${r.title} 복고양이 캐릭터">
+      <strong>${r.emoji} ${r.title}</strong><small>${range}</small>
+    </div>`;
+  }).join('');
   // 여정 단계
   const journey=document.getElementById('g-journey');
   journey.innerHTML=[...RANKS].reverse().map(r=>{
@@ -1783,7 +1815,7 @@ function showGrowth(){
       <div class="step-char">${makeChar(r.min,52)}</div>
       <div class="step-info">
         <div class="step-rank">${r.emoji} ${r.title}</div>
-        <div class="step-pts-range">${r.min.toLocaleString()}pts ~ ${r.min===10000?'':'${r.max.toLocaleString()}pts'}</div>
+        <div class="step-pts-range">${r.min===10000?'10,000pts 이상':`${r.min.toLocaleString()}pts ~ ${r.max.toLocaleString()}pts`}</div>
       </div>
       ${statusTag}
     </div>`;
