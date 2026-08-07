@@ -928,6 +928,9 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
 .cm-content-screen{background:linear-gradient(180deg,#fffaf5,#fff 50%,#f9f7ff)!important}.cm-head{background:linear-gradient(135deg,#6651bd,#8a74df);box-shadow:0 8px 22px rgba(75,57,147,.2)}.cm-head button{border-color:rgba(255,255,255,.38);background:rgba(255,255,255,.14);font-family:inherit}.cm-switch{background:#eeeaf1}.cm-chip,.cm-subject,.cm-obj{font-family:inherit}.cm-card,.cm-archive{box-shadow:0 13px 28px rgba(57,45,74,.09)}
 .rank-modal-sheet{background:linear-gradient(180deg,#fffaf5,#fff);box-shadow:0 -20px 50px rgba(40,30,55,.18)}
 @media(max-width:374px){.intro-hero,.login-hero{padding-left:21px;padding-right:21px}.intro-title{font-size:27px}.q-text{font-size:18px!important}}
+.rank-evolution-char{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.result-char-big .rank-evolution-char,.lvl-char .rank-evolution-char{border-radius:28px;box-shadow:0 12px 28px rgba(72,54,45,.13)}
+.step-char .rank-evolution-char{border-radius:16px}
 </style></head>
 <body>
 <div class="wrap">
@@ -1007,7 +1010,7 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
       <div class="dash-header">
         <div class="dash-greeting">반갑습니다!</div>
         <div class="dash-name" id="d-name"><span class="mgr-title">선생님</span> 👋</div>
-        <img class="cm-premium-mascot" src="assets/counseling-master-mascot-v1.png" alt="상담마스터 너구리 코치">
+        <img class="cm-premium-mascot" id="d-mascot" src="assets/rank-1-new.png" alt="현재 직급 성장 캐릭터">
         <div class="char-circle" id="d-char"></div>
         <div class="rank-pill" id="d-rank">
           <span id="d-rank-emoji">😰</span>
@@ -1496,6 +1499,14 @@ const RANKS = [
   { min:10000, max:99999, emoji:'👑', title:'전설의 상담왕', msg:'전설이 되셨습니다! 당신이 최고예요!', color:'#EF4444', next:10000 },
 ];
 function getRank(pts){ return RANKS.slice().reverse().find(r=>pts>=r.min)||RANKS[0]; }
+const RANK_MASCOTS = {
+  0:'assets/rank-1-new.png',
+  1000:'assets/rank-2-study.png',
+  3000:'assets/rank-3-relaxed.png',
+  6000:'assets/rank-4-veteran.png',
+  10000:'assets/rank-5-legend.png'
+};
+function rankMascotSrc(pts){ return RANK_MASCOTS[getRank(pts).min]||RANK_MASCOTS[0]; }
 
 /* ═══════════════════════════════
    동기부여 메시지
@@ -1514,6 +1525,8 @@ const MONEY_MSGS = ['💰 제품을 잘 알수록 학부모 신뢰가 높아지�
 ═══════════════════════════════ */
 function makeChar(pts, size=120, mood='normal'){
   const r=getRank(pts);
+  return `<img class="rank-evolution-char" src="${rankMascotSrc(pts)}" width="${size}" height="${size}" alt="${r.title} 성장 캐릭터">`;
+  /* 아래 SVG는 이전 버전 복구 참고용으로 남겨둔다. */
   const f={
     normal:{ e:'<circle cx="51" cy="47" r="4" fill="#2D2D2D"/><circle cx="69" cy="47" r="4" fill="#2D2D2D"/><circle cx="52" cy="46" r="1.5" fill="white"/><circle cx="70" cy="46" r="1.5" fill="white"/>', m:'<path d="M53 60 Q60 66 67 60" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/>' },
     happy: { e:'<path d="M47 45 Q51 41 55 45" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M65 45 Q69 41 73 45" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/>', m:'<path d="M50 59 Q60 70 70 59" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="46" cy="55" r="5" fill="#FCA5A5" opacity="0.5"/><circle cx="74" cy="55" r="5" fill="#FCA5A5" opacity="0.5"/>' },
@@ -1664,6 +1677,8 @@ async function showDashboard(){
   const rank=getRank(totalPts);
   const g=calcGauge(totalPts);
   document.getElementById('d-name').innerHTML=`<span>${userName}</span> <span class="mgr-title">${GT.manager_title||'선생님'}</span> 👋`;
+  document.getElementById('d-mascot').src=rankMascotSrc(totalPts);
+  document.getElementById('d-mascot').alt=rank.title+' 성장 캐릭터';
   document.getElementById('d-char').innerHTML=makeChar(totalPts,100,'happy');
   document.getElementById('d-rank-emoji').textContent=rank.emoji;
   document.getElementById('d-rank-txt').textContent=rank.title;
