@@ -1,4 +1,4 @@
-const VERSION = '2026-07-29-v9';
+const VERSION = '2026-08-07-v13';
 const CACHE = 'quiz-' + VERSION;
 
 self.addEventListener('install', e => {
@@ -23,6 +23,11 @@ self.addEventListener('fetch', e => {
   }
   // Supabase API 요청(랭킹/문제/설정 등 동적 데이터)은 절대 캐싱하지 않고 항상 네트워크로 직접 호출
   if (e.request.url.includes('supabase.co')) {
+    e.respondWith(fetch(e.request));
+    return;
+  }
+  // 교육 PDF는 용량이 크므로 기기 캐시에 쌓지 않고 필요할 때 불러온다.
+  if (new URL(e.request.url).pathname.toLowerCase().endsWith('.pdf')) {
     e.respondWith(fetch(e.request));
     return;
   }
