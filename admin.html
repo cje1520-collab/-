@@ -702,20 +702,11 @@ body {
           <div class="form-group" style="margin-bottom:6px"><label class="q-edit-label">제목</label><input class="q-edit-input" id="t-menu-rank-label" value="랭킹"></div>
           <div class="form-group"><label class="q-edit-label">설명</label><input class="q-edit-input" id="t-menu-rank-desc" value="월간 TOP 5"></div>
         </div>
-        <div style="background:#F5F3FF;border:1.5px solid #A78BFA;border-radius:12px;padding:12px">
-          <div style="font-size:11px;font-weight:800;color:#7C3AED;margin-bottom:8px">🌱 내 성장 보기</div>
-          <div class="form-group" style="margin-bottom:6px"><label class="q-edit-label">제목</label><input class="q-edit-input" id="t-menu-growth-label" value="내 성장 보기"></div>
-          <div class="form-group"><label class="q-edit-label">설명</label><input class="q-edit-input" id="t-menu-growth-desc" value="직급 여정 확인"></div>
-        </div>
       </div>
 
       <!-- 직급 이름 -->
       <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border)">👑 직급 이름 & 메시지</div>
       <div id="rank-text-fields"></div>
-
-      <!-- 응원 메시지 -->
-      <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin:16px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--border)">💬 정답 응원 메시지</div>
-      <div id="ok-msg-fields"></div>
 
       <div style="font-family:'Jua',sans-serif;font-size:15px;color:var(--text);margin:16px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--border)">❌ 오답 응원 메시지</div>
       <div id="ng-msg-fields"></div>
@@ -1059,13 +1050,6 @@ function buildTextFields(gt){
         <div><label class="q-edit-label">달성 메시지</label><input class="q-edit-input" id="rk${i}m" value="${gt?gt[`rank_${i}_msg`]||r.msg:r.msg}"></div>
       </div>
     </div>`).join('');
-  // 정답 응원 메시지
-  const of=document.getElementById('ok-msg-fields');
-  of.innerHTML=Object.entries(MOT_OK_DEFAULTS).map(([cat,msgs])=>`
-    <div style="margin-bottom:10px">
-      <div style="font-size:12px;font-weight:800;color:var(--primary);margin-bottom:6px">[${cat}]</div>
-      ${msgs.map((m,i)=>`<div class="form-group" style="margin-bottom:6px"><input class="q-edit-input" id="ok_${cat}_${i}" value="${gt?gt[`mot_ok_${cat}_${i+1}`]||m:m}"></div>`).join('')}
-    </div>`).join('');
   // 오답 메시지
   const ngf=document.getElementById('ng-msg-fields');
   ngf.innerHTML=MOT_NG_DEFAULTS.map((m,i)=>`<div class="form-group" style="margin-bottom:6px"><input class="q-edit-input" id="ng_${i}" value="${gt?gt[`mot_ng_${i+1}`]||m:m}"></div>`).join('');
@@ -1090,7 +1074,7 @@ async function loadTexts(){
         if(gt[`feat_${i}_desc`]) document.getElementById(`t-f${i}d`).value=gt[`feat_${i}_desc`];
       }
       // 메뉴 카드
-      const menuFields=['quiz','cards','education','roulette','rank','growth'];
+      const menuFields=['quiz','cards','education','roulette','rank'];
       menuFields.forEach(k=>{
         const lv=gt[`menu_${k}_label`]; const dv=gt[`menu_${k}_desc`];
         if(lv) document.getElementById(`t-menu-${k}-label`).value=lv;
@@ -1115,7 +1099,7 @@ async function saveTexts(){
     gt[`feat_${i}_desc`] =document.getElementById(`t-f${i}d`).value.trim();
   }
   // 메뉴 카드
-  ['quiz','cards','education','roulette','rank','growth'].forEach(k=>{
+  ['quiz','cards','education','roulette','rank'].forEach(k=>{
     gt[`menu_${k}_label`]=document.getElementById(`t-menu-${k}-label`).value.trim();
     gt[`menu_${k}_desc`] =document.getElementById(`t-menu-${k}-desc`).value.trim();
   });
@@ -1123,9 +1107,6 @@ async function saveTexts(){
     gt[`rank_${i}_emoji`]=document.getElementById(`rk${i}e`).value.trim();
     gt[`rank_${i}_title`]=document.getElementById(`rk${i}t`).value.trim();
     gt[`rank_${i}_msg`]  =document.getElementById(`rk${i}m`).value.trim();
-  });
-  Object.keys(MOT_OK_DEFAULTS).forEach(cat=>{
-    MOT_OK_DEFAULTS[cat].forEach((_,i)=>{ gt[`mot_ok_${cat}_${i+1}`]=document.getElementById(`ok_${cat}_${i}`).value.trim(); });
   });
   MOT_NG_DEFAULTS.forEach((_,i)=>{ gt[`mot_ng_${i+1}`]=document.getElementById(`ng_${i}`).value.trim(); });
   MONEY_DEFAULTS.forEach((_,i)=>{ gt[`money_${i+1}`]=document.getElementById(`mn_${i}`).value.trim(); });

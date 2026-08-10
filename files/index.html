@@ -982,6 +982,12 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
 #s-quiz .btn-submit{color:#fff!important;text-shadow:0 1px 1px rgba(111,52,28,.18)}#s-quiz .btn-submit:disabled{color:#fff!important;opacity:.68}
 .dash-growth-shortcut{display:flex;width:100%;margin-top:9px;padding:9px 11px;align-items:center;justify-content:space-between;gap:10px;border:1px solid rgba(244,122,85,.2);border-radius:14px;background:rgba(255,255,255,.72);color:#51485a;font:inherit;cursor:pointer;box-shadow:0 5px 14px rgba(64,49,77,.05)}
 .dash-growth-shortcut span{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:850}.dash-growth-shortcut strong{font-size:12px;color:#e46645}.dash-growth-shortcut i{font-style:normal;color:#aaa0ad}.dash-growth-shortcut b{font-size:17px;color:#f17652}
+.intro-sub{max-width:360px;margin-left:auto;margin-right:auto;line-height:1.75!important;word-break:keep-all;text-wrap:balance}.intro-feat{align-items:center}.feat-text{min-width:0}.feat-text strong{line-height:1.4;margin-bottom:4px}.feat-text span{display:block;line-height:1.65!important;word-break:keep-all}
+#s-dashboard .cm-premium-mascot.profile-avatar{width:82px;height:96px;right:17px;top:18px;border-radius:23px;background:linear-gradient(155deg,#fff,#eee9ff);overflow:visible;padding:9px;box-shadow:0 12px 25px rgba(77,59,101,.14),inset 0 1px 0 #fff}
+.profile-avatar svg{display:block;width:62px;height:62px}.profile-avatar .profile-level{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);white-space:nowrap;padding:5px 9px;border-radius:999px;background:#6d55c5;color:#fff;font-size:10px;font-weight:900;box-shadow:0 5px 12px rgba(83,61,157,.25)}
+.cm-secondary small{font-size:10px;color:#8c8293;font-weight:800}.cm-secondary.has-items{border-color:#f5a47f!important;background:linear-gradient(145deg,#fff8f3,#fff)!important}.cm-secondary.has-items small{color:#e2613d;font-weight:900}
+.dash-growth-shortcut{min-height:48px;margin-top:10px;padding:8px 12px;border:1.5px solid #d8cef6;background:linear-gradient(135deg,#f6f3ff,#fff);box-shadow:0 7px 17px rgba(84,66,128,.08)}.dash-growth-shortcut>span{flex-wrap:wrap;justify-content:flex-start}.dash-growth-shortcut>span:before{content:'전체 성장 단계 보기';width:100%;color:#726783;font-size:10px;font-weight:800}.dash-growth-shortcut strong{font-size:13px}.dash-growth-shortcut b{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:50%;background:#745acb;color:#fff}
+@media(max-width:374px){#s-dashboard .cm-premium-mascot.profile-avatar{width:74px;height:88px;right:13px;top:19px}.profile-avatar svg{width:56px;height:56px}.dash-growth-shortcut span{gap:4px;font-size:10px}.dash-growth-shortcut strong{font-size:11px}}
 .login-remember{margin:4px 16px 14px;padding:13px 14px;border:1px solid #e4dce8;border-radius:16px;background:rgba(255,255,255,.86);box-shadow:0 7px 18px rgba(57,45,74,.05)}.login-remember-main{display:flex;align-items:center;justify-content:space-between;gap:10px}.login-remember label{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:850;color:#494351;cursor:pointer}.login-remember input{width:19px;height:19px;accent-color:#f26f4f}.login-forget{border:0;background:transparent;color:#756a81;font-size:12px;font-weight:800;text-decoration:underline;cursor:pointer;padding:6px}.login-memory-note{display:block;margin-top:7px;font-size:11px;line-height:1.5;color:#8a818f}.login-memory-note.saved{color:#16876b;font-weight:800}
 @media(max-width:374px){.cm-content-screen .cm-wrap{padding-left:13px;padding-right:13px}.cm-step{padding:16px 14px 18px}.cm-step-body{font-size:16px;line-height:1.75}.cm-title strong{font-size:18px}.cm-title small{font-size:12px}.cm-step-recommend .cm-step-body,.cm-step-answer .cm-step-body{padding:12px 13px}}
 </style></head>
@@ -1092,7 +1098,7 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
       <strong id="notice-text"></strong>
       <span id="notice-sub"></span>
     </div>
-    <div class="cm-home-sections"><div class="cm-section-label"><span>자주 쓰는 메뉴</span><small>상담에 바로 활용해요</small></div><div class="cm-primary-grid"><button class="cm-primary hero" onclick="startQuiz()"><span class="cm-icon">🎮</span><strong id="menu-quiz-label">상담 퀴즈</strong><small id="menu-quiz-desc">50문항 도전!</small><span class="cm-arrow">›</span></button><button class="cm-primary cards" onclick="showCounselingCards()"><span class="cm-icon">🗂️</span><strong id="menu-cards-label">상담 핵심카드</strong><small id="menu-cards-desc">학년·과목별 상담 멘트</small></button><button class="cm-primary education" onclick="showEducationArchive()"><span class="cm-icon">📚</span><strong id="menu-education-label">교육자료</strong><small id="menu-education-desc">인사이트 PDF · 연계 영상</small></button></div><div class="cm-section-label"><span>더보기</span><small>연습과 기록을 확인해요</small></div><div class="cm-secondary-grid"><button class="cm-secondary" onclick="showRoulette()"><span>🎰</span><strong id="menu-roulette-label">롤플레잉 룰렛</strong><small id="menu-roulette-desc" style="display:none">거절극복 연습</small></button><button class="cm-secondary" onclick="showRankModal()"><span>🏆</span><strong id="menu-rank-label">랭킹</strong><small id="menu-rank-desc" style="display:none">이달의 TOP5</small></button><button class="cm-secondary" onclick="showGrowth()"><span>📈</span><strong id="menu-growth-label">성장가이드</strong><small id="menu-growth-desc" style="display:none">나의 성장 확인</small></button></div></div><button class="btn-ghost" id="btn-dash-review" onclick="startReviewFromDash()" style="display:none">📖 오답노트 (틀린 문제)</button>
+    <div class="cm-home-sections"><div class="cm-section-label"><span>자주 쓰는 메뉴</span><small>상담에 바로 활용해요</small></div><div class="cm-primary-grid"><button class="cm-primary hero" onclick="startQuiz()"><span class="cm-icon">🎮</span><strong id="menu-quiz-label">상담 퀴즈</strong><small id="menu-quiz-desc">50문항 도전!</small><span class="cm-arrow">›</span></button><button class="cm-primary cards" onclick="showCounselingCards()"><span class="cm-icon">🗂️</span><strong id="menu-cards-label">상담 핵심카드</strong><small id="menu-cards-desc">학년·과목별 상담 멘트</small></button><button class="cm-primary education" onclick="showEducationArchive()"><span class="cm-icon">📚</span><strong id="menu-education-label">교육자료</strong><small id="menu-education-desc">인사이트 PDF · 연계 영상</small></button></div><div class="cm-section-label"><span>더보기</span><small>연습과 기록을 확인해요</small></div><div class="cm-secondary-grid"><button class="cm-secondary" onclick="showRoulette()"><span>🎰</span><strong id="menu-roulette-label">롤플레잉 룰렛</strong><small id="menu-roulette-desc" style="display:none">거절극복 연습</small></button><button class="cm-secondary" onclick="showRankModal()"><span>🏆</span><strong id="menu-rank-label">랭킹</strong><small id="menu-rank-desc" style="display:none">이달의 TOP5</small></button><button class="cm-secondary" id="btn-dash-review" onclick="startReviewFromDash()"><span>📖</span><strong>오답노트</strong><small id="dash-review-count">0문제</small></button></div></div>
     <button class="btn-ghost" onclick="showScreen('s-login')">🔄 다른 계정으로</button>
   </div>
 
@@ -1342,8 +1348,8 @@ function applyTexts(){
   }
   // 인트로
   const badge=document.getElementById('intro-badge'); if(badge) badge.textContent=GT.intro_badge;
-  const tit=document.getElementById('intro-title'); if(tit) tit.innerHTML=GT.intro_title.replace('\n','<br>')+' 👋';
-  const sub=document.getElementById('intro-sub'); if(sub) sub.innerHTML=GT.intro_sub.replace('\n','<br>');
+  const tit=document.getElementById('intro-title'); if(tit) tit.innerHTML=GT.intro_title.replace(/\n/g,'<br>')+' 👋';
+  const sub=document.getElementById('intro-sub'); if(sub) sub.innerHTML=GT.intro_sub.replace(/\n/g,'<br>');
   for(let i=1;i<=4;i++){
     const ic=document.getElementById(`feat-${i}-icon`); if(ic) ic.textContent=GT[`feat_${i}_icon`];
     const tt=document.getElementById(`feat-${i}-title`); if(tt) tt.textContent=GT[`feat_${i}_title`];
@@ -1577,6 +1583,10 @@ const RANK_GROWTH = {
 };
 function rankGrowth(pts){ const r=getRank(pts); return {...(RANK_GROWTH[r.min]||RANK_GROWTH[0]),stage:RANKS.findIndex(x=>x.min===r.min)+1,rank:r}; }
 function growthSymbolMarkup(pts){ const g=rankGrowth(pts); return `<div class="growth-symbol stage-${g.stage}" role="img" aria-label="${g.rank.title} ${g.label}"><span class="symbol-main">${g.icon}</span>${g.spark?`<span class="symbol-spark">${g.spark}</span>`:''}</div>`; }
+function profileAvatarMarkup(stage){
+  const colors=['#58b98a','#568ed8','#7864cf','#d58b3e','#d4a72f'],c=colors[Math.max(0,Math.min(4,stage-1))];
+  return `<svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="38" fill="${c}" opacity=".12"/><circle cx="40" cy="29" r="13" fill="${c}"/><path d="M17 66c2-16 11-24 23-24s21 8 23 24" fill="${c}"/><path d="M31 29c3 3 15 3 18 0" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity=".8"/><circle cx="35" cy="27" r="1.5" fill="#fff"/><circle cx="45" cy="27" r="1.5" fill="#fff"/></svg><span class="profile-level">LEVEL ${stage}</span>`;
+}
 
 /* ═══════════════════════════════
    동기부여 메시지
@@ -1770,8 +1780,8 @@ async function showDashboard(){
   const g=calcGauge(totalPts);
   document.getElementById('d-name').innerHTML=`<span>${userName}</span> <span class="mgr-title">${GT.manager_title||'선생님'}</span> 👋`;
   const homeGrowth=rankGrowth(totalPts);
-  document.getElementById('d-mascot').className=`cm-premium-mascot growth-symbol stage-${homeGrowth.stage}`;
-  document.getElementById('d-mascot').innerHTML=`<span class="symbol-main">${homeGrowth.icon}</span>${homeGrowth.spark?`<span class="symbol-spark">${homeGrowth.spark}</span>`:''}`;
+  document.getElementById('d-mascot').className='cm-premium-mascot profile-avatar';
+  document.getElementById('d-mascot').innerHTML=profileAvatarMarkup(homeGrowth.stage);
   document.getElementById('d-mascot').setAttribute('aria-label',rank.title+' '+homeGrowth.label);
   document.getElementById('d-char').innerHTML=makeChar(totalPts,100,'happy');
   document.getElementById('d-rank-emoji').textContent=rank.emoji;
@@ -1796,9 +1806,8 @@ async function showDashboard(){
   renderTop5Dashboard();
   // 오답노트 버튼
   const wrongs=loadWrongNote(userPhone);
-  const rvBtn=document.getElementById('btn-dash-review');
-  if(wrongs.length){ rvBtn.style.display='block'; rvBtn.textContent=`📖 오답노트 (${wrongs.length}문제)`; }
-  else { rvBtn.style.display='none'; }
+  document.getElementById('dash-review-count').textContent=`${wrongs.length}문제`;
+  document.getElementById('btn-dash-review').classList.toggle('has-items',wrongs.length>0);
   showScreen('s-dashboard');
 }
 
