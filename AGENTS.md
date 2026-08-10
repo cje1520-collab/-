@@ -145,6 +145,13 @@ key, value (JSON), updated_at
 
 ## 📅 작업 이력
 
+### 2026-08-10 (인트로 앱 이름 강조)
+**`엘리하이 상담 MASTER`가 장식 배지가 아닌 앱 이름으로 먼저 인식되도록 확대**
+- 작업 전 운영 index/service worker를 `backup_20260810_before_intro_brand_title`에 백업
+- 앱 이름의 글자 크기·굵기·여백을 확대하고 브랜드 헤더형 카드로 변경
+- 374px 이하 화면에서도 제목과 겹치지 않도록 별도 크기 적용
+- 서비스 워커 캐시 버전을 `2026-08-10-v32`로 갱신
+
 ### 2026-08-10 (프로필 카드·인트로 정렬·오답노트 노출 개선)
 **직급과 성장 상태를 한눈에 읽는 프로필로 바꾸고 모바일 핵심 기능 노출을 정리**
 - 작업 전 운영 index/admin/service worker를 `backup_20260810_before_profile_intro_review_admin`에 백업
