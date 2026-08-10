@@ -682,6 +682,16 @@ body {
           <div class="form-group" style="margin-bottom:6px"><label class="q-edit-label">제목</label><input class="q-edit-input" id="t-menu-quiz-label" value="상담 퀴즈"></div>
           <div class="form-group"><label class="q-edit-label">설명</label><input class="q-edit-input" id="t-menu-quiz-desc" value="50문항 도전!"></div>
         </div>
+        <div style="background:#F5F3FF;border:1.5px solid #C4B5FD;border-radius:12px;padding:12px">
+          <div style="font-size:11px;font-weight:800;color:#6D4AC5;margin-bottom:8px">🗂️ 상담 핵심카드</div>
+          <div class="form-group" style="margin-bottom:6px"><label class="q-edit-label">제목</label><input class="q-edit-input" id="t-menu-cards-label" value="상담 핵심카드"></div>
+          <div class="form-group"><label class="q-edit-label">설명</label><input class="q-edit-input" id="t-menu-cards-desc" value="학년·과목별 상담 멘트"></div>
+        </div>
+        <div style="background:#ECFDF8;border:1.5px solid #7DD3C7;border-radius:12px;padding:12px">
+          <div style="font-size:11px;font-weight:800;color:#16876B;margin-bottom:8px">📚 교육자료</div>
+          <div class="form-group" style="margin-bottom:6px"><label class="q-edit-label">제목</label><input class="q-edit-input" id="t-menu-education-label" value="교육자료"></div>
+          <div class="form-group"><label class="q-edit-label">설명</label><input class="q-edit-input" id="t-menu-education-desc" value="인사이트 PDF · 연계 영상"></div>
+        </div>
         <div style="background:#F0FDF9;border:1.5px solid #06D6A0;border-radius:12px;padding:12px">
           <div style="font-size:11px;font-weight:800;color:#059669;margin-bottom:8px">🎰 롤플레잉 룰렛</div>
           <div class="form-group" style="margin-bottom:6px"><label class="q-edit-label">제목</label><input class="q-edit-input" id="t-menu-roulette-label" value="롤플레잉 룰렛"></div>
@@ -1080,7 +1090,7 @@ async function loadTexts(){
         if(gt[`feat_${i}_desc`]) document.getElementById(`t-f${i}d`).value=gt[`feat_${i}_desc`];
       }
       // 메뉴 카드
-      const menuFields=['quiz','roulette','rank','growth'];
+      const menuFields=['quiz','cards','education','roulette','rank','growth'];
       menuFields.forEach(k=>{
         const lv=gt[`menu_${k}_label`]; const dv=gt[`menu_${k}_desc`];
         if(lv) document.getElementById(`t-menu-${k}-label`).value=lv;
@@ -1105,7 +1115,7 @@ async function saveTexts(){
     gt[`feat_${i}_desc`] =document.getElementById(`t-f${i}d`).value.trim();
   }
   // 메뉴 카드
-  ['quiz','roulette','rank','growth'].forEach(k=>{
+  ['quiz','cards','education','roulette','rank','growth'].forEach(k=>{
     gt[`menu_${k}_label`]=document.getElementById(`t-menu-${k}-label`).value.trim();
     gt[`menu_${k}_desc`] =document.getElementById(`t-menu-${k}-desc`).value.trim();
   });

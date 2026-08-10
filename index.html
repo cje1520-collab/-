@@ -595,12 +595,15 @@ body {
 .choice-btn.selected{border-color:var(--primary);background:var(--primary-light)}
 .choice-btn:disabled{cursor:default;opacity:.75}.choice-btn.correct{border-color:var(--green);background:#F0FDF9}.choice-btn.wrong{border-color:var(--red);background:#FFF5F5}
 .feedback {
-  margin-top: 12px; padding: 14px 16px; border-radius: var(--radius);
-  font-size: 14px; font-weight: 700; line-height: 1.7; display: none;
+  position:fixed;left:50%;top:50%;z-index:1200;display:none;width:min(calc(100% - 48px),330px);
+  transform:translate(-50%,-50%);padding:24px 20px;border-radius:24px;text-align:center;
+  font-size:20px;font-weight:900;line-height:1.5;box-shadow:0 20px 60px rgba(44,34,55,.26);backdrop-filter:blur(12px);
 }
-.feedback.show { display: block; animation: popIn 0.3s ease; }
-.feedback.ok { background: #F0FDF9; border: 1.5px solid rgba(6,214,160,0.4); color: #059669; }
-.feedback.ng { background: #FFF5F5; border: 1.5px solid rgba(255,90,95,0.35); color: #DC2626; }
+.feedback.show { display:block;animation:answerToast 1.45s ease both;pointer-events:none }
+.feedback.ok { background:rgba(240,253,249,.96);border:2px solid rgba(6,214,160,.5);color:#087b5d }
+.feedback.ng { background:rgba(255,245,245,.97);border:2px solid rgba(255,90,95,.4);color:#c9363c }
+.feedback small{display:block;margin-top:5px;font-size:14px;color:inherit;opacity:.85}
+@keyframes answerToast{0%{opacity:0;transform:translate(-50%,-44%) scale(.88)}16%,72%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-54%) scale(.96)}}
 .motivate {
   margin-top: 10px; padding: 12px 16px;
   background: linear-gradient(135deg, rgba(255,217,61,0.15), rgba(255,107,53,0.08));
@@ -608,10 +611,10 @@ body {
   font-family: 'Jua', sans-serif; font-size: 13px; color: #B45309;
   text-align: center; display: none; animation: popIn 0.4s ease;
 }
-.motivate.show { display: block; }
+.motivate,.motivate.show { display:none!important; }
 .btn-next {
   display: none; width: 100%;
-  margin-top: 12px; padding: 16px;
+  margin-top:0; padding:16px;
   background: linear-gradient(135deg, #FF6B35, #FF9F1C);
   color: white; border: none; border-radius: var(--radius);
   font-family: 'Jua', sans-serif; font-size: 17px; cursor: pointer;
@@ -977,6 +980,8 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
 /* 퀴즈에서는 큰 성장 아이콘을 제거하고 제출 버튼 대비를 높인다. */
 #s-quiz .char-bar-mini{display:none!important}#s-quiz .char-bar{padding:11px 15px;min-height:52px}#s-quiz .char-bar-rank{font-family:inherit;font-size:14px;font-weight:900;margin-bottom:6px}
 #s-quiz .btn-submit{color:#fff!important;text-shadow:0 1px 1px rgba(111,52,28,.18)}#s-quiz .btn-submit:disabled{color:#fff!important;opacity:.68}
+.dash-growth-shortcut{display:flex;width:100%;margin-top:9px;padding:9px 11px;align-items:center;justify-content:space-between;gap:10px;border:1px solid rgba(244,122,85,.2);border-radius:14px;background:rgba(255,255,255,.72);color:#51485a;font:inherit;cursor:pointer;box-shadow:0 5px 14px rgba(64,49,77,.05)}
+.dash-growth-shortcut span{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:850}.dash-growth-shortcut strong{font-size:12px;color:#e46645}.dash-growth-shortcut i{font-style:normal;color:#aaa0ad}.dash-growth-shortcut b{font-size:17px;color:#f17652}
 .login-remember{margin:4px 16px 14px;padding:13px 14px;border:1px solid #e4dce8;border-radius:16px;background:rgba(255,255,255,.86);box-shadow:0 7px 18px rgba(57,45,74,.05)}.login-remember-main{display:flex;align-items:center;justify-content:space-between;gap:10px}.login-remember label{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:850;color:#494351;cursor:pointer}.login-remember input{width:19px;height:19px;accent-color:#f26f4f}.login-forget{border:0;background:transparent;color:#756a81;font-size:12px;font-weight:800;text-decoration:underline;cursor:pointer;padding:6px}.login-memory-note{display:block;margin-top:7px;font-size:11px;line-height:1.5;color:#8a818f}.login-memory-note.saved{color:#16876b;font-weight:800}
 @media(max-width:374px){.cm-content-screen .cm-wrap{padding-left:13px;padding-right:13px}.cm-step{padding:16px 14px 18px}.cm-step-body{font-size:16px;line-height:1.75}.cm-title strong{font-size:18px}.cm-title small{font-size:12px}.cm-step-recommend .cm-step-body,.cm-step-answer .cm-step-body{padding:12px 13px}}
 </style></head>
@@ -1080,13 +1085,14 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
           <div class="pts-gauge"><div class="pts-gauge-fill" id="d-gauge" style="width:0%"></div></div>
         </div>
         <div class="next-level-txt" id="d-next-txt"></div>
+        <button class="dash-growth-shortcut" type="button" onclick="showGrowth()"><span>🌱 성장여정 <strong id="d-growth-current">현재 단계</strong><i>→</i><span id="d-growth-next">다음 단계</span></span><b>›</b></button>
       </div>
     </div>
     <div class="notice-banner" id="notice-banner">
       <strong id="notice-text"></strong>
       <span id="notice-sub"></span>
     </div>
-    <div class="cm-home-sections"><div class="cm-section-label"><span>자주 쓰는 메뉴</span><small>상담에 바로 활용해요</small></div><div class="cm-primary-grid"><button class="cm-primary hero" onclick="startQuiz()"><span class="cm-icon">🎮</span><strong id="menu-quiz-label">상담 퀴즈</strong><small id="menu-quiz-desc">50문항 도전!</small><span class="cm-arrow">›</span></button><button class="cm-primary cards" onclick="showCounselingCards()"><span class="cm-icon">🗂️</span><strong>상담 핵심카드</strong><small>학년·과목별 상담 멘트</small></button><button class="cm-primary education" onclick="showEducationArchive()"><span class="cm-icon">📚</span><strong>교육자료</strong><small>인사이트 PDF · 연계 영상</small></button></div><div class="cm-section-label"><span>더보기</span><small>연습과 기록을 확인해요</small></div><div class="cm-secondary-grid"><button class="cm-secondary" onclick="showRoulette()"><span>🎰</span><strong id="menu-roulette-label">롤플레잉 룰렛</strong><small id="menu-roulette-desc" style="display:none">거절극복 연습</small></button><button class="cm-secondary" onclick="showRankModal()"><span>🏆</span><strong id="menu-rank-label">랭킹</strong><small id="menu-rank-desc" style="display:none">이달의 TOP5</small></button><button class="cm-secondary" onclick="showGrowth()"><span>📈</span><strong id="menu-growth-label">성장가이드</strong><small id="menu-growth-desc" style="display:none">나의 성장 확인</small></button></div></div><button class="btn-ghost" id="btn-dash-review" onclick="startReviewFromDash()" style="display:none">📖 오답노트 (틀린 문제)</button>
+    <div class="cm-home-sections"><div class="cm-section-label"><span>자주 쓰는 메뉴</span><small>상담에 바로 활용해요</small></div><div class="cm-primary-grid"><button class="cm-primary hero" onclick="startQuiz()"><span class="cm-icon">🎮</span><strong id="menu-quiz-label">상담 퀴즈</strong><small id="menu-quiz-desc">50문항 도전!</small><span class="cm-arrow">›</span></button><button class="cm-primary cards" onclick="showCounselingCards()"><span class="cm-icon">🗂️</span><strong id="menu-cards-label">상담 핵심카드</strong><small id="menu-cards-desc">학년·과목별 상담 멘트</small></button><button class="cm-primary education" onclick="showEducationArchive()"><span class="cm-icon">📚</span><strong id="menu-education-label">교육자료</strong><small id="menu-education-desc">인사이트 PDF · 연계 영상</small></button></div><div class="cm-section-label"><span>더보기</span><small>연습과 기록을 확인해요</small></div><div class="cm-secondary-grid"><button class="cm-secondary" onclick="showRoulette()"><span>🎰</span><strong id="menu-roulette-label">롤플레잉 룰렛</strong><small id="menu-roulette-desc" style="display:none">거절극복 연습</small></button><button class="cm-secondary" onclick="showRankModal()"><span>🏆</span><strong id="menu-rank-label">랭킹</strong><small id="menu-rank-desc" style="display:none">이달의 TOP5</small></button><button class="cm-secondary" onclick="showGrowth()"><span>📈</span><strong id="menu-growth-label">성장가이드</strong><small id="menu-growth-desc" style="display:none">나의 성장 확인</small></button></div></div><button class="btn-ghost" id="btn-dash-review" onclick="startReviewFromDash()" style="display:none">📖 오답노트 (틀린 문제)</button>
     <button class="btn-ghost" onclick="showScreen('s-login')">🔄 다른 계정으로</button>
   </div>
 
@@ -1288,6 +1294,8 @@ var GT = {
   feat_3_icon:'👑', feat_3_title:'캐릭터가 함께 성장해요',        feat_3_desc:'신입 → 열공 → 여유 → 베테랑 → 전설의 상담왕',
   feat_4_icon:'🎁', feat_4_title:'10,000pts 달성 시 상품권 지급!',feat_4_desc:'누적 포인트 기준, 전화번호로 기록 저장',
   menu_quiz_label:'상담 퀴즈',       menu_quiz_desc:'50문항 도전!',
+  menu_cards_label:'상담 핵심카드',   menu_cards_desc:'학년·과목별 상담 멘트',
+  menu_education_label:'교육자료',    menu_education_desc:'인사이트 PDF · 연계 영상',
   menu_roulette_label:'롤플레잉 룰렛', menu_roulette_desc:'거절극복 연습',
   menu_rank_label:'랭킹',           menu_rank_desc:'월간 TOP 10',
   menu_growth_label:'내 성장 보기',  menu_growth_desc:'직급 여정 확인',
@@ -1344,6 +1352,8 @@ function applyTexts(){
   // 메뉴 카드 텍스트
   const menuMap = {
     'menu-quiz-label':GT.menu_quiz_label, 'menu-quiz-desc':GT.menu_quiz_desc,
+    'menu-cards-label':GT.menu_cards_label, 'menu-cards-desc':GT.menu_cards_desc,
+    'menu-education-label':GT.menu_education_label, 'menu-education-desc':GT.menu_education_desc,
     'menu-roulette-label':GT.menu_roulette_label, 'menu-roulette-desc':GT.menu_roulette_desc,
     'menu-rank-label':GT.menu_rank_label, 'menu-rank-desc':GT.menu_rank_desc,
     'menu-growth-label':GT.menu_growth_label, 'menu-growth-desc':GT.menu_growth_desc,
@@ -1771,6 +1781,9 @@ async function showDashboard(){
   document.getElementById('d-gauge-left').textContent=g.left;
   document.getElementById('d-gauge-right').textContent=g.right;
   document.getElementById('d-next-txt').innerHTML=g.nextTxt;
+  const rankIndex=RANKS.findIndex(x=>x.title===rank.title),nextRank=RANKS[Math.min(rankIndex+1,RANKS.length-1)];
+  document.getElementById('d-growth-current').textContent=rank.title;
+  document.getElementById('d-growth-next').textContent=rankIndex===RANKS.length-1?'최고 단계 달성':nextRank.title;
   // 공지사항
   const notice=await sbNotice();
   if(notice&&notice.value){
@@ -1942,6 +1955,7 @@ function renderQ(){
   choiceList.innerHTML=isChoice?choices.map((choice,i)=>`<button class="choice-btn" data-value="${escapeAttr(choice)}" onclick="selectChoice(this)">${i+1}. ${escapeHtml(choice)}</button>`).join(''):'';
   inp.style.display=isChoice?'none':'block';
   document.getElementById('btn-submit').disabled=false;
+  document.getElementById('btn-submit').style.display='block';
   document.getElementById('feedback').className='feedback';
   document.getElementById('feedback').innerHTML='';
   document.getElementById('motivate').className='motivate';
@@ -1985,6 +1999,14 @@ function updateQuizChar(mood){
   if(mood==='sad')   el.classList.add('shake');
 }
 
+function showAnswerToast(ok,answer,pts=0){
+  const fb=document.getElementById('feedback');
+  fb.className='feedback '+(ok?'ok':'ng')+' show';
+  fb.innerHTML=ok?'✅ 정답이에요!<small>+'+pts+' pts 획득</small>':'아쉬워요!<small>정답: '+escapeHtml(answer)+'</small>';
+  clearTimeout(showAnswerToast.timer);
+  showAnswerToast.timer=setTimeout(()=>{fb.className='feedback';fb.innerHTML=''},1450);
+}
+
 async function submitAnswer(){
   if(answered)return;
   const q=shuffled[current];
@@ -2000,10 +2022,6 @@ async function submitAnswer(){
   if(navBtn) navBtn.disabled=true;
   const isOk=norm(val)===norm(q.answer);
   const pts=calcPts(q); // 회차별 포인트
-  const fbOk=q.fb_ok||`✅ 정답! 정답은 '${q.answer}'입니다.`;
-  const fbNg=q.fb_ng||`❌ 오답! 정답은 '${q.answer}'이에요.`;
-  const fb=document.getElementById('feedback');
-  const mot=document.getElementById('motivate');
   // 문제 제출 카운트 (정답 여부 무관)
   incTodayAttempts(userPhone);
 
@@ -2018,22 +2036,17 @@ async function submitAnswer(){
     hideLoading();
     launchCoins(pts);
     document.getElementById('pts-badge').textContent=`⭐ ${sessionScore} pts`;
-    const timesLabel=(doneMap[q.id]||1)>1?` (${doneMap[q.id]}회차 복습)`:'';
-    fb.className='feedback ok show';
-    fb.innerHTML=fbOk+`<br><span style="color:var(--gold)">+${pts} pts 획득! 🎉${timesLabel}</span>`;
+    showAnswerToast(true,q.answer,pts);
     // 레벨업 체크
     const newRank=getRank(totalPts);
     if(prevRank&&newRank.title!==prevRank.title){ await showLevelUp(newRank); prevRank=newRank; }
     const stk=document.getElementById('streak-tag');
     if(streak>=3){ stk.style.display=''; stk.textContent=STREAK_MSG[streak]||(streak+'연속! 🔥'); } else { stk.style.display='none'; }
-    mot.textContent=rand(MOT_OK[q.cat]||['💰 이 지식이 계약률을 높여줘요!']);
-    mot.className='motivate show';
     updateQuizChar('happy');
   } else {
     inp.className='ans-input ng'; streak=0;
     document.getElementById('streak-tag').style.display='none';
-    fb.className='feedback ng show'; fb.innerHTML=fbNg;
-    mot.textContent=rand(MOT_NG); mot.className='motivate show';
+    showAnswerToast(false,q.answer);
     updateQuizChar('sad');
     wrongAnswers.push(q);
   }
@@ -2042,6 +2055,7 @@ async function submitAnswer(){
   const isLast=current===shuffled.length-1;
   const nb=document.getElementById('btn-next');
   nb.textContent=isLast?'결과 보기 🎯':'다음 문제 →';
+  document.getElementById('btn-submit').style.display='none';
   nb.classList.add('show');
   // 나가기 버튼 다시 활성화
   if(navBtn) navBtn.disabled=false;
@@ -2088,11 +2102,7 @@ function timeoutAnswer(){
   streak=0;
   document.getElementById('streak-tag').style.display='none';
   inp.className='ans-input ng';
-  const fb=document.getElementById('feedback');
-  fb.className='feedback ng show';
-  fb.innerHTML=`⏰ 시간 초과! 정답은 '<strong>${q.answer}</strong>'이에요.`;
-  const mot=document.getElementById('motivate');
-  mot.textContent=rand(MOT_NG); mot.className='motivate show';
+  showAnswerToast(false,q.answer);
   updateQuizChar('sad');
   wrongAnswers.push(q);
   incTodayAttempts(userPhone);
@@ -2100,6 +2110,7 @@ function timeoutAnswer(){
   const isLast=current===shuffled.length-1;
   const nb=document.getElementById('btn-next');
   nb.textContent=isLast?'결과 보기 🎯':'다음 문제 →';
+  document.getElementById('btn-submit').style.display='none';
   nb.classList.add('show');
   if(navBtn) navBtn.disabled=false;
 }
