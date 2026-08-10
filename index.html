@@ -985,11 +985,15 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
 .intro-badge{display:inline-flex!important;align-items:center;justify-content:center;min-height:48px;margin-bottom:24px!important;padding:12px 22px!important;border:1.5px solid #d5c8ff!important;border-radius:17px!important;background:linear-gradient(135deg,#f4f0ff,#fff)!important;color:#5d45b4!important;font-size:18px!important;font-weight:950!important;letter-spacing:-.035em!important;box-shadow:0 9px 22px rgba(92,69,174,.12)!important}
 .intro-sub{max-width:360px;margin-left:auto;margin-right:auto;line-height:1.75!important;word-break:keep-all;text-wrap:balance}.intro-feat{align-items:center}.feat-text{min-width:0}.feat-text strong{line-height:1.4;margin-bottom:4px}.feat-text span{display:block;line-height:1.65!important;word-break:keep-all}
 @media(max-width:374px){.intro-badge{min-height:44px;padding:10px 17px!important;font-size:16px!important}.intro-title{font-size:26px!important}}
-#s-dashboard .cm-premium-mascot.profile-avatar{width:82px;height:96px;right:17px;top:18px;border-radius:23px;background:linear-gradient(155deg,#fff,#eee9ff);overflow:visible;padding:9px;box-shadow:0 12px 25px rgba(77,59,101,.14),inset 0 1px 0 #fff}
-.profile-avatar svg{display:block;width:62px;height:62px}.profile-avatar .profile-level{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);white-space:nowrap;padding:5px 9px;border-radius:999px;background:#6d55c5;color:#fff;font-size:10px;font-weight:900;box-shadow:0 5px 12px rgba(83,61,157,.25)}
+.rank-plant{display:block;width:100%;height:100%;object-fit:contain!important;object-position:center;filter:drop-shadow(0 7px 8px rgba(64,47,37,.13))}
+#s-dashboard .dash-header{min-height:242px}
+#s-dashboard .cm-premium-mascot.profile-avatar{display:grid;width:112px;height:124px;right:9px;top:9px;place-items:center;border-radius:50%;background:radial-gradient(circle,#fff 0 55%,#f3edff 75%,#fff5eb 100%);overflow:visible;padding:5px;box-shadow:0 14px 30px rgba(77,59,101,.13),inset 0 0 0 1px rgba(221,211,235,.8)}
+.profile-avatar .profile-plant{width:104px;height:108px}.profile-avatar .profile-level{position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);white-space:nowrap;padding:5px 10px;border-radius:999px;background:#6d55c5;color:#fff;font-size:10px;font-weight:900;box-shadow:0 5px 12px rgba(83,61,157,.25)}
+.step-char{display:grid;place-items:center;width:60px!important;height:60px!important;padding:3px;border-radius:17px;background:radial-gradient(circle,#fff,#f5f1ff);overflow:hidden}.step-char .rank-plant{width:56px;height:56px}.journey-step.current{border:2px solid var(--primary)!important;background:linear-gradient(135deg,#fff8f3,#fff)!important;box-shadow:0 10px 24px rgba(239,112,71,.14)!important}.journey-step.done .rank-plant{opacity:.92}.journey-step.locked .rank-plant{filter:grayscale(.82);opacity:.5}.current-tag{background:var(--primary)!important;color:#fff!important}.done-tag{background:#e8f8f2!important;color:#16876b!important}.lock-tag{background:#f1edf3!important;color:#807586!important}
+.result-char-big .rank-plant,.lvl-char .rank-plant{object-fit:contain;border-radius:0;filter:drop-shadow(0 12px 15px rgba(63,45,32,.18))}.rank-tiny{width:30px!important;height:30px!important;object-fit:contain!important;filter:none}.top5-rank-tag,.rank-emoji{display:grid;place-items:center;min-width:34px}
 .cm-secondary small{font-size:10px;color:#8c8293;font-weight:800}.cm-secondary.has-items{border-color:#f5a47f!important;background:linear-gradient(145deg,#fff8f3,#fff)!important}.cm-secondary.has-items small{color:#e2613d;font-weight:900}
 .dash-growth-shortcut{min-height:48px;margin-top:10px;padding:8px 12px;border:1.5px solid #d8cef6;background:linear-gradient(135deg,#f6f3ff,#fff);box-shadow:0 7px 17px rgba(84,66,128,.08)}.dash-growth-shortcut>span{flex-wrap:wrap;justify-content:flex-start}.dash-growth-shortcut>span:before{content:'전체 성장 단계 보기';width:100%;color:#726783;font-size:10px;font-weight:800}.dash-growth-shortcut strong{font-size:13px}.dash-growth-shortcut b{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:50%;background:#745acb;color:#fff}
-@media(max-width:374px){#s-dashboard .cm-premium-mascot.profile-avatar{width:74px;height:88px;right:13px;top:19px}.profile-avatar svg{width:56px;height:56px}.dash-growth-shortcut span{gap:4px;font-size:10px}.dash-growth-shortcut strong{font-size:11px}}
+@media(max-width:374px){#s-dashboard .dash-header{min-height:236px}#s-dashboard .cm-premium-mascot.profile-avatar{width:98px;height:112px;right:7px;top:11px}.profile-avatar .profile-plant{width:92px;height:98px}.dash-growth-shortcut span{gap:4px;font-size:10px}.dash-growth-shortcut strong{font-size:11px}}
 .login-remember{margin:4px 16px 14px;padding:13px 14px;border:1px solid #e4dce8;border-radius:16px;background:rgba(255,255,255,.86);box-shadow:0 7px 18px rgba(57,45,74,.05)}.login-remember-main{display:flex;align-items:center;justify-content:space-between;gap:10px}.login-remember label{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:850;color:#494351;cursor:pointer}.login-remember input{width:19px;height:19px;accent-color:#f26f4f}.login-forget{border:0;background:transparent;color:#756a81;font-size:12px;font-weight:800;text-decoration:underline;cursor:pointer;padding:6px}.login-memory-note{display:block;margin-top:7px;font-size:11px;line-height:1.5;color:#8a818f}.login-memory-note.saved{color:#16876b;font-weight:800}
 @media(max-width:374px){.cm-content-screen .cm-wrap{padding-left:13px;padding-right:13px}.cm-step{padding:16px 14px 18px}.cm-step-body{font-size:16px;line-height:1.75}.cm-title strong{font-size:18px}.cm-title small{font-size:12px}.cm-step-recommend .cm-step-body,.cm-step-answer .cm-step-body{padding:12px 13px}}
 </style></head>
@@ -1078,10 +1082,9 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
       <div class="dash-header">
         <div class="dash-greeting">반갑습니다!</div>
         <div class="dash-name" id="d-name"><span class="mgr-title">선생님</span> 👋</div>
-        <div class="cm-premium-mascot growth-symbol stage-1" id="d-mascot" role="img" aria-label="현재 직급 성장 단계">🙋‍♀️</div>
+        <div class="cm-premium-mascot profile-avatar" id="d-mascot" role="img" aria-label="현재 직급 성장 단계"></div>
         <div class="char-circle" id="d-char"></div>
         <div class="rank-pill" id="d-rank">
-          <span id="d-rank-emoji">😰</span>
           <span id="d-rank-txt">신입 상담사</span>
         </div>
         <div class="pts-display" id="d-pts">0<span>pts</span></div>
@@ -1369,7 +1372,6 @@ function applyTexts(){
   Object.entries(menuMap).forEach(([id,val])=>{ const el=document.getElementById(id); if(el&&val) el.textContent=val; });
   // 직급 업데이트
   for(let i=0;i<5;i++){
-    RANKS[i].emoji=GT[`rank_${i}_emoji`];
     RANKS[i].title=GT[`rank_${i}_title`];
     RANKS[i].msg  =GT[`rank_${i}_msg`];
   }
@@ -1565,30 +1567,23 @@ async function sbRouletteConfig(){ try{ const r=await fetch(`${SB_URL}/rest/v1/s
 function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
 const RANKS = [
-  { min:0,     max:999,   emoji:'😰', title:'신입 상담사',   msg:'첫 발걸음! 제품 공부 열심히 해봐요!', color:'#22C55E', next:1000 },
-  { min:1000,  max:2999,  emoji:'📚', title:'열공 상담사',   msg:'공부하는 모습이 빛나요! 계속 달려봐요!', color:'#3B82F6', next:3000 },
-  { min:3000,  max:5999,  emoji:'☕', title:'여유 상담사',   msg:'학부모 마음을 읽기 시작했어요!', color:'#8B5CF6', next:6000 },
-  { min:6000,  max:9999,  emoji:'🏅', title:'베테랑 상담사', msg:'계약률 탑! 이제 전설이 보여요!', color:'#F59E0B', next:10000 },
-  { min:10000, max:99999, emoji:'👑', title:'전설의 상담왕', msg:'전설이 되셨습니다! 당신이 최고예요!', color:'#EF4444', next:10000 },
+  { min:0,     max:999,   title:'신입 상담사',   msg:'첫 발걸음! 제품 공부 열심히 해봐요!', color:'#22C55E', next:1000 },
+  { min:1000,  max:2999,  title:'열공 상담사',   msg:'공부하는 모습이 빛나요! 계속 달려봐요!', color:'#3B82F6', next:3000 },
+  { min:3000,  max:5999,  title:'여유 상담사',   msg:'학부모 마음을 읽기 시작했어요!', color:'#8B5CF6', next:6000 },
+  { min:6000,  max:9999,  title:'베테랑 상담사', msg:'계약률 탑! 이제 전설이 보여요!', color:'#F59E0B', next:10000 },
+  { min:10000, max:99999, title:'전설의 상담왕', msg:'전설이 되셨습니다! 당신이 최고예요!', color:'#EF4444', next:10000 },
 ];
 function getRank(pts){ return RANKS.slice().reverse().find(r=>pts>=r.min)||RANKS[0]; }
 const RANK_MASCOTS = {
-  0:'assets/rank-1-new.png',
-  1000:'assets/rank-2-study.png',
-  3000:'assets/rank-3-relaxed.png',
-  6000:'assets/rank-4-veteran.png',
-  10000:'assets/rank-5-legend.png'
+  0:'assets/rank-plants/rank-plant-1.png',
+  1000:'assets/rank-plants/rank-plant-2.png',
+  3000:'assets/rank-plants/rank-plant-3.png',
+  6000:'assets/rank-plants/rank-plant-4.png',
+  10000:'assets/rank-plants/rank-plant-5.png'
 };
 function rankMascotSrc(pts){ return RANK_MASCOTS[getRank(pts).min]||RANK_MASCOTS[0]; }
-const RANK_GROWTH = {
-  0:{icon:'🙋‍♀️',label:'신입'},1000:{icon:'👩‍🏫',label:'열공'},3000:{icon:'😊',label:'여유'},6000:{icon:'👩‍💼',label:'베테랑'},10000:{icon:'👸',label:'상담왕',spark:'✨'}
-};
-function rankGrowth(pts){ const r=getRank(pts); return {...(RANK_GROWTH[r.min]||RANK_GROWTH[0]),stage:RANKS.findIndex(x=>x.min===r.min)+1,rank:r}; }
-function growthSymbolMarkup(pts){ const g=rankGrowth(pts); return `<div class="growth-symbol stage-${g.stage}" role="img" aria-label="${g.rank.title} ${g.label}"><span class="symbol-main">${g.icon}</span>${g.spark?`<span class="symbol-spark">${g.spark}</span>`:''}</div>`; }
-function profileAvatarMarkup(stage){
-  const colors=['#58b98a','#568ed8','#7864cf','#d58b3e','#d4a72f'],c=colors[Math.max(0,Math.min(4,stage-1))];
-  return `<svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="38" fill="${c}" opacity=".12"/><circle cx="40" cy="29" r="13" fill="${c}"/><path d="M17 66c2-16 11-24 23-24s21 8 23 24" fill="${c}"/><path d="M31 29c3 3 15 3 18 0" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity=".8"/><circle cx="35" cy="27" r="1.5" fill="#fff"/><circle cx="45" cy="27" r="1.5" fill="#fff"/></svg><span class="profile-level">LEVEL ${stage}</span>`;
-}
+function rankGrowth(pts){ const r=getRank(pts); return {stage:RANKS.findIndex(x=>x.min===r.min)+1,rank:r}; }
+function plantImageMarkup(pts,extra=''){const r=getRank(pts);return `<img class="rank-plant ${extra}" src="${rankMascotSrc(pts)}" alt="${r.title} 식물 캐릭터">`;}
 
 /* ═══════════════════════════════
    동기부여 메시지
@@ -1607,7 +1602,7 @@ const MONEY_MSGS = ['💰 제품을 잘 알수록 학부모 신뢰가 높아지�
 ═══════════════════════════════ */
 function makeChar(pts, size=120, mood='normal'){
   const r=getRank(pts);
-  return growthSymbolMarkup(pts);
+  return plantImageMarkup(pts);
   /* 아래 SVG는 이전 버전 복구 참고용으로 남겨둔다. */
   const f={
     normal:{ e:'<circle cx="51" cy="47" r="4" fill="#2D2D2D"/><circle cx="69" cy="47" r="4" fill="#2D2D2D"/><circle cx="52" cy="46" r="1.5" fill="white"/><circle cx="70" cy="46" r="1.5" fill="white"/>', m:'<path d="M53 60 Q60 66 67 60" stroke="#2D2D2D" stroke-width="2.5" fill="none" stroke-linecap="round"/>' },
@@ -1783,10 +1778,9 @@ async function showDashboard(){
   document.getElementById('d-name').innerHTML=`<span>${userName}</span> <span class="mgr-title">${GT.manager_title||'선생님'}</span> 👋`;
   const homeGrowth=rankGrowth(totalPts);
   document.getElementById('d-mascot').className='cm-premium-mascot profile-avatar';
-  document.getElementById('d-mascot').innerHTML=profileAvatarMarkup(homeGrowth.stage);
-  document.getElementById('d-mascot').setAttribute('aria-label',rank.title+' '+homeGrowth.label);
+  document.getElementById('d-mascot').innerHTML=plantImageMarkup(totalPts,'profile-plant')+`<span class="profile-level">LEVEL ${homeGrowth.stage}</span>`;
+  document.getElementById('d-mascot').setAttribute('aria-label',rank.title+' 식물 성장 '+homeGrowth.stage+'단계');
   document.getElementById('d-char').innerHTML=makeChar(totalPts,100,'happy');
-  document.getElementById('d-rank-emoji').textContent=rank.emoji;
   document.getElementById('d-rank-txt').textContent=rank.title;
   document.getElementById('d-pts').innerHTML=`${totalPts.toLocaleString()}<span>pts</span>`;
   document.getElementById('d-gauge').style.width=g.pct+'%';
@@ -1832,7 +1826,7 @@ async function renderTop5Dashboard(){
       return `<div class="top5-row${isMe?' top5-me':''}">
         <span class="top5-rank">${medals[i]}</span>
         <span class="top5-name">${u.name}</span>
-        <span class="top5-rank-tag">${r.emoji}</span>
+        <span class="top5-rank-tag">${plantImageMarkup(u.pts,'rank-tiny')}</span>
         <span class="top5-pts">${u.pts.toLocaleString()}</span>
         ${isMe?`<span style="font-family:'Jua',sans-serif;font-size:12px;color:var(--primary);background:var(--primary-light);padding:2px 8px;border-radius:99px;margin-left:4px;white-space:nowrap">${i+1}위 📍</span>`:''}
       </div>`;
@@ -1846,7 +1840,7 @@ async function renderTop5Dashboard(){
         html+=`<div class="top5-row top5-me" style="border-radius:10px;padding:8px 6px">
           <span class="top5-rank" style="font-size:13px;color:var(--primary)">${myIdx+1}위</span>
           <span class="top5-name">${me.name}</span>
-          <span class="top5-rank-tag">${mr.emoji}</span>
+          <span class="top5-rank-tag">${plantImageMarkup(me.pts,'rank-tiny')}</span>
           <span class="top5-pts">${me.pts.toLocaleString()}</span>
           <span style="font-family:'Jua',sans-serif;font-size:12px;color:var(--primary);background:var(--primary-light);padding:2px 8px;border-radius:99px;margin-left:4px;white-space:nowrap">📍 내 순위</span>
         </div>`;
@@ -1866,9 +1860,9 @@ async function renderTop5Dashboard(){
 function showGrowth(){
   const rank=getRank(totalPts);
   const g=calcGauge(totalPts);
-  document.getElementById('g-cur-rank').textContent=rank.emoji+' '+rank.title;
+  document.getElementById('g-cur-rank').textContent=rank.title;
   document.getElementById('g-cur-pts').innerHTML=`${totalPts.toLocaleString()}<span>pts</span>`;
-  document.getElementById('g-next-txt').innerHTML=rank.min===10000?'🏆 최고 등급 달성! 전설이에요!':g.nextTxt;
+  document.getElementById('g-next-txt').innerHTML=rank.min===10000?'최고 등급을 달성했어요!':g.nextTxt;
   // 전체 진행률 (0~10000)
   const overallPct=Math.min(100,Math.round(totalPts/10000*100));
   document.getElementById('g-overall-bar').style.width=overallPct+'%';
@@ -1884,13 +1878,13 @@ function showGrowth(){
     else if(isDone) cls+=' done';
     else cls+=' locked';
     let statusTag='';
-    if(isCurrent) statusTag='<span class="step-status current-tag">📍 현재</span>';
-    else if(isDone) statusTag='<span class="step-status done-tag">✅ 달성</span>';
-    else statusTag='<span class="step-status lock-tag">🔒 미달성</span>';
+    if(isCurrent) statusTag='<span class="step-status current-tag">현재</span>';
+    else if(isDone) statusTag='<span class="step-status done-tag">✓ 완료</span>';
+    else statusTag='<span class="step-status lock-tag">잠금</span>';
     return `<div class="${cls}">
       <div class="step-char">${makeChar(r.min,52)}</div>
       <div class="step-info">
-        <div class="step-rank">${r.emoji} ${r.title}</div>
+        <div class="step-rank">${r.title}</div>
         <div class="step-pts-range">${r.min===10000?'10,000pts 이상':`${r.min.toLocaleString()}pts ~ ${r.max.toLocaleString()}pts`}</div>
       </div>
       ${statusTag}
@@ -2001,7 +1995,7 @@ function updateQuizChar(mood){
   const rank=getRank(totalPts);
   const el=document.getElementById('q-mini-char');
   el.innerHTML='';
-  document.getElementById('q-rank-name').textContent=rank.emoji+' '+rank.title;
+  document.getElementById('q-rank-name').textContent=rank.title;
   const g=calcGauge(totalPts);
   document.getElementById('q-gauge-fill').style.width=g.pct+'%';
   el.classList.remove('bounce','shake');
@@ -2135,7 +2129,7 @@ function showResult(){
   const rank=getRank(totalPts);
   document.getElementById('r-char').innerHTML=makeChar(totalPts,120,'happy');
   document.getElementById('r-name').textContent=userName+' '+(GT.manager_title||'선생님');
-  document.getElementById('r-rank').textContent=rank.emoji+' '+rank.title;
+  document.getElementById('r-rank').textContent=rank.title;
   document.getElementById('r-pts').innerHTML=`+${sessionScore}<span>pts</span>`;
   document.getElementById('r-total').innerHTML=`누적 포인트 <strong>${totalPts.toLocaleString()} pts</strong>`;
   document.getElementById('st-correct').textContent=correct+'문제';
@@ -2145,7 +2139,7 @@ function showResult(){
   document.getElementById('st-total').textContent=totalPts.toLocaleString()+'pts';
   // 레벨업
   if(prevRank&&rank.title!==prevRank.title){
-    document.getElementById('levelup-box').textContent=`🎉 ${rank.emoji} ${rank.title} 승급!`;
+    document.getElementById('levelup-box').textContent=`${rank.title} 승급!`;
     document.getElementById('levelup-box').style.display='block';
   }
   // 메시지
@@ -2294,7 +2288,7 @@ async function showRankModal(){
       const rank = getRank(r.pts);
       return `<div class="rank-row${i===0?' top1':''}${isMe?' me':''}">
         <div class="rank-num">${i+1}</div>
-        <div class="rank-emoji">${rank.emoji}</div>
+        <div class="rank-emoji">${plantImageMarkup(r.pts,'rank-tiny')}</div>
         <div class="rank-info">
           <div class="rank-info-name">${r.name} ${GT.manager_title||'매니저'}</div>
           <div class="rank-info-pts">${r.pts.toLocaleString()} pts</div>
@@ -2363,7 +2357,7 @@ async function shareResult(){
     hideLoading();
     // fallback: 텍스트 복사
     const rank=getRank(totalPts); const tot=shuffled.length, rate=Math.round(correct/tot*100);
-    const text=`📊 ${userName} ${GT.manager_title||'선생님'}의 상담왕 퀴즈 결과\n🎯 정답률: ${rate}%\n⭐ +${sessionScore}pts\n🏆 누적: ${totalPts.toLocaleString()}pts\n👤 ${rank.emoji} ${rank.title}`;
+    const text=`📊 ${userName} ${GT.manager_title||'선생님'}의 상담왕 퀴즈 결과\n🎯 정답률: ${rate}%\n⭐ +${sessionScore}pts\n🏆 누적: ${totalPts.toLocaleString()}pts\n현재 등급: ${rank.title}`;
     if(navigator.clipboard) navigator.clipboard.writeText(text).then(()=>showShareToast());
   }
 }
@@ -2404,7 +2398,7 @@ function showLevelUp(newRank){
     const o=document.createElement('div'); o.className='levelup-overlay';
     o.innerHTML=`<div class="lvl-char">${makeChar(newRank.min,150,'happy')}</div>
       <div class="lvl-title">🎉 직급 승급!</div>
-      <div class="lvl-sub">${newRank.emoji} ${newRank.title}</div>
+      <div class="lvl-sub">${newRank.title}</div>
       <div style="font-family:'Jua',sans-serif;font-size:14px;color:rgba(255,255,255,0.85);margin-top:8px">${newRank.msg}</div>`;
     document.body.appendChild(o);
     launchConfetti();

@@ -1044,8 +1044,7 @@ function buildTextFields(gt){
   const rf=document.getElementById('rank-text-fields');
   rf.innerHTML=RANK_DEFAULTS.map((r,i)=>`
     <div style="background:var(--card2);border-radius:12px;padding:12px;margin-bottom:8px">
-      <div style="display:grid;grid-template-columns:60px 1fr 1fr;gap:8px;margin-bottom:6px">
-        <div><label class="q-edit-label">이모지</label><input class="q-edit-input" id="rk${i}e" value="${gt?gt[`rank_${i}_emoji`]||r.emoji:r.emoji}"></div>
+      <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:8px;margin-bottom:6px">
         <div><label class="q-edit-label">직급명</label><input class="q-edit-input" id="rk${i}t" value="${gt?gt[`rank_${i}_title`]||r.title:r.title}"></div>
         <div><label class="q-edit-label">달성 메시지</label><input class="q-edit-input" id="rk${i}m" value="${gt?gt[`rank_${i}_msg`]||r.msg:r.msg}"></div>
       </div>
@@ -1104,7 +1103,6 @@ async function saveTexts(){
     gt[`menu_${k}_desc`] =document.getElementById(`t-menu-${k}-desc`).value.trim();
   });
   RANK_DEFAULTS.forEach((_,i)=>{
-    gt[`rank_${i}_emoji`]=document.getElementById(`rk${i}e`).value.trim();
     gt[`rank_${i}_title`]=document.getElementById(`rk${i}t`).value.trim();
     gt[`rank_${i}_msg`]  =document.getElementById(`rk${i}m`).value.trim();
   });
