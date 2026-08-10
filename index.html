@@ -972,7 +972,11 @@ body{color:var(--text);background:linear-gradient(180deg,#f5f1ff 0%,#fff8f0 46%,
 .cm-step-recommend .cm-step-body,.cm-step-answer .cm-step-body{padding:14px 15px;border-radius:15px;background:#fff;border-left:4px solid var(--age);box-shadow:0 5px 15px color-mix(in srgb,var(--age) 8%,transparent)}
 .cm-step-recommend .cm-line:first-child:before,.cm-step-answer .cm-line:first-child:before{content:'“';color:var(--age);font-size:22px;font-weight:900;margin-right:2px}.cm-step-recommend .cm-line:last-child:after,.cm-step-answer .cm-line:last-child:after{content:'”';color:var(--age);font-size:22px;font-weight:900;margin-left:2px}
 .cm-tags{gap:8px;margin-top:1px}.cm-tags span{padding:8px 10px;border-radius:12px;font-size:13px;line-height:1.45}
+.cm-step-contents .cm-tags{display:grid;grid-template-columns:1fr;gap:8px;width:100%}.cm-step-contents .cm-tags span{display:block;width:100%;padding:11px 13px;font-size:16px;line-height:1.55;font-weight:800;text-align:left;border-radius:14px}
 .cm-obj-grid{gap:9px}.cm-obj{font-size:14px;min-height:48px;padding:11px 7px;border-radius:13px}
+/* 퀴즈에서는 큰 성장 아이콘을 제거하고 제출 버튼 대비를 높인다. */
+#s-quiz .char-bar-mini{display:none!important}#s-quiz .char-bar{padding:11px 15px;min-height:52px}#s-quiz .char-bar-rank{font-family:inherit;font-size:14px;font-weight:900;margin-bottom:6px}
+#s-quiz .btn-submit{color:#fff!important;text-shadow:0 1px 1px rgba(111,52,28,.18)}#s-quiz .btn-submit:disabled{color:#fff!important;opacity:.68}
 @media(max-width:374px){.cm-content-screen .cm-wrap{padding-left:13px;padding-right:13px}.cm-step{padding:16px 14px 18px}.cm-step-body{font-size:16px;line-height:1.75}.cm-title strong{font-size:18px}.cm-title small{font-size:12px}.cm-step-recommend .cm-step-body,.cm-step-answer .cm-step-body{padding:12px 13px}}
 </style></head>
 <body>
@@ -1941,7 +1945,7 @@ function revealHint(){
 function updateQuizChar(mood){
   const rank=getRank(totalPts);
   const el=document.getElementById('q-mini-char');
-  el.innerHTML=makeChar(totalPts,44,mood);
+  el.innerHTML='';
   document.getElementById('q-rank-name').textContent=rank.emoji+' '+rank.title;
   const g=calcGauge(totalPts);
   document.getElementById('q-gauge-fill').style.width=g.pct+'%';
