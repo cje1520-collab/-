@@ -1469,6 +1469,7 @@ function startReviewFromDash(){
 ═══════════════════════════════ */
 const BGM = {
   ctx: null, gain: null, playing: false, muted: true, loopTimer: null,
+  audio: null, fadeTimer: null,
   // 부드러운 펜타토닉 멜로디 (C장조, ~68초)
   MELODY: [
     // ── 섹션 A ──
@@ -1509,10 +1510,24 @@ const BGM = {
     [784,0.3],[659,0.3],[523,0.3],[440,0.3],[392,0.3],[440,0.3],[523,0.5],[523,1.5],[0,0.5],
   ],
   init(){
-    this.ctx=new (window.AudioContext||window.webkitAudioContext)();
-    this.gain=this.ctx.createGain();
-    this.gain.gain.value=0;
-    this.gain.connect(this.ctx.destination);
+    if(this.audio) return;
+    this.audio=new Audio('assets/audio/education-modern-electronic.mp3');
+    this.audio.preload='auto';
+    this.audio.loop=true;
+    this.audio.volume=0;
+    this.audio.playsInline=true;
+  },
+  fadeTo(target,duration=450){
+    if(!this.audio) return;
+    clearInterval(this.fadeTimer);
+    const start=this.audio.volume;
+    const steps=10;
+    let step=0;
+    this.fadeTimer=setInterval(()=>{
+      step++;
+      this.audio.volume=Math.max(0,Math.min(1,start+(target-start)*(step/steps)));
+      if(step>=steps) clearInterval(this.fadeTimer);
+    },duration/steps);
   },
   note(freq,start,dur){
     if(!freq) return;
@@ -1545,23 +1560,29 @@ const BGM = {
     this.loopTimer=setTimeout(()=>this.loop(), total*1000-100);
   },
   async toggle(){
-    if(!this.ctx) this.init();
-    // iOS: AudioContext must be resumed inside a direct user gesture
-    if(this.ctx.state==='suspended') await this.ctx.resume();
+    if(!this.audio) this.init();
     this.muted=!this.muted;
-    this.gain.gain.setTargetAtTime(this.muted?0:0.18, this.ctx.currentTime, 0.1);
-    if(!this.muted&&!this.playing){ this.playing=true; this.loop(); }
-    if(this.muted) clearTimeout(this.loopTimer);
+    if(this.muted){
+      this.fadeTo(0);
+      setTimeout(()=>{ if(this.muted&&this.audio){ this.audio.pause(); this.playing=false; } },480);
+    }else{
+      try{ await this.audio.play(); this.playing=true; this.fadeTo(0.16); }
+      catch(e){ this.muted=true; }
+    }
     document.getElementById('bgm-btn').textContent=this.muted?'🔇':'🔊';
   },
   async start(){
     if(this.playing) return;
-    if(!this.ctx) this.init();
-    try{ await this.ctx.resume(); }catch(e){}
-    this.playing=true; this.muted=false;
-    this.gain.gain.setTargetAtTime(0.18, this.ctx.currentTime, 0.1);
-    this.loop();
-    document.getElementById('bgm-btn').textContent='🔊';
+    if(!this.audio) this.init();
+    try{
+      await this.audio.play();
+      this.playing=true; this.muted=false;
+      this.fadeTo(0.16,650);
+      document.getElementById('bgm-btn').textContent='🔊';
+    }catch(e){
+      this.playing=false; this.muted=true;
+      document.getElementById('bgm-btn').textContent='🔇';
+    }
     document.removeEventListener('touchstart', BGM._starter);
     document.removeEventListener('click', BGM._starter);
   },
