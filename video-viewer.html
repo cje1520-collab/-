@@ -14,7 +14,7 @@
 </head>
 <body>
   <header class="bar">
-    <button class="back" type="button" onclick="goBack()">← 교육자료</button>
+    <button class="back" id="back-btn" type="button" onclick="goBack()">← 교육자료</button>
     <div class="title" id="title">교육 영상</div>
     <a class="external" id="direct" href="#" target="_blank" rel="noopener">유튜브</a>
   </header>
@@ -24,6 +24,7 @@
   </main>
   <script>
     const params=new URLSearchParams(location.search);
+    const returnTo=params.get('return')==='roulette'?'roulette':'education';
     const source=params.get('url')||'';
     const title=params.get('title')||'교육 영상';
     let id='';
@@ -31,8 +32,9 @@
     id=id.split(/[?&#/]/)[0];
     const safe=/^[A-Za-z0-9_-]{11}$/.test(id);
     document.getElementById('title').textContent=title;
+    document.getElementById('back-btn').textContent=returnTo==='roulette'?'← 롤플레잉':'← 교육자료';
     document.title=title+' · 교육 영상';
-    function goBack(){location.href='index.html?return=education'}
+    function goBack(){location.href='index.html?return='+returnTo}
     if(safe){
       document.getElementById('viewer').src='https://www.youtube-nocookie.com/embed/'+id+'?rel=0';
       document.getElementById('direct').href=source;

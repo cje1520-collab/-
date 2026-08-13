@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -1036,6 +1036,29 @@ button,a{touch-action:manipulation}.btn-main,.btn-sub,.btn-ghost{min-height:48px
 .education-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:15px 0;padding:4px;border-radius:16px;background:#ece8e5}.education-tabs button{min-height:50px;border:0;border-radius:13px;background:transparent;color:#777178;font-size:16px;font-weight:850}.education-tabs button.on{background:#fff;color:var(--ui-purple);box-shadow:0 4px 12px rgba(43,35,58,.08)}
 .education-summary{display:flex;align-items:flex-end;justify-content:space-between;margin:18px 2px 10px}.education-summary strong{font-size:19px}.education-summary small{color:var(--ui-muted);font-size:13px}.best-practice-list{display:grid;gap:10px}.best-practice-card{overflow:hidden;border:1px solid var(--ui-line);border-radius:19px;background:#fff;box-shadow:0 3px 12px rgba(43,35,58,.035)}.best-practice-link{display:block;color:inherit;text-decoration:none}.best-practice-thumb{position:relative;display:block;aspect-ratio:16/7.1;overflow:hidden;background:#ede9f6}.best-practice-thumb img{width:100%;height:100%;object-fit:cover}.best-practice-thumb:after{content:'▶';position:absolute;left:50%;top:50%;display:grid;width:50px;height:50px;place-items:center;transform:translate(-50%,-50%);border-radius:50%;background:rgba(255,255,255,.95);color:var(--ui-orange);font-size:20px;box-shadow:0 5px 18px rgba(0,0,0,.18)}.best-practice-title{display:flex;min-height:62px;padding:14px 15px;align-items:center;font-size:17px;line-height:1.45;font-weight:900;word-break:keep-all}.best-practice-link:active{background:#f7f4ff}.education-panel[hidden]{display:none!important}
 </style>
+<style id="mobile-app-shell-v42">
+html,body{width:100%;height:var(--app-height,100svh);min-height:0;overflow:hidden}
+body{padding-bottom:0}
+.wrap{height:var(--app-height,100svh);min-height:0;padding-bottom:0;overflow:hidden}
+.screen{height:100%;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
+.screen.active{flex:1 1 auto}
+.cm-content-screen{min-height:0!important;height:100%;margin-top:0!important;margin-bottom:0!important;border-radius:0!important}
+#s-quiz{height:100%;min-height:0;padding-bottom:0!important;overflow:hidden!important}
+#s-quiz .quiz-nav,#s-quiz .quiz-progress,#s-quiz .quiz-status-row,#s-quiz .quiz-action-dock{flex:0 0 auto}
+#s-quiz .quiz-status-row{display:grid;grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr);gap:8px;padding:0 14px 8px}
+#s-quiz .quiz-timer,#s-quiz .char-bar{min-width:0;min-height:52px;margin:0!important}
+#s-quiz .quiz-timer{padding:0 10px;white-space:nowrap}
+#s-quiz .char-bar{padding:9px 11px!important}
+#s-quiz .char-bar-rank{font-size:14px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#s-quiz .quiz-body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;padding-bottom:14px}
+#s-quiz .quiz-action-dock{padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--ui-line);background:rgba(255,255,255,.97);box-shadow:0 -7px 22px rgba(43,35,58,.08);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+#s-quiz .quiz-action-dock .btn-submit,#s-quiz .quiz-action-dock .btn-next{width:100%;min-height:58px;margin:0!important;font-size:18px!important}
+#s-roulette{height:100%;min-height:0;overflow-y:auto}
+#s-roulette .roulette-nav{grid-template-columns:44px minmax(0,1fr) 82px}
+.roulette-help{display:flex;min-height:40px;align-items:center;justify-content:center;border:0;border-radius:12px;background:#f0ecff;color:var(--ui-purple);font:inherit;font-size:13px;font-weight:900;white-space:nowrap}
+.roulette-help:active{transform:scale(.97)}
+@media(max-width:350px){#s-quiz .quiz-status-row{grid-template-columns:1fr 1.18fr;padding-left:10px;padding-right:10px}#s-quiz .quiz-timer{font-size:12px}.roulette-help{font-size:12px}}
+</style>
 <style id="mobile-readability-v39">
 /* 50대 현장 사용자를 위한 선택 영역·홈·룰렛·랭킹 가독성 보강 */
 .app-brand-mark{display:none!important}.app-brand strong{font-size:19px!important}
@@ -1197,7 +1220,7 @@ button,a{touch-action:manipulation}.btn-main,.btn-sub,.btn-ghost{min-height:48px
     <div class="roulette-nav">
       <button class="roulette-back" onclick="showDashboard()" aria-label="홈으로">←</button>
       <div class="roulette-head-title">롤플레잉 룰렛</div>
-      <div style="width:70px"></div>
+      <button class="roulette-help" type="button" onclick="openRpHelpVideo()" aria-label="팀별 롤플레잉 진행 도움 영상 열기">▶ 도움영상</button>
     </div>
     <div class="roulette-cat-wrap" id="roulette-cats"></div>
     <div class="drum-outer">
@@ -1226,16 +1249,18 @@ button,a{touch-action:manipulation}.btn-main,.btn-sub,.btn-ghost{min-height:48px
       <button class="btn-exit" id="btn-nav-action" onclick="navAction()">💾 나가기</button>
     </div>
     <div class="quiz-progress"><div class="quiz-progress-fill" id="prog"></div></div>
-    <div class="quiz-timer" id="quiz-timer">
-      ⏱ 남은 시간 <span class="quiz-timer-count" id="timer-count">30</span>초
-    </div>
-    <div class="char-bar">
-      <div class="char-bar-mini" id="q-mini-char"></div>
-      <div class="char-bar-info">
-        <div class="char-bar-rank" id="q-rank-name">😰 신입 상담사</div>
-        <div class="char-bar-gauge"><div class="char-bar-gauge-fill" id="q-gauge-fill" style="width:0%"></div></div>
+    <div class="quiz-status-row">
+      <div class="quiz-timer" id="quiz-timer">
+        ⏱ 남은 시간 <span class="quiz-timer-count" id="timer-count">30</span>초
       </div>
-      <div class="streak-tag" id="streak-tag" style="display:none">🔥 1연속!</div>
+      <div class="char-bar">
+        <div class="char-bar-mini" id="q-mini-char"></div>
+        <div class="char-bar-info">
+          <div class="char-bar-rank" id="q-rank-name">😰 신입 상담사</div>
+          <div class="char-bar-gauge"><div class="char-bar-gauge-fill" id="q-gauge-fill" style="width:0%"></div></div>
+        </div>
+        <div class="streak-tag" id="streak-tag" style="display:none">🔥 1연속!</div>
+      </div>
     </div>
     <div class="quiz-body">
       <div class="quiz-card">
@@ -1250,11 +1275,13 @@ button,a{touch-action:manipulation}.btn-main,.btn-sub,.btn-ghost{min-height:48px
         <input class="ans-input" id="ans-input" placeholder="정답 입력" autocomplete="off"
                onkeydown="if(event.key==='Enter')submitAnswer()">
         <div class="choice-list" id="choice-list"></div>
-        <button class="btn-submit" id="btn-submit" onclick="submitAnswer()">정답 제출</button>
         <div class="feedback" id="feedback"></div>
         <div class="motivate" id="motivate"></div>
-        <button class="btn-next" id="btn-next" onclick="nextQ()">다음 문제 →</button>
       </div>
+    </div>
+    <div class="quiz-action-dock">
+      <button class="btn-submit" id="btn-submit" onclick="submitAnswer()">정답 제출</button>
+      <button class="btn-next" id="btn-next" onclick="nextQ()">다음 문제 →</button>
     </div>
   </div>
 
@@ -2311,6 +2338,16 @@ async function showRoulette(){
   showScreen('s-roulette');
 }
 
+function openRpHelpVideo(){
+  const url='https://youtu.be/3WZgpKnIfQg';
+  const title='팀별 롤플레잉 진행 도움 영상';
+  if(cmUsesMobileViewer()){
+    cmRememberArchiveReturn('roulette');
+    location.href='video-viewer.html?url='+encodeURIComponent(url)+'&title='+encodeURIComponent(title)+'&return=roulette';
+  }
+  else window.open(url,'_blank','noopener');
+}
+
 function renderRouletteCats(){
   const wrap = document.getElementById('roulette-cats');
   wrap.innerHTML = rouletteData.map((c,i)=>
@@ -2555,12 +2592,13 @@ function cmCopyContent(index,objection){const list=objection?cmContentList(cmOb?
 document.querySelectorAll('[data-cm-panel]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-cm-panel]').forEach(x=>x.classList.toggle('on',x===b));const cards=b.dataset.cmPanel==='cards';document.getElementById('cm-card-panel').style.display=cards?'block':'none';document.getElementById('cm-objection-panel').style.display=cards?'none':'block'})
 const CM_ARCHIVE_RETURN_KEY='counseling_master_archive_return_v1';
 let cmArchiveRestoreBusy=false;
-function cmRememberArchiveReturn(){
-  try{sessionStorage.setItem(CM_ARCHIVE_RETURN_KEY,JSON.stringify({name:userName,phone:userPhone,at:Date.now()}))}catch(e){}
+function cmRememberArchiveReturn(screen='education'){
+  try{sessionStorage.setItem(CM_ARCHIVE_RETURN_KEY,JSON.stringify({name:userName,phone:userPhone,screen,at:Date.now()}))}catch(e){}
 }
 async function cmRestoreArchiveReturn(){
   if(cmArchiveRestoreBusy)return;
-  const forced=new URLSearchParams(location.search).get('return')==='education';
+  const forcedTarget=new URLSearchParams(location.search).get('return');
+  const forced=forcedTarget==='education'||forcedTarget==='roulette';
   let saved=null;
   try{saved=JSON.parse(sessionStorage.getItem(CM_ARCHIVE_RETURN_KEY)||'null')}catch(e){}
   if(!forced&&!saved)return;
@@ -2576,10 +2614,16 @@ async function cmRestoreArchiveReturn(){
         await loginUser();
       }
     }
-    if(userName&&userPhone)await showEducationArchive();
+    if(userName&&userPhone){
+      const target=forcedTarget||(saved?.screen==='roulette'?'roulette':'education');
+      if(target==='roulette')await showRoulette();else await showEducationArchive();
+    }
   }catch(e){console.warn('교육자료 화면 복귀 실패',e)}finally{cmArchiveRestoreBusy=false}
 }
 addEventListener('pageshow',()=>setTimeout(cmRestoreArchiveReturn,0));
+function syncStableAppHeight(){document.documentElement.style.setProperty('--app-height',window.innerHeight+'px')}
+syncStableAppHeight();
+addEventListener('orientationchange',()=>setTimeout(syncStableAppHeight,250));
 function cmUsesMobileViewer(){return matchMedia('(max-width:768px)').matches||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)}
 function cmRenderEducation(){const rows=cmEdu.filter(x=>x.active!==false).sort((a,b)=>(a.sort_order||99)-(b.sort_order||99));document.getElementById('education-insight-count').textContent=rows.length+'개 자료';document.getElementById('cm-archive-list').innerHTML=rows.map(x=>{const [y,m]=x.id.split('-'),viewer='pdf-viewer.html?file='+encodeURIComponent(x.file)+'&title='+encodeURIComponent(x.title),videoViewer='video-viewer.html?url='+encodeURIComponent(x.video||'')+'&title='+encodeURIComponent(x.title),mobileViewer=cmUsesMobileViewer(),pdfHref=mobileViewer?viewer:x.file,pdfTarget=mobileViewer?'':' target="_blank" rel="noopener"',videoHref=mobileViewer?videoViewer:x.video,videoTarget=mobileViewer?'':' target="_blank" rel="noopener"';return '<article class="cm-archive"><span class="cm-date">'+y+'<strong>'+Number(m)+'월</strong></span><span><h3>'+cmEsc(x.title)+'</h3><div class="cm-meta">상담력 인사이트 · PDF '+cmEsc(x.pages)+'p</div><div class="cm-actions"><a class="cm-pdf" href="'+cmEsc(pdfHref)+'"'+pdfTarget+' onclick="cmRememberArchiveReturn()">자료 읽기</a>'+(x.video?'<a class="cm-video" href="'+cmEsc(videoHref)+'"'+videoTarget+' onclick="cmRememberArchiveReturn()">영상 보기</a>':'')+'</div></span></article>'}).join('')||'<div class="empty-state">등록된 상담력 인사이트가 없습니다.</div>'}
 function cmYoutubeId(url){const m=String(url||'').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);return m?m[1]:''}
