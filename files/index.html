@@ -1096,7 +1096,7 @@ body{padding-bottom:0}
     <div class="page-card" style="margin:12px;padding:0">
       <div class="intro-hero">
         <div class="intro-badge" id="intro-badge">✦ 엘리하이 상담왕 퀴즈</div>
-        <h1 class="intro-title" id="intro-title">안녕하세요!<br><em class="mgr-title">선생님</em> 👋</h1>
+        <h1 class="intro-title" id="intro-title">안녕하세요!<br><em>매니저님</em> 👋</h1>
         <p class="intro-sub" id="intro-sub">
           상담 퀴즈를 풀며<br>
           <strong style="color:var(--text)">상담력도 기르고 포인트도 모아요!</strong>
@@ -1402,7 +1402,7 @@ body{padding-bottom:0}
 ═══════════════════════════════ */
 var GT = {
   intro_badge:'✦ 엘리하이 상담왕 퀴즈',
-  intro_title:'안녕하세요!\n선생님',
+  intro_title:'안녕하세요!\n매니저님',
   intro_sub:'상담 퀴즈를 풀며\n상담력도 기르고 포인트도 모아요!',
   manager_title:'매니저',
   feat_1_icon:'📚', feat_1_title:'퀴즈로 상담 지식 UP',         feat_1_desc:'가격·상품·앱·문제집 50문항 도전!',
@@ -1458,7 +1458,7 @@ function applyTexts(){
   }
   // 인트로
   const badge=document.getElementById('intro-badge'); if(badge) badge.textContent=GT.intro_badge;
-  const tit=document.getElementById('intro-title'); if(tit) tit.innerHTML=GT.intro_title.replace(/\n/g,'<br>')+' 👋';
+  const tit=document.getElementById('intro-title'); if(tit){const honorific=String(GT.manager_title||'매니저').replace(/님$/,'')+'님';tit.innerHTML='안녕하세요!<br><em>'+honorific+'</em> 👋';}
   const sub=document.getElementById('intro-sub'); if(sub) sub.innerHTML=GT.intro_sub.replace(/\n/g,'<br>');
   for(let i=1;i<=4;i++){
     const ic=document.getElementById(`feat-${i}-icon`); if(ic) ic.textContent=GT[`feat_${i}_icon`];
