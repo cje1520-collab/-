@@ -1090,6 +1090,12 @@ body{padding-bottom:0}
 /* v47: 상담 브로슈어를 교육 자료 상단에 고정 */
 .education-brochures{margin:0 0 14px}.education-brochures-head{display:flex;align-items:end;justify-content:space-between;margin:0 2px 9px}.education-brochures-head strong{font-size:18px}.education-brochures-head small{color:#817a87;font-size:11px;font-weight:750}.education-brochure-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.education-brochure-card{display:flex;min-height:112px;padding:14px;border:1px solid #e3ddd8;border-radius:17px;background:#fff;color:#282435;text-decoration:none;box-shadow:0 5px 16px rgba(45,37,56,.05);flex-direction:column;align-items:flex-start}.education-brochure-card>span{display:grid;place-items:center;width:38px;height:38px;margin-bottom:11px;border-radius:11px;background:#f0ecff;font-size:21px}.education-brochure-card.middle>span{background:#eaf8f2}.education-brochure-card strong{font-size:16px;line-height:1.35}.education-brochure-card small{margin-top:4px;color:#7d7682;font-size:12px}.education-brochure-card b{margin-top:auto;padding-top:10px;color:#6650bd;font-size:12px}.education-brochure-card.middle b{color:#177c65}
 @media(max-width:374px){.education-brochure-card{min-height:108px;padding:12px}.education-brochure-card strong{font-size:15px}}
+</style>
+<style id="feature-guide-v50">
+.app-brand-actions{display:flex;align-items:center;gap:2px}.app-brand-help{display:flex;align-items:center;justify-content:center;gap:5px;min-height:42px;padding:0 10px;border:0;border-radius:12px;background:var(--ui-purple-soft);color:var(--ui-purple);font:inherit;font-size:13px;font-weight:900}.app-brand-help svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.app-brand-help.guide-highlight{position:relative;z-index:43;box-shadow:0 0 0 4px rgba(109,87,199,.18),0 0 0 8px rgba(109,87,199,.08)}
+#s-dashboard{position:relative}.feature-guide-coach{position:absolute;z-index:42;top:calc(62px + env(safe-area-inset-top));right:14px;width:min(292px,calc(100% - 28px));padding:16px;border:1px solid #d9cff4;border-radius:18px;background:#fff;box-shadow:0 14px 34px rgba(43,32,65,.2)}.feature-guide-coach[hidden]{display:none}.feature-guide-coach:before{content:"";position:absolute;top:-8px;right:42px;width:15px;height:15px;transform:rotate(45deg);border-left:1px solid #d9cff4;border-top:1px solid #d9cff4;background:#fff}.feature-guide-coach-close{position:absolute;top:8px;right:8px;width:36px;height:36px;border:0;background:transparent;color:var(--ui-muted);font-size:20px}.feature-guide-coach strong{display:block;padding-right:30px;font-size:17px}.feature-guide-coach p{margin:6px 0 13px;color:var(--ui-muted);font-size:13px;line-height:1.55;word-break:keep-all}.feature-guide-coach-actions{display:flex;align-items:center;justify-content:flex-end;gap:6px}.feature-guide-coach-actions button{min-height:42px;padding:0 12px;border:0;border-radius:12px;font:inherit;font-size:12px;font-weight:900}.feature-guide-later{background:transparent;color:var(--ui-muted)}.feature-guide-open{background:var(--ui-purple);color:#fff}
+.feature-guide-overlay{position:fixed;z-index:1200;inset:0;display:none;align-items:flex-end;justify-content:center;background:rgba(31,25,42,.42);backdrop-filter:blur(3px)}.feature-guide-overlay.show{display:flex}.feature-guide-sheet{width:min(100%,480px);max-height:min(88%,760px);overflow-y:auto;padding:10px 16px calc(22px + env(safe-area-inset-bottom));border-radius:26px 26px 0 0;background:var(--ui-bg);box-shadow:0 -16px 40px rgba(31,25,42,.18)}.feature-guide-handle{width:42px;height:4px;margin:0 auto 15px;border-radius:4px;background:#d7d1dc}.feature-guide-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.feature-guide-head h2{margin:0;font-size:21px;letter-spacing:-.04em}.feature-guide-head p{margin:5px 0 0;color:var(--ui-muted);font-size:13px}.feature-guide-close{flex:0 0 42px;width:42px;height:42px;border:0;border-radius:13px;background:#eeeaf1;color:var(--ui-ink);font-size:20px}.feature-guide-list{display:grid;gap:8px;margin-top:16px}.feature-guide-item{display:grid;grid-template-columns:42px minmax(0,1fr) 24px;align-items:center;gap:10px;width:100%;min-height:68px;padding:11px 12px;border:1px solid var(--ui-line);border-radius:16px;background:#fff;color:var(--ui-ink);text-align:left}.feature-guide-item>span:first-child{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:var(--ui-purple-soft);font-size:23px}.feature-guide-item strong{display:block;font-size:15px}.feature-guide-item small{display:block;margin-top:3px;color:var(--ui-muted);font-size:12px;line-height:1.4}.feature-guide-item b{color:var(--ui-purple);font-size:22px}.feature-guide-detail{display:none;padding-top:14px}.feature-guide-detail.show{display:block}.feature-guide-detail-icon{display:grid;place-items:center;width:58px;height:58px;margin-bottom:12px;border-radius:18px;background:var(--ui-purple-soft);font-size:29px}.feature-guide-detail h3{margin:0 0 9px;font-size:21px}.feature-guide-detail p{margin:0;color:#554e5e;font-size:15px;line-height:1.7;word-break:keep-all}.feature-guide-detail-actions{display:grid;grid-template-columns:1fr 1.35fr;gap:8px;margin-top:20px}.feature-guide-detail-actions button{min-height:50px;border:0;border-radius:14px;font:inherit;font-weight:900}.feature-guide-back{background:#ebe7ee;color:var(--ui-ink)}.feature-guide-start{background:var(--ui-purple);color:#fff}
+@media(max-width:350px){.app-brand-help{padding:0 8px;font-size:12px}.feature-guide-coach{right:10px;width:calc(100% - 20px)}.feature-guide-coach-actions{gap:2px}.feature-guide-coach-actions button{padding:0 9px}}
 </style></head>
 <body>
 <div class="wrap">
@@ -1172,7 +1178,8 @@ body{padding-bottom:0}
 
   <!-- ══ 대시보드 ══ -->
   <div class="screen" id="s-dashboard">
-    <header class="app-brand"><div><strong>상담 MASTER</strong></div><button type="button" onclick="document.getElementById('notice-banner').scrollIntoView({behavior:'smooth'})" aria-label="공지사항 보기" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button></header>
+    <header class="app-brand"><div><strong>상담 MASTER</strong></div><div class="app-brand-actions"><button type="button" class="app-brand-help" id="feature-guide-button" onclick="openFeatureGuide()" aria-label="상담 MASTER 사용 가이드 열기"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.4 2.4 0 1 1 3.2 2.3c-.8.3-1 1-1 1.7M12 17h.01"/></svg>도움말</button><button type="button" onclick="document.getElementById('notice-banner').scrollIntoView({behavior:'smooth'})" aria-label="공지사항 보기" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button></div></header>
+    <aside class="feature-guide-coach" id="feature-guide-coach" hidden aria-live="polite"><button type="button" class="feature-guide-coach-close" onclick="dismissFeatureGuideCoach()" aria-label="튜토리얼 닫기">×</button><strong>처음이신가요? 👋</strong><p>오른쪽 위 사용 가이드에서 상담 MASTER의 기능을 간단히 확인해보세요.</p><div class="feature-guide-coach-actions"><button type="button" class="feature-guide-later" onclick="snoozeFeatureGuideCoach()">7일간 보지 않기</button><button type="button" class="feature-guide-open" onclick="openFeatureGuideFromCoach()">가이드 보기</button></div></aside>
     <div class="page-card" style="margin:12px;padding:0">
       <div class="dash-header">
         <div class="dash-greeting">반갑습니다!</div>
@@ -1371,6 +1378,15 @@ body{padding-bottom:0}
   <span id="loading-msg">불러오는 중...</span>
 </div>
 <div class="share-toast" id="share-toast">📋 클립보드에 복사됐어요!</div>
+
+<div class="feature-guide-overlay" id="feature-guide-overlay" onclick="if(event.target===this)closeFeatureGuide()" aria-hidden="true">
+  <section class="feature-guide-sheet" role="dialog" aria-modal="true" aria-labelledby="feature-guide-title">
+    <div class="feature-guide-handle"></div>
+    <div class="feature-guide-head"><div><h2 id="feature-guide-title">상담 MASTER 사용 가이드</h2><p>각 메뉴가 무슨 기능인지 확인해보세요.</p></div><button type="button" class="feature-guide-close" onclick="closeFeatureGuide()" aria-label="사용 가이드 닫기">×</button></div>
+    <div class="feature-guide-list" id="feature-guide-list"></div>
+    <div class="feature-guide-detail" id="feature-guide-detail"><div class="feature-guide-detail-icon" id="feature-guide-detail-icon"></div><h3 id="feature-guide-detail-title"></h3><p id="feature-guide-detail-copy"></p><div class="feature-guide-detail-actions"><button type="button" class="feature-guide-back" onclick="showFeatureGuideList()">목록으로</button><button type="button" class="feature-guide-start" id="feature-guide-start">바로 시작</button></div></div>
+  </section>
+</div>
 
 <!-- ══ 랭킹 모달 ══ -->
 <div class="rank-modal-overlay" id="rank-modal" onclick="if(event.target===this)closeRankModal()">
@@ -1840,6 +1856,28 @@ function showScreen(id){
   }
   window.scrollTo(0,0);
 }
+const FEATURE_GUIDE_SNOOZE_KEY='counseling_master_feature_guide_snooze_v1';
+const FEATURE_GUIDE_ITEMS=[
+  {key:'quiz',icon:'🎮',title:'상담 퀴즈',summary:'제품 지식을 익히고 포인트 적립',copy:'제품과 서비스 지식을 짧은 문제로 익히는 공간이에요. 정답을 맞히면 포인트가 쌓이고, 틀린 문제는 오답노트에서 다시 볼 수 있어요.'},
+  {key:'cards',icon:'🗂️',title:'상담 핵심카드',summary:'고객 상황별 질문과 추천 멘트',copy:'고객의 학년과 고민을 고르면 질문, 공감 표현, 추천 콘텐츠와 상담 멘트를 순서대로 보여줘요.'},
+  {key:'education',icon:'📚',title:'교육 자료',summary:'인사이트·우수사례·브로슈어',copy:'월별 상담력 인사이트, 현장 우수사례 영상, 초등·중등 브로슈어를 한곳에서 확인할 수 있어요.'},
+  {key:'roulette',icon:'🎰',title:'롤플레잉',summary:'팀 미팅용 RP 주제 추첨',copy:'팀 미팅이나 롤플레잉 연습에서 상담 주제를 무작위로 뽑을 때 사용해요. START 후 STOP을 눌러 주제를 정할 수 있어요.'},
+  {key:'ranking',icon:'🏆',title:'랭킹',summary:'월간 TOP 5와 내 순위',copy:'이번 달 퀴즈 점수 TOP 5와 내 순위를 확인해 학습 현황을 가볍게 비교할 수 있어요.'},
+  {key:'growth',icon:'🌱',title:'성장여정',summary:'현재 직급과 다음 성장 단계',copy:'누적 포인트에 따른 현재 직급과 다음 단계까지 남은 포인트를 확인하는 공간이에요.'}
+];
+let featureGuideCoachDismissed=false;
+function featureGuideSnoozed(){try{return Number(localStorage.getItem(FEATURE_GUIDE_SNOOZE_KEY)||0)>Date.now()}catch(e){return false}}
+function maybeShowFeatureGuideCoach(){const coach=document.getElementById('feature-guide-coach'),button=document.getElementById('feature-guide-button');if(!coach||!button||featureGuideCoachDismissed||featureGuideSnoozed())return;coach.hidden=false;button.classList.add('guide-highlight')}
+function hideFeatureGuideCoach(){const coach=document.getElementById('feature-guide-coach'),button=document.getElementById('feature-guide-button');if(coach)coach.hidden=true;if(button)button.classList.remove('guide-highlight')}
+function dismissFeatureGuideCoach(){featureGuideCoachDismissed=true;hideFeatureGuideCoach()}
+function snoozeFeatureGuideCoach(){try{localStorage.setItem(FEATURE_GUIDE_SNOOZE_KEY,String(Date.now()+7*24*60*60*1000))}catch(e){}featureGuideCoachDismissed=true;hideFeatureGuideCoach();showShareToast('7일 동안 안내를 띄우지 않아요')}
+function openFeatureGuideFromCoach(){featureGuideCoachDismissed=true;hideFeatureGuideCoach();openFeatureGuide()}
+function renderFeatureGuideList(){const list=document.getElementById('feature-guide-list');if(!list)return;list.innerHTML=FEATURE_GUIDE_ITEMS.map(x=>`<button type="button" class="feature-guide-item" onclick="showFeatureGuideDetail('${x.key}')"><span>${x.icon}</span><span><strong>${x.title}</strong><small>${x.summary}</small></span><b>›</b></button>`).join('')}
+function openFeatureGuide(){hideFeatureGuideCoach();renderFeatureGuideList();showFeatureGuideList();const overlay=document.getElementById('feature-guide-overlay');overlay.classList.add('show');overlay.setAttribute('aria-hidden','false')}
+function closeFeatureGuide(){const overlay=document.getElementById('feature-guide-overlay');overlay.classList.remove('show');overlay.setAttribute('aria-hidden','true')}
+function showFeatureGuideList(){document.getElementById('feature-guide-list').style.display='grid';document.getElementById('feature-guide-detail').classList.remove('show')}
+function showFeatureGuideDetail(key){const item=FEATURE_GUIDE_ITEMS.find(x=>x.key===key);if(!item)return;document.getElementById('feature-guide-list').style.display='none';document.getElementById('feature-guide-detail-icon').textContent=item.icon;document.getElementById('feature-guide-detail-title').textContent=item.title;document.getElementById('feature-guide-detail-copy').textContent=item.copy;document.getElementById('feature-guide-detail').classList.add('show');document.getElementById('feature-guide-start').onclick=()=>startFeatureGuideItem(key)}
+function startFeatureGuideItem(key){closeFeatureGuide();if(key==='quiz')startQuiz();else if(key==='cards')showCounselingCards();else if(key==='education')showEducationArchive();else if(key==='roulette')showRoulette();else if(key==='ranking')showRankModal();else if(key==='growth')showGrowth()}
 async function showMyProfile(){await showDashboard();document.querySelectorAll('#bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.action==='my'));const card=document.querySelector('#s-dashboard .dash-header');card?.classList.add('profile-focus');setTimeout(()=>card?.classList.remove('profile-focus'),900)}
 function showLoading(m='불러오는 중...'){ document.getElementById('loading-msg').textContent=m; document.getElementById('loading').classList.add('show'); }
 function hideLoading(){ document.getElementById('loading').classList.remove('show'); }
@@ -1943,6 +1981,7 @@ async function showDashboard(){
   const mission=document.getElementById('mission-progress');
   if(mission)mission.textContent=dailyLimit>0?`오늘 ${todayAttempts}/${dailyLimit}문제 완료`:`오늘 ${todayAttempts}문제 완료`;
   showScreen('s-dashboard');
+  setTimeout(maybeShowFeatureGuideCoach,350);
 }
 
 async function renderTop5Dashboard(){
