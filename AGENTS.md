@@ -155,10 +155,13 @@ key, value (JSON), updated_at
 - 첫 접속 시 통합 안내를 자동 노출하고 `7일 동안 보지 않기` 선택 흐름 추가
 - 오른쪽 상단 도움말의 화살표를 누르면 기능별 설명과 바로 시작 버튼이 열리도록 간소화
 - 첫 자동 노출을 특정 상담퀴즈 안내가 아닌 전체 `상담 MASTER 사용 가이드` 목록으로 변경
+- 첫 화면을 덮는 자동 도움말 대신 오른쪽 상단 도움말 버튼을 강조하는 작은 튜토리얼 말풍선으로 변경
+- 말풍선에 `처음이신가요?`, `가이드 보기`, `7일간 보지 않기`만 제공해 초기 방해 최소화
 - 운영 index·admin·service worker 및 Supabase 데이터는 변경하지 않음
 - 백업: `backup_20260828_before_feature_guide_simulation`
 - 피드백 반영 백업: `backup_20260828_before_feature_guide_v2`
 - 자동 도움말 반영 백업: `backup_20260828_before_feature_guide_v3`
+- 튜토리얼 말풍선 반영 백업: `backup_20260828_before_feature_guide_v4`
 
 ### 2026-08-27 (부산 강희승 우수사례 영상 추가)
 **교육자료 우수사례에 부산 강희승 영상을 신규 등록**
