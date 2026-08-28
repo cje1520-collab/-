@@ -154,9 +154,11 @@ key, value (JSON), updated_at
 - 피드백 반영본에서는 메뉴 위치·경로 문구를 제거하고 기능 설명과 `바로 시작`만 유지
 - 첫 접속 시 통합 안내를 자동 노출하고 `7일 동안 보지 않기` 선택 흐름 추가
 - 오른쪽 상단 도움말의 화살표를 누르면 기능별 설명과 바로 시작 버튼이 열리도록 간소화
+- 첫 자동 노출을 특정 상담퀴즈 안내가 아닌 전체 `상담 MASTER 사용 가이드` 목록으로 변경
 - 운영 index·admin·service worker 및 Supabase 데이터는 변경하지 않음
 - 백업: `backup_20260828_before_feature_guide_simulation`
 - 피드백 반영 백업: `backup_20260828_before_feature_guide_v2`
+- 자동 도움말 반영 백업: `backup_20260828_before_feature_guide_v3`
 
 ### 2026-08-27 (부산 강희승 우수사례 영상 추가)
 **교육자료 우수사례에 부산 강희승 영상을 신규 등록**
