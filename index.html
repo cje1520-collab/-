@@ -14,9 +14,14 @@ if('serviceWorker' in navigator){
     swReloading=true;
     location.reload();
   });
-  navigator.serviceWorker.register('./sw.js').then(reg=>{
-    reg.update();
-    setInterval(()=>reg.update(),60*60*1000);
+  navigator.serviceWorker.register('./sw.js?v=56',{updateViaCache:'none'}).then(reg=>{
+    const checkUpdate=()=>reg.update().catch(()=>{});
+    checkUpdate();
+    setInterval(checkUpdate,5*60*1000);
+    window.addEventListener('pageshow',checkUpdate);
+    document.addEventListener('visibilitychange',()=>{
+      if(document.visibilityState==='visible')checkUpdate();
+    });
   });
 }
 </script>
@@ -1227,7 +1232,7 @@ body{padding-bottom:0}
   </div>
 
   <!-- ══ 목표 관리 ══ -->
-  <div class="screen" id="s-goal-management"><header class="goal-management-head"><button type="button" onclick="closeGoalManagement()" aria-label="홈으로">‹</button><strong>이번 달 목표 관리</strong></header><iframe class="goal-management-frame" id="goal-management-frame" src="goal-management.html?v=55" title="이번 달 목표관리 모의계산기"></iframe></div>
+  <div class="screen" id="s-goal-management"><header class="goal-management-head"><button type="button" onclick="closeGoalManagement()" aria-label="홈으로">‹</button><strong>이번 달 목표 관리</strong></header><iframe class="goal-management-frame" id="goal-management-frame" src="goal-management.html?v=56" title="이번 달 목표관리 모의계산기"></iframe></div>
 
   <!-- ══ 내 성장 ══ -->
   <div class="screen" id="s-growth">

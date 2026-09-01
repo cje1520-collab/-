@@ -1,4 +1,4 @@
-const VERSION = '2026-09-01-v55';
+const VERSION = '2026-09-01-v56';
 const CACHE = 'quiz-' + VERSION;
 
 self.addEventListener('install', e => {
@@ -17,7 +17,7 @@ self.addEventListener('fetch', e => {
   // HTML은 항상 네트워크 우선 (최신 버전 보장)
   if (e.request.destination === 'document' || e.request.url.endsWith('.html')) {
     e.respondWith(
-      fetch(e.request).catch(() => caches.match(e.request))
+      fetch(new Request(e.request, { cache: 'no-store' })).catch(() => caches.match(e.request))
     );
     return;
   }
