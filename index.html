@@ -1176,10 +1176,15 @@ body{padding-bottom:0}
     <button class="btn-ghost" onclick="showScreen('s-intro')">← 돌아가기</button>
   </div>
 
+  <style>
+  .goal-home-card{margin:12px 0 14px;padding:20px;border:1px solid #e7e0fb;border-radius:24px;background:linear-gradient(145deg,#fff 0%,#faf7ff 58%,#fff5ec 100%);box-shadow:0 12px 30px rgba(76,57,119,.1);color:#30294a}.goal-home-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.goal-home-label{font-size:13px;font-weight:800;color:#756b91}.goal-home-money{display:block;margin-top:4px;font-size:30px;line-height:1.15;color:#6c55d9;letter-spacing:-.04em}.goal-home-edit{min-height:40px;padding:0 13px;border:0;border-radius:13px;background:#eee9ff;color:#624bc8;font-size:13px;font-weight:900}.goal-home-progress-head{display:flex;align-items:flex-end;justify-content:space-between;margin-top:17px}.goal-home-progress-head span{font-size:12px;color:#817891}.goal-home-progress-head strong{font-size:23px;color:#6c55d9}.goal-home-track{height:10px;margin-top:7px;border-radius:99px;background:#ece8f3;overflow:hidden}.goal-home-track i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#6c55d9,#8a73ee)}.goal-home-money-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.goal-home-money-row div{padding:11px;border-radius:14px;background:rgba(255,255,255,.88)}.goal-home-money-row small{display:block;color:#82798e;font-size:11px}.goal-home-money-row b{display:block;margin-top:3px;font-size:15px;color:#332d44}.goal-home-remain{margin-top:10px;color:#776d85;font-size:12px}.goal-home-remain strong{color:#f47b42}.goal-home-targets{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:13px}.goal-home-targets span{padding:9px 4px;border-radius:12px;background:#fff;text-align:center;color:#70677f;font-size:11px}.goal-home-targets b{display:block;margin-top:2px;color:#332d44;font-size:15px}.goal-home-detail{width:100%;min-height:45px;margin-top:13px;border:0;border-radius:14px;background:#6c55d9;color:#fff;font-size:14px;font-weight:900}.goal-management-head{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border-bottom:1px solid #ebe7f4}.goal-management-head button{width:42px;height:42px;border:0;border-radius:13px;background:#f1edff;color:#6c55d9;font-size:25px}.goal-management-head strong{font-size:18px;color:#30294a}.goal-management-frame{display:block;width:100%;height:calc(100dvh - 70px);border:0;background:#f7f5fb}@media(max-width:374px){.goal-home-card{padding:17px}.goal-home-money{font-size:27px}.goal-home-money-row b{font-size:13px}}
+  </style>
+
   <!-- ══ 대시보드 ══ -->
   <div class="screen" id="s-dashboard">
     <header class="app-brand"><div><strong>상담 MASTER</strong></div><div class="app-brand-actions"><button type="button" class="app-brand-help" id="feature-guide-button" onclick="openFeatureGuide()" aria-label="상담 MASTER 사용 가이드 열기"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.4 2.4 0 1 1 3.2 2.3c-.8.3-1 1-1 1.7M12 17h.01"/></svg>도움말</button><button type="button" onclick="document.getElementById('notice-banner').scrollIntoView({behavior:'smooth'})" aria-label="공지사항 보기" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button></div></header>
     <aside class="feature-guide-coach" id="feature-guide-coach" hidden aria-live="polite"><button type="button" class="feature-guide-coach-close" onclick="dismissFeatureGuideCoach()" aria-label="튜토리얼 닫기">×</button><strong>처음이신가요? 👋</strong><p>오른쪽 위 사용 가이드에서 상담 MASTER의 기능을 간단히 확인해보세요.</p><div class="feature-guide-coach-actions"><button type="button" class="feature-guide-later" onclick="snoozeFeatureGuideCoach()">7일간 보지 않기</button><button type="button" class="feature-guide-open" onclick="openFeatureGuideFromCoach()">가이드 보기</button></div></aside>
+    <section class="goal-home-card" aria-labelledby="goal-home-title"><div class="goal-home-top"><div><span class="goal-home-label" id="goal-home-title">이번 달 목표 수수료</span><strong class="goal-home-money" id="goal-home-target">3,000,000원</strong></div><button type="button" class="goal-home-edit" onclick="openGoalManagement()">목표 수정</button></div><div class="goal-home-progress-head"><span>목표 달성률</span><strong id="goal-home-rate">0%</strong></div><div class="goal-home-track" role="progressbar" aria-label="수수료 목표 달성률" aria-valuemin="0" aria-valuemax="100" id="goal-home-progress"><i id="goal-home-bar" style="width:0%"></i></div><div class="goal-home-money-row"><div><small>현재 예상 수수료</small><b id="goal-home-current">300,000원</b></div><div><small>목표까지</small><b id="goal-home-remain">2,700,000원</b></div></div><div class="goal-home-targets"><span>신청 목표<b id="goal-home-app">179건</b></span><span>진행 목표<b id="goal-home-run">46건</b></span><span>결제 목표<b id="goal-home-pay">9건</b></span></div><p class="goal-home-remain">※ 환불·프로모션·장기근무수당 등에 따라 실제 수수료는 달라질 수 있습니다.</p><button type="button" class="goal-home-detail" onclick="openGoalManagement()">주차별 목표·실적 입력</button></section>
     <div class="page-card" style="margin:12px;padding:0">
       <div class="dash-header">
         <div class="dash-greeting">반갑습니다!</div>
@@ -1210,6 +1215,9 @@ body{padding-bottom:0}
     <button class="growth-banner" onclick="showGrowth()"><span><small>꾸준한 학습이 상담 자신감으로</small><strong>내 식물의 다음 성장을 확인해보세요</strong></span><img src="assets/rank-plants/rank-plant-2.png" alt="성장 중인 식물"></button>
     <button class="btn-ghost" onclick="showScreen('s-login')">🔄 다른 계정으로</button>
   </div>
+
+  <!-- ══ 목표 관리 ══ -->
+  <div class="screen" id="s-goal-management"><header class="goal-management-head"><button type="button" onclick="closeGoalManagement()" aria-label="홈으로">‹</button><strong>이번 달 목표 관리</strong></header><iframe class="goal-management-frame" id="goal-management-frame" src="goal-management.html" title="이번 달 목표관리 모의계산기"></iframe></div>
 
   <!-- ══ 내 성장 ══ -->
   <div class="screen" id="s-growth">
@@ -1856,6 +1864,13 @@ function showScreen(id){
   }
   window.scrollTo(0,0);
 }
+const GOAL_STORAGE_KEY='counsel-master-monthly-goals-v1';
+function goalWon(value){return Math.round(Number(value)||0).toLocaleString('ko-KR')+'원'}
+function goalMonthKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
+function currentGoalRecord(){try{const history=JSON.parse(localStorage.getItem(GOAL_STORAGE_KEY)||'{}'),key=goalMonthKey();if(history[key])return history[key];const previousKey=Object.keys(history).filter(x=>x<key).sort().pop(),previous=previousKey&&history[previousKey];if(previous)return{goalMoney:previous.goalMoney,fee:300000,targets:previous.targets,actual:{app:0,run:0,pay:0},mix:previous.mix};}catch(e){}return{goalMoney:3000000,fee:300000,targets:{app:179,run:46,pay:9},actual:{app:0,run:0,pay:0},mix:[22,70,8]}}
+function renderGoalSummary(){const item=currentGoalRecord(),target=Math.max(1,Number(item.goalMoney)||3000000),fee=Math.max(0,Number(item.fee)||0),rate=Math.min(100,Math.round(fee/target*100)),remain=Math.max(0,target-fee),targets=item.targets||{app:179,run:46,pay:9};document.getElementById('goal-home-target').textContent=goalWon(target);document.getElementById('goal-home-current').textContent=goalWon(fee);document.getElementById('goal-home-remain').textContent=goalWon(remain);document.getElementById('goal-home-rate').textContent=rate+'%';document.getElementById('goal-home-bar').style.width=rate+'%';document.getElementById('goal-home-progress').setAttribute('aria-valuenow',rate);document.getElementById('goal-home-app').textContent=(targets.app||0)+'건';document.getElementById('goal-home-run').textContent=(targets.run||0)+'건';document.getElementById('goal-home-pay').textContent=(targets.pay||0)+'건'}
+function openGoalManagement(){const frame=document.getElementById('goal-management-frame');if(frame)frame.contentWindow.location.reload();showScreen('s-goal-management')}
+function closeGoalManagement(){renderGoalSummary();showDashboard()}
 const FEATURE_GUIDE_SNOOZE_KEY='counseling_master_feature_guide_snooze_v1';
 const FEATURE_GUIDE_ITEMS=[
   {key:'quiz',icon:'🎮',title:'상담 퀴즈',summary:'제품 지식을 익히고 포인트 적립',copy:'제품과 서비스 지식을 짧은 문제로 익히는 공간이에요. 정답을 맞히면 포인트가 쌓이고, 틀린 문제는 오답노트에서 다시 볼 수 있어요.'},
@@ -1947,6 +1962,7 @@ async function loginUser(){
    대시보드
 ═══════════════════════════════ */
 async function showDashboard(){
+  renderGoalSummary();
   const rank=getRank(totalPts);
   const g=calcGauge(totalPts);
   document.getElementById('d-name').innerHTML=`<span>${userName}</span> <span class="mgr-title">${GT.manager_title||'매니저'}</span>`;
@@ -1986,6 +2002,7 @@ async function showDashboard(){
 
 async function renderTop5Dashboard(){
   const list=document.getElementById('d-top5');
+  if(!list)return;
   try{
     const all=await sbMonthlyRanking();
     if(!all.length){
