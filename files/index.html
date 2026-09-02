@@ -14,7 +14,7 @@ if('serviceWorker' in navigator){
     swReloading=true;
     location.reload();
   });
-  navigator.serviceWorker.register('./sw.js?v=60',{updateViaCache:'none'}).then(reg=>{
+  navigator.serviceWorker.register('./sw.js?v=61',{updateViaCache:'none'}).then(reg=>{
     const checkUpdate=()=>reg.update().catch(()=>{});
     checkUpdate();
     setInterval(checkUpdate,5*60*1000);
@@ -1031,7 +1031,7 @@ button,a{touch-action:manipulation}.btn-main,.btn-sub,.btn-ghost{min-height:48px
 @media(max-width:374px){#s-dashboard{padding-left:13px!important;padding-right:13px!important}#s-dashboard .dash-header{min-height:282px;padding:17px}#s-dashboard .cm-premium-mascot.profile-avatar{width:112px;height:126px;right:3px}#s-dashboard .profile-avatar .profile-plant{width:108px;height:111px}#s-dashboard .dash-name{font-size:20px}.mission-card{grid-template-columns:38px minmax(0,1fr);padding:12px}.mission-card button{grid-column:2;justify-self:start;min-height:36px;margin-top:4px}.mission-icon{width:38px;height:38px}.cm-wrap{padding-left:13px;padding-right:13px}#s-dashboard .cm-secondary strong{font-size:10px}.growth-current{padding-right:112px}.growth-current:after{width:100px;height:100px}.cm-card-head,.cm-step{padding-left:14px;padding-right:14px}.cm-step-body{font-size:14.5px}.bottom-nav button b{font-size:9px}}
 @media(min-width:431px){body{background:#f1efec}.wrap{box-shadow:0 0 40px rgba(40,34,50,.08)}}
 </style>
-<style id="mobile-ux-v34-fixes">html,body,.wrap{overflow-x:hidden}.cm-head button,.roulette-back{width:44px!important;min-height:44px!important}.cm-chip,.cm-obj,.copy-script,.resource-filter button,.cm-actions a{min-height:44px!important}.cm-chips,.cm-obj-grid,.resource-filter{scrollbar-width:none}.cm-chips::-webkit-scrollbar,.cm-obj-grid::-webkit-scrollbar,.resource-filter::-webkit-scrollbar{display:none}</style>
+<style id="mobile-ux-v34-fixes">html,body,.wrap{overflow-x:hidden}html,body,.wrap,.screen,.quiz-body,.cm-content-screen,.feature-guide-sheet{scrollbar-width:none;-ms-overflow-style:none}html::-webkit-scrollbar,body::-webkit-scrollbar,.wrap::-webkit-scrollbar,.screen::-webkit-scrollbar,.quiz-body::-webkit-scrollbar,.cm-content-screen::-webkit-scrollbar,.feature-guide-sheet::-webkit-scrollbar{display:none;width:0;height:0}.cm-head button,.roulette-back{width:44px!important;min-height:44px!important}.cm-chip,.cm-obj,.copy-script,.resource-filter button,.cm-actions a{min-height:44px!important}.cm-chips,.cm-obj-grid,.resource-filter{scrollbar-width:none}.cm-chips::-webkit-scrollbar,.cm-obj-grid::-webkit-scrollbar,.resource-filter::-webkit-scrollbar{display:none}</style>
 <style id="mobile-ux-v35-icons">
 /* Familiar function icons and clearer counseling-card hierarchy */
 #s-dashboard .cm-primary.hero{background:linear-gradient(135deg,#806bd2,#9a86df);box-shadow:0 8px 20px rgba(109,87,199,.15)}#s-dashboard .cm-icon{font-size:25px!important;line-height:1}#s-dashboard .cm-primary.hero .cm-icon{background:rgba(255,255,255,.22)}#s-dashboard .cm-primary.cards .cm-icon{background:#f2edff}#s-dashboard .cm-primary.education .cm-icon{background:#eaf8f2}#s-dashboard .cm-secondary span{font-family:inherit;font-size:23px!important;background:#f6f2fb}#s-dashboard .cm-secondary:nth-child(3) span{background:#fff4e8}#s-dashboard .cm-secondary:nth-child(4) span{background:#eef7ff}.bottom-nav button span{font-family:inherit;font-size:20px}.bottom-nav .nav-quiz span{font-size:20px}
@@ -1235,7 +1235,7 @@ body{padding-bottom:0}
   </div>
 
   <!-- ══ 목표 관리 ══ -->
-  <div class="screen" id="s-goal-management"><header class="goal-management-head"><button type="button" onclick="closeGoalManagement()" aria-label="홈으로">‹</button><strong>이번 달 목표 관리</strong></header><iframe class="goal-management-frame" id="goal-management-frame" src="goal-management.html?v=60" title="이번 달 목표관리 모의계산기"></iframe></div>
+  <div class="screen" id="s-goal-management"><header class="goal-management-head"><button type="button" onclick="closeGoalManagement()" aria-label="홈으로">‹</button><strong>이번 달 목표 관리</strong></header><iframe class="goal-management-frame" id="goal-management-frame" src="goal-management.html?v=61" title="이번 달 목표관리 모의계산기"></iframe></div>
 
   <!-- ══ 내 성장 ══ -->
   <div class="screen" id="s-growth">
