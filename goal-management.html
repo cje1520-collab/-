@@ -13,7 +13,35 @@
 .master-week-inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.master-week-inputs label{color:var(--master-muted);font-size:10px;font-weight:700}.master-week-inputs input{width:100%;height:40px;margin-top:4px;padding:0 6px;border:1px solid var(--master-line);border-radius:10px;background:#fff;color:var(--master-text);font:inherit;font-size:15px;font-weight:700;text-align:center;box-sizing:border-box}
 .master-history-peek{display:flex;align-items:center;gap:12px;margin-top:12px;padding:14px;border:1px solid var(--master-line);border-radius:18px;background:#fff}.master-history-icon{display:grid;flex:0 0 40px;height:40px;place-items:center;border-radius:13px;background:var(--master-mint-soft);color:var(--master-mint);font-size:19px}.master-history-copy{min-width:0;flex:1}.master-history-copy strong{display:block;font-size:13px}.master-history-copy span{display:block;margin-top:2px;color:var(--master-muted);font-size:11px}.master-history-peek button{min-height:36px;padding:0 10px;border:0;border-radius:11px;background:var(--master-soft);color:var(--master-purple);font-size:11px;font-weight:700}.master-history-list{display:grid;gap:10px}.master-month-card{width:100%;padding:15px;border:1px solid var(--master-line);border-radius:18px;background:#fff;text-align:left}.master-month-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.master-month-top strong{font-size:15px}.master-month-top b{color:var(--master-purple);font-size:18px}.master-month-money{margin-top:7px;color:var(--master-muted);font-size:11px}.master-month-money strong{color:var(--master-text);font-size:12px}.master-month-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}.master-month-metric{padding:9px 4px;border-radius:11px;background:var(--master-bg);text-align:center}.master-month-metric small{display:block;color:var(--master-muted);font-size:10px}.master-month-metric b{display:block;margin-top:2px;font-size:12px}.master-history-detail{margin-top:12px;padding:15px;border-radius:18px;background:var(--master-soft)}.master-history-detail h3{margin:0 0 10px;font-size:15px}.master-history-detail-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid rgba(108,85,217,.12);font-size:12px}.master-history-detail-row:last-child{border-bottom:0}.master-history-detail-row span{color:var(--master-muted)}.master-save-time{margin-top:8px;color:var(--master-muted);font-size:10px;text-align:center}
 @media(max-width:360px){.master-phone{border-radius:22px}.master-main{padding-left:10px;padding-right:10px}.master-target-money{font-size:28px}.master-plant{width:112px;height:112px}.master-level-chip{top:95px;right:27px}.master-money-block{padding-right:76px}.master-goal-card{padding:12px 8px}.master-goal-card strong{font-size:15px}.master-input-grid{grid-template-columns:1fr}}
-.master-header{display:none}.master-phone{max-width:none;border:0;border-radius:0;box-shadow:none}.master-main{padding-top:12px}html{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}</style>
+.master-header{display:none}.master-phone{max-width:none;border:0;border-radius:0;box-shadow:none}.master-main{padding-top:12px}html{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}
+/* v62: 목표 홈은 핵심 수치만 먼저 보여 주고 상세 지표는 상세보기로 분리 */
+#master-dashboard .master-hero{min-height:0;padding:18px 18px 17px;border-radius:22px}
+#master-dashboard .master-greeting,#master-dashboard .master-level,#master-dashboard .master-plant,#master-dashboard .master-level-chip{display:none}
+#master-dashboard .master-money-block{padding:0}
+#master-dashboard .master-target-money{font-size:30px}
+#master-dashboard .master-achievement{margin-top:14px;padding-top:13px;border-top:1px solid rgba(108,85,217,.12)}
+#master-dashboard .master-achievement>div:first-child{display:flex;align-items:baseline;gap:8px}
+#master-dashboard .master-achievement>div:first-child strong{font-size:23px}
+#master-dashboard .master-current b{font-size:16px}
+#master-dashboard .master-remain{margin-top:9px;font-size:12px}
+#master-dashboard .master-target-tags{display:none}
+#master-dashboard .master-edit-target{position:absolute;right:16px;top:16px;bottom:auto;min-height:38px;padding:0 13px}
+#master-dashboard .master-goal-grid{display:none}
+#master-dashboard .master-section-title{margin:14px 4px 8px}
+#master-dashboard .master-section-title h3{font-size:16px}
+#master-dashboard .master-detail-link{padding:0 3px;font-size:14px}
+#master-dashboard .master-priority{margin-top:4px;padding:12px}
+#master-dashboard .master-menu-card{min-height:76px}
+#master-detail .master-result{padding:16px 18px;border-radius:18px}
+#master-detail .master-result strong{font-size:26px}
+#master-detail .master-panel{padding:16px;border-radius:18px}
+#master-detail .master-week-list{gap:7px}
+#master-detail .master-week-row{padding:10px 11px;border-radius:14px}
+#master-detail .master-week-head{margin-bottom:8px}
+#master-detail .master-week-metrics{gap:5px}
+#master-detail .master-week-metric{padding:7px 5px;border-radius:10px}
+#master-detail .master-week-metric b{margin-top:2px;font-size:14px}
+</style>
 <section class="master-phone"><header class="master-header"><div class="master-brand">상담 MASTER</div><div class="master-header-actions"><button class="master-icon-button" type="button" aria-label="도움말">?</button><button class="master-icon-button master-bell" type="button" aria-label="알림">♧</button></div></header><main class="master-main">
 <section class="master-screen" id="master-dashboard"><article class="master-hero"><div class="master-greeting">반갑습니다!<strong>오늘도 힘내요, <em>매니저님</em></strong></div><span class="master-level">☕ 여유 매니저</span><img class="master-plant" src="assets/rank-plants/rank-plant-3.png" alt="커피를 든 레벨 3 식물 캐릭터"><span class="master-level-chip">LEVEL 3</span><div class="master-money-block"><div class="master-eyebrow">이번 달 목표 수수료</div><div class="master-target-money" id="master-target-money">3,000,000원</div></div><div class="master-achievement"><div><div class="master-eyebrow">목표 달성률</div><strong id="master-fee-percent">10%</strong></div><div class="master-current">현재 예상 수수료<b id="master-current-fee">300,000원</b></div></div><div class="master-progress" role="progressbar" aria-label="수수료 목표 달성률" aria-valuemin="0" aria-valuemax="100"><i id="master-fee-bar" style="width:10%"></i></div><div class="master-remain">✨ 목표까지 <strong id="master-remain-money">2,700,000원</strong> 남았어요!</div><div class="master-target-tags"><span>신청 <b id="master-app-tag">179</b></span><span>진행 <b id="master-run-tag">46</b></span><span>결제 <b id="master-pay-tag">9</b></span></div><button class="master-edit-target" type="button" data-master-go="goal">목표 수정</button></article>
 <div class="master-section-title"><h3>목표 관리</h3><button class="master-detail-link" type="button" data-master-go="detail">상세보기 〉</button></div><div class="master-goal-grid"><button class="master-goal-card" type="button" data-master-go="detail"><span>📋 신청</span><strong id="master-app-value">0 / 179</strong><b id="master-app-percent">0%</b><div class="master-mini-progress"><i id="master-app-bar"></i></div></button><button class="master-goal-card" type="button" data-master-go="detail"><span>💬 진행</span><strong id="master-run-value">0 / 46</strong><b id="master-run-percent">0%</b><div class="master-mini-progress"><i id="master-run-bar"></i></div></button><button class="master-goal-card" type="button" data-master-go="detail"><span>✓ 결제</span><strong id="master-pay-value">0 / 9</strong><b id="master-pay-percent">0%</b><div class="master-mini-progress"><i id="master-pay-bar"></i></div></button></div>
@@ -45,7 +73,7 @@ q('#master-save-goal').onclick=()=>{if(renderMixTotal()!==100)return;state.goalM
 q('#master-add-pay').onclick=()=>{const key=q('#master-pay-product').value,qty=Math.max(1,num(q('#master-pay-qty').value)),found=state.payments.find(x=>x.key===key);found?found.qty+=qty:state.payments.push({key,qty});saveCurrent();renderPayments();renderDetailFee()};
 q('#master-apply-actual').onclick=()=>{state.actual.app=num(q('#master-actual-app').value);state.actual.run=num(q('#master-actual-run').value);saveCurrent();show('dashboard')};
 q('#master-reset-actual').onclick=()=>{state.actual={app:0,run:0};state.weeklyActual=[];state.payments=[];saveCurrent();renderDetail();renderDashboard()};
-root.addEventListener('click',event=>{const button=event.target.closest('[data-parent-action]');if(!button)return;event.preventDefault();window.parent.postMessage({type:'counsel-master-navigation',action:button.dataset.parentAction},location.origin)});
+root.addEventListener('click',event=>{const button=event.target.closest('[data-parent-action]');if(!button)return;event.preventDefault();const action=button.dataset.parentAction;try{if(typeof window.parent.navigateFromGoalHome==='function'){window.parent.navigateFromGoalHome(action);return}}catch(e){}window.parent.postMessage({type:'counsel-master-navigation',action},'*')});
 saveCurrent();renderDashboard()})();
 </script></div>
 </body></html>
