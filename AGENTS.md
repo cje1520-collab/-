@@ -915,3 +915,10 @@ key, value (JSON), updated_at
 - 어드민에서 제목·노출·순서 수정 기능 유지, 서버 education_archive_v1 목록 갱신
 - files/와 루트 동기화, 서비스워커 및 목표 홈 iframe v72 갱신
 - 백업: backup_20261002_before_october_insight_v72 (파일·운영 설정)
+
+### 2026-10-07 (10월 상담력 인사이트 연결 영상 v73)
+- 2033대입개편 논의와 초등 학습 항목에 https://youtu.be/FTBURBQzmBM 연결 영상 추가
+- 기존 PDF·제목·노출·순서를 유지하고 영상 보기 버튼을 기존 기기별 뷰어에 연결
+- 서버 education_archive_v1 저장 후 재조회 일치 확인 및 기본 데이터·어드민 동기화
+- JavaScript 구문 검증 완료, 서비스워커 2026-10-07-v73 갱신
+- 백업: backup_20261007_before_october_video_v73
