@@ -14,7 +14,7 @@ if('serviceWorker' in navigator){
     swReloading=true;
     location.reload();
   });
-  navigator.serviceWorker.register('./sw.js?v=73',{updateViaCache:'none'}).then(reg=>{
+  navigator.serviceWorker.register('./sw.js?v=74',{updateViaCache:'none'}).then(reg=>{
     const checkUpdate=()=>reg.update().catch(()=>{});
     checkUpdate();
     setInterval(checkUpdate,5*60*1000);
@@ -1272,18 +1272,18 @@ body{padding-bottom:0}
       </div>
     </div>
     <section class="monthly-learning"><div class="mobile-section-head"><strong>🔖 이번 달 교육자료</strong><button type="button" onclick="showEducationArchive()">전체 보기 〉</button></div><article class="learning-slide" data-learning-slide="0"><div class="learning-thumb"><small>상담력 인사이트</small><img src="assets/rank-plants/rank-plant-4.png" alt="10월 상담력 인사이트"></div><div class="learning-copy"><small>10월 최신</small><h3>10월 상담력 인사이트</h3><p>2033대입개편 논의와 초등 학습을 확인해보세요.</p><button type="button" onclick="openHomeEducation('insight')">바로 보기</button></div></article><article class="learning-slide" data-learning-slide="1" hidden><div class="learning-thumb"><small>우수사례</small><img src="assets/rank-plants/rank-plant-3.png" alt="최신 상담 우수사례"></div><div class="learning-copy"><small>최신 우수사례</small><h3>부산 강희승 매니저</h3><p>현장에서 성과로 이어진 상담 흐름과 활동 사례를 확인해보세요.</p><button type="button" onclick="openHomeEducation('best')">영상 보기</button></div></article><article class="learning-slide" data-learning-slide="2" hidden><div class="learning-thumb"><small>전체교육</small><img src="assets/rank-plants/rank-plant-2.png" alt="전체 교육자료 모아보기"></div><div class="learning-copy"><small>교육자료 모음</small><h3>전체 교육자료</h3><p>상담력 인사이트와 우수사례 등 필요한 교육을 한곳에서 찾아보세요.</p><button type="button" onclick="showEducationArchive()">모아보기</button></div></article><div class="learning-dots" aria-label="교육자료 선택"><button class="is-active" type="button" onclick="setHomeLearning(0)" aria-label="상담력 인사이트 보기"></button><button type="button" onclick="setHomeLearning(1)" aria-label="우수사례 보기"></button><button type="button" onclick="setHomeLearning(2)" aria-label="전체교육 보기"></button></div></section>
-    <section class="today-actions" aria-labelledby="mission-title"><div class="mobile-section-head"><strong id="mission-title">☑ 오늘 할 일</strong></div><div class="today-row"><span class="today-icon">🎮</span><span class="today-copy"><strong>상담 퀴즈</strong><small id="mission-progress">오늘 0문제 완료 · 참여하고 포인트를 받아보세요!</small></span><button type="button" onclick="startQuiz()">참여하기 〉</button></div><div class="today-row"><span class="today-icon">📊</span><span class="today-copy"><strong>이번 주 실적 입력</strong><small>실적을 입력하고 목표를 관리하세요!</small></span><button type="button" onclick="openGoalManagement('detail')">입력하기 〉</button></div></section>
+    <section class="today-actions" aria-labelledby="mission-title"><div class="mobile-section-head"><strong id="mission-title">☑ 오늘 할 일</strong></div><div class="today-row"><span class="today-icon">🎮</span><span class="today-copy"><strong>상담왕</strong><small id="mission-progress">오늘 0문제 완료 · 참여하고 포인트를 받아보세요!</small></span><button type="button" onclick="showCounselKing()">참여하기 〉</button></div><div class="today-row"><span class="today-icon">📊</span><span class="today-copy"><strong>이번 주 실적 입력</strong><small>실적을 입력하고 목표를 관리하세요!</small></span><button type="button" onclick="openGoalManagement('detail')">입력하기 〉</button></div></section>
     <div class="notice-banner" id="notice-banner">
       <strong id="notice-text"></strong>
       <span id="notice-sub"></span>
     </div>
-    <div class="cm-home-sections"><div class="cm-section-label"><span>주요 메뉴</span></div><div class="mobile-main-menu"><button onclick="startQuiz()"><i>🎮</i><strong id="menu-quiz-label">상담 퀴즈</strong></button><button onclick="showEducationArchive()"><i>📚</i><strong id="menu-education-label">교육자료</strong></button><button onclick="showCounselingCards()"><i>🗂️</i><strong id="menu-cards-label">핵심카드</strong></button><button onclick="showRoulette()"><i>🎰</i><strong id="menu-roulette-label">롤플레잉</strong></button></div><div class="mobile-sub-menu"><button onclick="showRankModal()"><span>🏆</span><strong id="menu-rank-label">랭킹</strong></button><button onclick="showGrowth()"><span>🌱</span><strong>성장</strong></button><button id="btn-dash-review" onclick="startReviewFromDash()"><span>📖</span><strong>오답노트</strong><small id="dash-review-count">0</small></button><button onclick="document.getElementById('notice-banner').scrollIntoView({behavior:'smooth'})"><span>📢</span><strong>공지사항</strong></button></div></div>
+    <div class="cm-home-sections"><div class="cm-section-label"><span>주요 메뉴</span></div><div class="mobile-main-menu"><button onclick="showCounselKing()"><i>🎮</i><strong id="menu-quiz-label">상담왕</strong></button><button onclick="showEducationArchive()"><i>📚</i><strong id="menu-education-label">교육자료</strong></button><button onclick="showCounselingCards()"><i>🗂️</i><strong id="menu-cards-label">핵심카드</strong></button><button onclick="showRoulette()"><i>🎰</i><strong id="menu-roulette-label">롤플레잉</strong></button></div><div class="mobile-sub-menu"><button onclick="showRankModal()"><span>🏆</span><strong id="menu-rank-label">랭킹</strong></button><button onclick="showGrowth()"><span>🌱</span><strong>성장</strong></button><button id="btn-dash-review" onclick="startReviewFromDash()"><span>📖</span><strong>오답노트</strong><small id="dash-review-count">0</small></button><button onclick="document.getElementById('notice-banner').scrollIntoView({behavior:'smooth'})"><span>📢</span><strong>공지사항</strong></button></div></div>
     <button class="growth-banner" onclick="showGrowth()"><span><small>꾸준한 학습이 상담 자신감으로</small><strong>내 식물의 다음 성장을 확인해보세요</strong></span><img src="assets/rank-plants/rank-plant-2.png" alt="성장 중인 식물"></button>
     <button class="btn-ghost" onclick="showScreen('s-login')">🔄 다른 계정으로</button>
   </div>
 
   <!-- ══ 목표 관리 ══ -->
-  <div class="screen" id="s-goal-management"><header class="goal-management-head"><button type="button" onclick="closeGoalManagement()" aria-label="홈으로">‹</button><strong>이번 달 목표 관리</strong></header><iframe class="goal-management-frame" id="goal-management-frame" src="goal-management.html?v=72" title="이번 달 목표관리 모의계산기"></iframe></div>
+  <div class="screen" id="s-goal-management"><header class="goal-management-head"><button type="button" onclick="closeGoalManagement()" aria-label="홈으로">‹</button><strong>이번 달 목표 관리</strong></header><iframe class="goal-management-frame" id="goal-management-frame" src="goal-management.html?v=74" title="이번 달 목표관리 모의계산기"></iframe></div>
 
   <!-- ══ 내 성장 ══ -->
   <div class="screen" id="s-growth">
@@ -1441,7 +1441,7 @@ body{padding-bottom:0}
 <nav class="bottom-nav" id="bottom-nav" aria-label="주요 메뉴">
   <button data-screen="s-dashboard" onclick="showDashboard()"><span>🏠</span><b>홈</b></button>
   <button data-screen="s-growth" onclick="showGrowth()"><span>🌱</span><b>성장여정</b></button>
-  <button class="nav-quiz" onclick="startQuiz()"><span>🎮</span><b>퀴즈</b></button>
+  <button class="nav-quiz" onclick="showCounselKing()"><span>🎮</span><b>퀴즈</b></button>
   <button data-action="rank" onclick="showRankModal()"><span>🏆</span><b>랭킹</b></button>
   <button data-action="my" onclick="showMyProfile()"><span>👤</span><b>마이</b></button>
 </nav>
@@ -1560,7 +1560,7 @@ function applyTexts(){
   }
   // 메뉴 카드 텍스트
   const menuMap = {
-    'menu-quiz-label':GT.menu_quiz_label, 'menu-quiz-desc':GT.menu_quiz_desc,
+    'menu-quiz-label':'상담왕', 'menu-quiz-desc':GT.menu_quiz_desc,
     'menu-cards-label':GT.menu_cards_label, 'menu-cards-desc':GT.menu_cards_desc,
     'menu-education-label':GT.menu_education_label, 'menu-education-desc':GT.menu_education_desc,
     'menu-roulette-label':GT.menu_roulette_label, 'menu-roulette-desc':GT.menu_roulette_desc,
@@ -1939,7 +1939,7 @@ function bindGoalHomeMenus(){const frame=document.getElementById('goal-managemen
 function showGoalHome(){const screen=document.getElementById('s-goal-management'),frame=document.getElementById('goal-management-frame');screen.classList.add('goal-home-mode');showScreen('s-goal-management');const open=()=>{frame?.contentDocument?.querySelector('[data-master-go="dashboard"]')?.click();bindGoalHomeMenus()};if(frame?.contentDocument?.readyState==='complete')open();else frame?.addEventListener('load',open,{once:true})}
 function openGoalManagement(mode='detail'){const screen=document.getElementById('s-goal-management'),frame=document.getElementById('goal-management-frame');screen.classList.remove('goal-home-mode');showScreen('s-goal-management');const open=()=>{frame?.contentDocument?.querySelector(`[data-master-go="${mode}"]`)?.click();bindGoalHomeMenus()};if(frame?.contentDocument?.readyState==='complete')open();else frame?.addEventListener('load',open,{once:true})}
 function closeGoalManagement(){renderGoalSummary();showGoalHome()}
-function navigateFromGoalHome(action){const screen=document.getElementById('s-goal-management');screen?.classList.remove('goal-home-mode');const actions={quiz:()=>startQuiz(),cards:()=>showCounselingCards(),education:()=>showEducationArchive(),home:()=>showGoalHome(),growth:()=>showGrowth(),rank:()=>showRankModal(),more:()=>showScreen('s-dashboard')};actions[action]?.()}
+function navigateFromGoalHome(action){const screen=document.getElementById('s-goal-management');screen?.classList.remove('goal-home-mode');const actions={quiz:()=>showCounselKing(),cards:()=>showCounselingCards(),education:()=>showEducationArchive(),home:()=>showGoalHome(),growth:()=>showGrowth(),rank:()=>showRankModal(),more:()=>showScreen('s-dashboard')};actions[action]?.()}
 window.addEventListener('message',event=>{const frame=document.getElementById('goal-management-frame');if(event.source!==frame?.contentWindow||event.data?.type!=='counsel-master-navigation')return;navigateFromGoalHome(event.data.action)});
 function setHomeLearning(index){document.querySelectorAll('[data-learning-slide]').forEach((slide,i)=>slide.hidden=i!==index);document.querySelectorAll('.learning-dots button').forEach((dot,i)=>dot.classList.toggle('is-active',i===index))}
 async function openHomeEducation(tab){await showEducationArchive();if(tab==='best')cmSelectEducationTab('best');else cmSelectEducationTab('insight')}
@@ -2780,5 +2780,5 @@ function cmSelectEducationTab(tab){document.querySelectorAll('[data-education-ta
 function cmRenderBrochureShelf(){const nav=document.querySelector('#s-education .education-tabs');if(!nav||document.querySelector('#s-education .education-brochures'))return;const section=document.createElement('section');section.className='education-brochures';section.innerHTML='<div class="education-brochures-head"><strong>현장 상담 브로슈어</strong><small>학년별 자료</small></div><div class="education-brochure-grid"><a class="education-brochure-card" href="pdf-viewer.html?file=brochures%2Felementary-counseling-brochure.pdf&title='+encodeURIComponent('초등 상담 브로슈어')+'&return=education" onclick="cmRememberArchiveReturn(\'education\')"><span>📘</span><strong>초등 상담<br>브로슈어</strong><small>16페이지</small><b>자료 보기 ›</b></a><a class="education-brochure-card middle" href="pdf-viewer.html?file=brochures%2Fmiddle-counseling-brochure.pdf&title='+encodeURIComponent('중등 상담 브로슈어')+'&return=education" onclick="cmRememberArchiveReturn(\'education\')"><span>📗</span><strong>중등 상담<br>브로슈어</strong><small>12페이지</small><b>자료 보기 ›</b></a></div>';nav.before(section)}
 async function showEducationArchive(){[cmEdu,cmBest]=await Promise.all([cmSetting('education_archive_v1',CM_EDU_FALLBACK),cmSetting('best_practices_v1',CM_BEST_FALLBACK)]);showScreen('s-education');cmRenderBrochureShelf();document.querySelectorAll('[data-education-tab]').forEach(b=>b.onclick=()=>cmSelectEducationTab(b.dataset.educationTab));cmSelectEducationTab('insight');cmRenderEducation();cmRenderBestPractices()}
 </script>
-</body>
+<script src="mission-entry.js?v=74"></script></body>
 </html>
