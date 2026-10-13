@@ -14,7 +14,7 @@ if('serviceWorker' in navigator){
     swReloading=true;
     location.reload();
   });
-  navigator.serviceWorker.register('./sw.js?v=76',{updateViaCache:'none'}).then(reg=>{
+  navigator.serviceWorker.register('./sw.js?v=77',{updateViaCache:'none'}).then(reg=>{
     const checkUpdate=()=>reg.update().catch(()=>{});
     checkUpdate();
     setInterval(checkUpdate,5*60*1000);
@@ -1283,7 +1283,7 @@ body{padding-bottom:0}
   </div>
 
   <!-- ══ 목표 관리 ══ -->
-  <div class="screen" id="s-goal-management"><header class="goal-management-head"><button type="button" onclick="closeGoalManagement()" aria-label="홈으로">‹</button><strong>이번 달 목표 관리</strong></header><iframe class="goal-management-frame" id="goal-management-frame" src="goal-management.html?v=76" title="이번 달 목표관리 모의계산기"></iframe></div>
+  <div class="screen" id="s-goal-management"><header class="goal-management-head"><button type="button" onclick="closeGoalManagement()" aria-label="홈으로">‹</button><strong>이번 달 목표 관리</strong></header><iframe class="goal-management-frame" id="goal-management-frame" src="goal-management.html?v=77" title="이번 달 목표관리 모의계산기"></iframe></div>
 
   <!-- ══ 내 성장 ══ -->
   <div class="screen" id="s-growth">
@@ -2780,5 +2780,5 @@ function cmSelectEducationTab(tab){document.querySelectorAll('[data-education-ta
 function cmRenderBrochureShelf(){const nav=document.querySelector('#s-education .education-tabs');if(!nav||document.querySelector('#s-education .education-brochures'))return;const section=document.createElement('section');section.className='education-brochures';section.innerHTML='<div class="education-brochures-head"><strong>현장 상담 브로슈어</strong><small>학년별 자료</small></div><div class="education-brochure-grid"><a class="education-brochure-card" href="pdf-viewer.html?file=brochures%2Felementary-counseling-brochure.pdf&title='+encodeURIComponent('초등 상담 브로슈어')+'&return=education" onclick="cmRememberArchiveReturn(\'education\')"><span>📘</span><strong>초등 상담<br>브로슈어</strong><small>16페이지</small><b>자료 보기 ›</b></a><a class="education-brochure-card middle" href="pdf-viewer.html?file=brochures%2Fmiddle-counseling-brochure.pdf&title='+encodeURIComponent('중등 상담 브로슈어')+'&return=education" onclick="cmRememberArchiveReturn(\'education\')"><span>📗</span><strong>중등 상담<br>브로슈어</strong><small>12페이지</small><b>자료 보기 ›</b></a></div>';nav.before(section)}
 async function showEducationArchive(){[cmEdu,cmBest]=await Promise.all([cmSetting('education_archive_v1',CM_EDU_FALLBACK),cmSetting('best_practices_v1',CM_BEST_FALLBACK)]);showScreen('s-education');cmRenderBrochureShelf();document.querySelectorAll('[data-education-tab]').forEach(b=>b.onclick=()=>cmSelectEducationTab(b.dataset.educationTab));cmSelectEducationTab('insight');cmRenderEducation();cmRenderBestPractices()}
 </script>
-<script src="mission-entry.js?v=76"></script></body>
+<script src="mission-entry.js?v=77"></script></body>
 </html>
