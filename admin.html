@@ -1779,6 +1779,8 @@ const CM_ADMIN_BEST_FALLBACK=[{"id":"BP001","title":"[정착교육 3차월] 우�
 CM_ADMIN_EDU_FALLBACK.unshift({id:'2026-09',label:'2026년 9월',title:'9월 상담력 인사이트',pages:5,file:'insights/insight-2026-09.pdf',active:true,sort_order:1});
 CM_ADMIN_EDU_FALLBACK.forEach(x=>x.sort_order=(Number(x.sort_order)||99)+1);
 CM_ADMIN_EDU_FALLBACK.unshift({id:'2026-10',label:'2026년 10월',title:'2033대입개편 논의와 초등 학습',pages:5,file:'insights/insight-2026-10.pdf',video:'https://youtu.be/FTBURBQzmBM',active:true,sort_order:1});
+CM_ADMIN_EDU_FALLBACK.forEach(x=>x.sort_order=(Number(x.sort_order)||99)+2);
+CM_ADMIN_EDU_FALLBACK.unshift(...[{"id":"2026-12","label":"2026년 12월","title":"진단평가 활용 상담","pages":7,"file":"insights/insight-2026-12.pdf","active":true,"sort_order":1},{"id":"2026-11","label":"2026년 11월","title":"키즈 타사비교","pages":9,"file":"insights/insight-2026-11.pdf","active":true,"sort_order":2}]);
 CM_ADMIN_BEST_FALLBACK.push({id:'BP013',title:'[우수사례] 부산강희승',video:'https://youtu.be/7QFCZ6Nv8bY',active:true,sort_order:13});
 CM_ADMIN_BEST_FALLBACK.push({id:'BP014',title:'중등상담(신현숙)',video:'https://youtu.be/9YazoSS-8uQ',active:true,sort_order:15});
 CM_ADMIN_BEST_FALLBACK.push({id:'BP015',title:'거절극복(조은정)',video:'https://youtube.com/shorts/LB_P-qcHZkY?feature=share',active:true,sort_order:16});
