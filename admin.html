@@ -1784,6 +1784,7 @@ CM_ADMIN_EDU_FALLBACK.unshift(...[{"id":"2026-12","label":"2026년 12월","title
 CM_ADMIN_BEST_FALLBACK.push({id:'BP013',title:'[우수사례] 부산강희승',video:'https://youtu.be/7QFCZ6Nv8bY',active:true,sort_order:13});
 CM_ADMIN_BEST_FALLBACK.push({id:'BP014',title:'중등상담(신현숙)',video:'https://youtu.be/9YazoSS-8uQ',active:true,sort_order:15});
 CM_ADMIN_BEST_FALLBACK.push({id:'BP015',title:'거절극복(조은정)',video:'https://youtube.com/shorts/LB_P-qcHZkY?feature=share',active:true,sort_order:16});
+CM_ADMIN_BEST_FALLBACK.push(...[{"id":"BP1786516462100","title":"문해력(박애경/문향자)","video":"https://youtu.be/Dyeb5ecXCvk","active":true,"sort_order":17},{"id":"BP1786516462101","title":"키즈거절극복(김윤희)","video":"https://youtu.be/aerPf0DDIvY","active":true,"sort_order":18}]);
 let cmAdminBest=null,cmAdminBestIndex=0;
 async function cmAdminGet(key,fallback){try{const r=await fetch(`${SB_URL}/rest/v1/settings?key=eq.${key}&select=value`,{headers:HDR});const d=await r.json();if(!Array.isArray(d)||!d[0])return structuredClone(fallback);return typeof d[0].value==='string'?JSON.parse(d[0].value):d[0].value}catch(e){return structuredClone(fallback)}}
 async function cmAdminPut(key,value){
