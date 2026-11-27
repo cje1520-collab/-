@@ -14,7 +14,7 @@ if('serviceWorker' in navigator){
     swReloading=true;
     location.reload();
   });
-  navigator.serviceWorker.register('./sw.js?v=81',{updateViaCache:'none'}).then(reg=>{
+  navigator.serviceWorker.register('./sw.js?v=86',{updateViaCache:'none'}).then(reg=>{
     const checkUpdate=()=>reg.update().catch(()=>{});
     checkUpdate();
     setInterval(checkUpdate,5*60*1000);
@@ -1133,80 +1133,47 @@ body{padding-bottom:0}
 <div class="wrap">
 
   <!-- ══ 인트로 ══ -->
-  <div class="screen active" id="s-intro">
-    <div class="page-card" style="margin:12px;padding:0">
-      <div class="intro-hero">
-        <div class="intro-badge" id="intro-badge">✦ 엘리하이 상담왕 퀴즈</div>
-        <h1 class="intro-title" id="intro-title">안녕하세요!<br><em>매니저님</em> 👋</h1>
-        <p class="intro-sub" id="intro-sub">
-          상담 퀴즈를 풀며<br>
-          <strong style="color:var(--text)">상담력도 기르고 포인트도 모아요!</strong>
-        </p>
-        <div class="intro-features">
-          <div class="intro-feat">
-            <span class="feat-icon" id="feat-1-icon">📚</span>
-            <div class="feat-text">
-              <strong id="feat-1-title">퀴즈로 상담 지식 UP</strong>
-              <span id="feat-1-desc">가격·상품·앱·문제집 50문항 도전!</span>
-            </div>
-          </div>
-          <div class="intro-feat">
-            <span class="feat-icon" id="feat-2-icon">💰</span>
-            <div class="feat-text">
-              <strong id="feat-2-title">정답 맞추면 포인트 적립</strong>
-              <span id="feat-2-desc">알수록 상담이 달라지고, 계약률이 올라가요</span>
-            </div>
-          </div>
-          <div class="intro-feat">
-            <span class="feat-icon" id="feat-3-icon">👑</span>
-            <div class="feat-text">
-              <strong id="feat-3-title">캐릭터가 함께 성장해요</strong>
-              <span id="feat-3-desc">신입 → 열공 → 여유 → 베테랑 → 전설의 상담왕</span>
-            </div>
-          </div>
-          <div class="intro-feat">
-            <span class="feat-icon" id="feat-4-icon">🎁</span>
-            <div class="feat-text">
-              <strong id="feat-4-title">10,000pts 달성 시 상품권 지급!</strong>
-              <span id="feat-4-desc">누적 포인트 기준, 전화번호로 기록 저장</span>
-            </div>
-          </div>
+  <div class="screen active" id="s-login">
+    <div class="login-entry">
+      <header class="login-entry-header">
+        <h1>상담마스터</h1>
+        <p>상담 매니저 올인원 교육 아카이브</p>
+      </header>
+      <form onsubmit="event.preventDefault();loginUser()">
+        <div class="input-group">
+          <label class="input-label" for="inp-name">이름</label>
+          <input class="input-field" type="text" id="inp-name" autocomplete="name" placeholder="이름을 입력해 주세요" maxlength="10">
         </div>
-      </div>
+        <div class="input-group">
+          <label class="input-label" for="inp-phone">휴대폰 번호</label>
+          <input class="input-field" type="tel" id="inp-phone" autocomplete="tel-national" inputmode="numeric" placeholder="01012345678" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        </div>
+        <button class="btn-main" id="btn-login" type="submit">로그인</button>
+        <div class="login-remember">
+          <div class="login-remember-main">
+            <label><input type="checkbox" id="remember-login" checked> 이 기기에 로그인 정보 저장</label>
+            <button type="button" class="login-forget" onclick="clearRememberedLogin()">저장 정보 지우기</button>
+          </div>
+          <small class="login-memory-note" id="login-memory-status">이름과 전화번호는 현재 기기에만 저장됩니다.</small>
+        </div>
+      </form>
     </div>
-    <button class="btn-main" onclick="showScreen('s-login')">시작하기 →</button>
   </div>
 
-  <!-- ══ 로그인 ══ -->
-  <div class="screen" id="s-login">
-    <div class="page-card" style="margin:12px;padding:0">
-      <div class="login-hero">
-        <span class="login-emoji">🔑</span>
-        <div class="login-title">로그인</div>
-        <div class="login-sub">이름과 전화번호로 기록이 저장돼요<br>같은 번호로 접속하면 내 기록을 불러와요</div>
-      </div>
-    </div>
-    <div class="input-group">
-      <label class="input-label">이름</label>
-      <input class="input-field" type="text" id="inp-name" placeholder="홍길동" maxlength="10">
-    </div>
-    <div class="input-group">
-      <label class="input-label">전화번호</label>
-      <input class="input-field" type="tel" id="inp-phone" placeholder="01012345678" maxlength="11"
-             oninput="this.value=this.value.replace(/\D/g,'')"
-             onkeydown="if(event.key==='Enter')loginUser()">
-      <div class="input-note">📌 숫자만 입력해주세요 (예: 01012345678)</div>
-    </div>
-    <div class="login-remember">
-      <div class="login-remember-main">
-        <label><input type="checkbox" id="remember-login" checked> 이 기기에 로그인 정보 저장</label>
-        <button type="button" class="login-forget" onclick="clearRememberedLogin()">저장 정보 지우기</button>
-      </div>
-      <small class="login-memory-note" id="login-memory-status">이름과 전화번호는 현재 기기에만 저장됩니다.</small>
-    </div>
-    <button class="btn-main" id="btn-login" onclick="loginUser()">🚀 내 기록 불러오기</button>
-    <button class="btn-ghost" onclick="showScreen('s-intro')">← 돌아가기</button>
-  </div>
+  <style>
+    #s-login{background:#f9f8fc;padding:clamp(40px,12vh,106px) 24px 32px}
+    #s-login .login-entry{width:100%;max-width:360px;margin:0 auto;color:#211b2d;font-family:"Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+    #s-login .login-entry-header{margin:0 0 36px}
+    #s-login h1{margin:0 0 10px;color:#2e2344;font-size:clamp(37px,10vw,52px);font-weight:800;line-height:1.1;letter-spacing:-.065em}
+    #s-login .login-entry-header p{margin:0;color:#655c71;font-size:clamp(13px,4vw,16px);letter-spacing:-.025em}
+    #s-login .input-group{margin:0 0 16px;padding:0}
+    #s-login .input-label{display:block;color:#332a42;font-size:15px;margin-bottom:7px}
+    #s-login .input-field{width:100%;min-height:52px;background:white;border:1px solid #d9d2e4;border-radius:12px;color:#211b2d;font-size:16px}
+    #s-login .input-field:focus-visible{outline:2px solid #674b94;outline-offset:2px}
+    #s-login #btn-login{width:100%;min-height:52px;margin:5px 0 0;border-radius:12px;background:#4d367b;color:white;box-shadow:none;font-family:inherit;font-size:17px}
+    #s-login .login-remember{margin:15px 0 0;padding:0;background:transparent;border:0;box-shadow:none}
+    #s-login .login-remember-main{gap:6px;flex-wrap:wrap}
+  </style>
 
   <style>
   .feature-guide-coach{position:relative;top:auto;right:auto;width:100%;margin:0 0 12px;box-sizing:border-box}.feature-guide-coach:before{display:none}
@@ -1224,7 +1191,49 @@ body{padding-bottom:0}
   /* v64: iPhone 12 Pro 기준 화면 폭·폰트·퀴즈 상단 정렬 보정 */
   .cm-content-screen{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;background:#fafaf8!important}
   .cm-content-screen .cm-head,.cm-content-screen .cm-wrap{width:100%;max-width:none;margin-left:0;margin-right:0}
+
+#s-counseling-cards,#s-education,#s-counsel-king,#s-quiz{font-family:"Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;color:#211b2d!important}
+#s-counseling-cards .cm-head strong,#s-education .cm-head strong{font-size:19px;font-weight:750;letter-spacing:-.04em}
+#s-counseling-cards .cm-switch button,#s-education .education-tabs button{font-size:15px;font-weight:650}
+#s-counseling-cards .cm-step-body,#s-counseling-cards .cm-step-body p,#s-counseling-cards .cm-step-body span{font-weight:400}
+#s-counseling-cards .cm-selection-summary strong,#s-education .cm-archive h3{font-size:16px;font-weight:700}
+#s-education .cm-archive{position:relative;padding-right:47px}
+#s-education .archive-share{display:inline-grid;place-items:center;width:36px;height:36px;min-height:36px;padding:0;border:0;border-radius:10px;background:#f0ebf7;color:#4d367b}
+#s-education .archive-share svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#s-education .archive-item-share{position:absolute;right:9px;top:9px;background:transparent}
+#s-education .cm-head .archive-share{justify-self:end}
+:is(#cm-card,#cm-ob-card).cm-card-compact{background:#fff;color:#211b2d;border:1px solid #e7e0ee;border-radius:16px;box-shadow:none;overflow:hidden}
+.card-brief-header{padding:13px 15px;background:#f0ebf7;border-bottom:1px solid #e7e0ee}
+.card-brief-header h2{font-size:18px;line-height:1.3;letter-spacing:-.035em;margin:0;font-weight:750}
+.card-stage{padding:9px 15px 10px;border-bottom:1px solid #eee9f2}
+.card-stage h3{font-size:14px;color:#4d367b;line-height:1.3;margin:0 0 3px;font-weight:750}
+.card-stage-label{font-size:12px;color:#645a71;margin-bottom:3px}
+.card-stage-label:empty{display:none}
+.card-stage-body,.card-brief-extra>div{font-size:15px;font-weight:400;line-height:1.48;letter-spacing:-.022em;overflow-wrap:anywhere}
+:is(#cm-card,#cm-ob-card) .card-stage-body p,:is(#cm-card,#cm-ob-card) .card-brief-extra p{font-size:inherit;font-weight:400;line-height:inherit;margin:0}
+:is(#cm-card,#cm-ob-card) .card-stage-body p+p{margin-top:4px}
+.card-brief-list{list-style:disc;padding-left:17px;margin:0}
+.card-brief-extra{padding:9px 15px;font-size:13px;color:#4d367b}
+.card-brief-extra summary{cursor:pointer;font-weight:650}
+.card-brief-extra>div{padding-top:6px;color:#211b2d}
+.card-focus-toggle{display:block;margin:5px 0 0 auto;border:0;border-radius:9px;background:#eee8f6;color:#4d367b;padding:7px 11px;font:inherit;font-size:13px;font-weight:650;cursor:pointer}
+
+#s-counseling-cards #cm-card-picker[hidden]{display:none!important}
+#s-counseling-cards #cm-card-picker:not([hidden]){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:10px;max-height:none;overflow:visible;flex:none;padding:12px;background:#fff;border-color:#e7e0ee}
+#cm-card-picker label{display:grid;gap:4px;min-width:0;color:#504561;font-size:13px;font-weight:650}
+#cm-card-picker select{width:100%;min-width:0;min-height:44px;border:1px solid #ded6eb;border-radius:9px;background:#faf8fd;color:#282038;padding:6px;font:inherit;font-size:15px;font-weight:450}
+#s-counseling-cards #cm-ob-picker[hidden]{display:none!important}
+#s-counseling-cards #cm-ob-picker:not([hidden]){display:block;max-height:none;overflow:visible;flex:none;padding:12px;background:#fff;border-color:#e7e0ee}
+#cm-ob-picker label{display:grid;gap:4px;color:#504561;font-size:13px;font-weight:650}
+#cm-ob-picker select{width:100%;min-height:44px;border:1px solid #ded6eb;border-radius:9px;background:#faf8fd;color:#282038;padding:6px;font:inherit;font-size:15px;font-weight:450}
+#cm-card-selection-summary.open i,#cm-ob-selection-summary.open i{display:inline-block;transform:rotate(180deg)}
+#rank-modal{z-index:160}
+#rank-modal .rank-modal-sheet{background:#faf8fd;border-top:1px solid #e7dfee}
+#rank-modal .rank-modal-close{border:0;background:#efe8f8;color:#4d367b;cursor:pointer}
+#s-counseling-cards.card-focus .cm-switch,#s-counseling-cards.card-focus #cm-card-selection-summary,#s-counseling-cards.card-focus #cm-card-picker,#s-counseling-cards.card-focus .card-brief-extra{display:none}
+
   #s-education .cm-wrap{overflow-x:hidden}
+  #s-education .education-brochures{margin:20px 0 0} #s-education .education-brochure-card{min-height:0;padding:9px 11px;gap:4px} #s-education .education-brochure-card strong{font-size:14px} #s-education .education-brochure-card br,#s-education .education-brochure-card b,#s-education .education-brochure-card span{display:none} .archive-share{min-height:40px;padding:7px 10px;border:1px solid #ded5ed;border-radius:10px;background:#fff;color:#513a7a;font:inherit;font-weight:700;cursor:pointer}
   #s-education .education-brochure-grid,#s-education .education-tabs,#s-education .education-panel,#s-education .cm-archive-list{width:100%;min-width:0}
   #s-education .education-brochure-card,#s-education .cm-archive{min-width:0}
   #s-quiz{width:100%;background:#fafaf8!important}
@@ -1246,74 +1255,13 @@ body{padding-bottom:0}
 </style>
 
   <!-- ══ 대시보드 ══ -->
-  <div class="screen" id="s-dashboard">
-    <header class="app-brand"><div><strong>상담 MASTER</strong></div><div class="app-brand-actions"><button type="button" class="app-brand-help" id="feature-guide-button" onclick="openFeatureGuide()" aria-label="상담 MASTER 사용 가이드 열기"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.4 2.4 0 1 1 3.2 2.3c-.8.3-1 1-1 1.7M12 17h.01"/></svg>도움말</button><button type="button" onclick="document.getElementById('notice-banner').scrollIntoView({behavior:'smooth'})" aria-label="공지사항 보기" class="icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button></div></header>
-    <aside class="feature-guide-coach" id="feature-guide-coach" hidden aria-live="polite"><button type="button" class="feature-guide-coach-close" onclick="dismissFeatureGuideCoach()" aria-label="튜토리얼 닫기">×</button><strong>처음이신가요? 👋</strong><p>오른쪽 위 사용 가이드에서 상담 MASTER의 기능을 간단히 확인해보세요.</p><div class="feature-guide-coach-actions"><button type="button" class="feature-guide-later" onclick="snoozeFeatureGuideCoach()">7일간 보지 않기</button><button type="button" class="feature-guide-open" onclick="openFeatureGuideFromCoach()">가이드 보기</button></div></aside>
-    <section class="goal-home-card" aria-labelledby="goal-home-title"><div class="goal-home-profile"><div><span>반갑습니다!</span><strong>오늘도 힘내요, <em id="goal-home-manager">매니저님</em></strong><small id="goal-home-rank">☕ 여유 매니저</small></div><div class="goal-home-character"><img id="goal-home-plant" src="assets/rank-plants/rank-plant-3.png" alt="목표를 응원하는 식물 캐릭터"><b>LEVEL 3</b></div></div><div class="goal-home-top"><div><span class="goal-home-label" id="goal-home-title"><b id="goal-home-month">이번 달 목표 수수료</b></span><strong class="goal-home-money" id="goal-home-target">3,000,000원</strong></div></div><div class="goal-home-progress-head"><div><span>목표 달성률</span><strong id="goal-home-rate">0%</strong></div><div class="goal-home-current-box"><span>현재 예상 수수료</span><b id="goal-home-current">300,000원</b></div></div><div class="goal-home-track" role="progressbar" aria-label="수수료 목표 달성률" aria-valuemin="0" aria-valuemax="100" id="goal-home-progress"><i id="goal-home-bar" style="width:0%"></i></div><div class="goal-home-remain-copy">✨ <span id="goal-home-remain-copy">목표까지 2,700,000원 남았어요!</span></div><div class="goal-home-target-tags"><span>신청 <b id="goal-home-app">179</b></span><span>진행 <b id="goal-home-run">46</b></span><span>결제 <b id="goal-home-pay">9</b></span><button type="button" class="goal-home-edit" onclick="openGoalManagement('goal')">목표 수정</button></div><span id="goal-home-remain" hidden>2,700,000원</span></section><section class="goal-home-status" aria-label="목표 관리"><div class="goal-home-status-head"><strong>목표 관리</strong><button type="button" onclick="openGoalManagement('detail')">상세보기 〉</button></div><div class="goal-home-status-grid"><button type="button" onclick="openGoalManagement('detail')"><span>📋 신청</span><strong id="goal-home-app-status">0 / 179</strong><b id="goal-home-app-percent">0%</b><i><em id="goal-home-app-bar"></em></i></button><button type="button" onclick="openGoalManagement('detail')"><span>💬 진행</span><strong id="goal-home-run-status">0 / 46</strong><b id="goal-home-run-percent">0%</b><i><em id="goal-home-run-bar"></em></i></button><button type="button" onclick="openGoalManagement('detail')"><span>✓ 결제</span><strong id="goal-home-pay-status">0 / 9</strong><b id="goal-home-pay-percent">0%</b><i><em id="goal-home-pay-bar"></em></i></button></div><div class="goal-home-priority"><span>✦</span><div><strong>지금 우선할 활동</strong><small id="goal-home-priority-copy">신청 모수를 먼저 확보해 보세요.</small></div><button type="button" onclick="openGoalManagement('detail')">입력</button></div><p class="goal-home-disclaimer">※ 실제 수수료는 환불·프로모션 등에 따라 달라질 수 있습니다.</p></section>
-    <div class="page-card" style="margin:12px;padding:0">
-      <div class="dash-header">
-        <div class="dash-greeting">오늘도 목표에 한 걸음 더 가까워지고 있어요!</div>
-        <div class="dash-name" id="d-name"><span class="mgr-title">매니저</span></div>
-        <div class="cm-premium-mascot profile-avatar" id="d-mascot" role="img" aria-label="현재 직급 성장 단계"></div>
-        <div class="char-circle" id="d-char"></div>
-        <div class="rank-pill" id="d-rank">
-          <span id="d-rank-txt">신입 상담사</span>
-        </div>
-        <div class="pts-display" id="d-pts">0<span>pts</span></div>
-        <div class="pts-gauge-wrap">
-          <div class="pts-gauge-label">
-            <span id="d-gauge-left">다음 레벨까지</span>
-            <span id="d-gauge-right">0%</span>
-          </div>
-          <div class="pts-gauge"><div class="pts-gauge-fill" id="d-gauge" style="width:0%"></div></div>
-        </div>
-        <div class="next-level-txt" id="d-next-txt"></div>
-        <button class="dash-growth-shortcut" type="button" onclick="showGrowth()"><span><small>성장여정</small><strong id="d-growth-current">현재 단계</strong><i>→</i><span id="d-growth-next">다음 단계</span></span><b>›</b></button>
-      </div>
-    </div>
-    <section class="monthly-learning"><div class="mobile-section-head"><strong>🔖 이번 달 교육자료</strong><button type="button" onclick="showEducationArchive()">전체 보기 〉</button></div><article class="learning-slide" data-learning-slide="0"><div class="learning-thumb"><small>상담력 인사이트</small><img src="assets/rank-plants/rank-plant-4.png" alt="10월 상담력 인사이트"></div><div class="learning-copy"><small>10월 최신</small><h3>10월 상담력 인사이트</h3><p>2033대입개편 논의와 초등 학습을 확인해보세요.</p><button type="button" onclick="openHomeEducation('insight')">바로 보기</button></div></article><article class="learning-slide" data-learning-slide="1" hidden><div class="learning-thumb"><small>우수사례</small><img src="assets/rank-plants/rank-plant-3.png" alt="최신 상담 우수사례"></div><div class="learning-copy"><small>최신 우수사례</small><h3>부산 강희승 매니저</h3><p>현장에서 성과로 이어진 상담 흐름과 활동 사례를 확인해보세요.</p><button type="button" onclick="openHomeEducation('best')">영상 보기</button></div></article><article class="learning-slide" data-learning-slide="2" hidden><div class="learning-thumb"><small>전체교육</small><img src="assets/rank-plants/rank-plant-2.png" alt="전체 교육자료 모아보기"></div><div class="learning-copy"><small>교육자료 모음</small><h3>전체 교육자료</h3><p>상담력 인사이트와 우수사례 등 필요한 교육을 한곳에서 찾아보세요.</p><button type="button" onclick="showEducationArchive()">모아보기</button></div></article><div class="learning-dots" aria-label="교육자료 선택"><button class="is-active" type="button" onclick="setHomeLearning(0)" aria-label="상담력 인사이트 보기"></button><button type="button" onclick="setHomeLearning(1)" aria-label="우수사례 보기"></button><button type="button" onclick="setHomeLearning(2)" aria-label="전체교육 보기"></button></div></section>
-    <section class="today-actions" aria-labelledby="mission-title"><div class="mobile-section-head"><strong id="mission-title">☑ 오늘 할 일</strong></div><div class="today-row"><span class="today-icon">🎮</span><span class="today-copy"><strong>상담왕</strong><small id="mission-progress">오늘 0문제 완료 · 참여하고 포인트를 받아보세요!</small></span><button type="button" onclick="showCounselKing()">참여하기 〉</button></div><div class="today-row"><span class="today-icon">📊</span><span class="today-copy"><strong>이번 주 실적 입력</strong><small>실적을 입력하고 목표를 관리하세요!</small></span><button type="button" onclick="openGoalManagement('detail')">입력하기 〉</button></div></section>
-    <div class="notice-banner" id="notice-banner">
-      <strong id="notice-text"></strong>
-      <span id="notice-sub"></span>
-    </div>
-    <div class="cm-home-sections"><div class="cm-section-label"><span>주요 메뉴</span></div><div class="mobile-main-menu"><button onclick="showCounselKing()"><i>🎮</i><strong id="menu-quiz-label">상담왕</strong></button><button onclick="showEducationArchive()"><i>📚</i><strong id="menu-education-label">교육자료</strong></button><button onclick="showCounselingCards()"><i>🗂️</i><strong id="menu-cards-label">핵심카드</strong></button><button onclick="showRoulette()"><i>🎰</i><strong id="menu-roulette-label">롤플레잉</strong></button></div><div class="mobile-sub-menu"><button onclick="showRankModal()"><span>🏆</span><strong id="menu-rank-label">랭킹</strong></button><button onclick="showGrowth()"><span>🌱</span><strong>성장</strong></button><button id="btn-dash-review" onclick="startReviewFromDash()"><span>📖</span><strong>오답노트</strong><small id="dash-review-count">0</small></button><button onclick="document.getElementById('notice-banner').scrollIntoView({behavior:'smooth'})"><span>📢</span><strong>공지사항</strong></button></div></div>
-    <button class="growth-banner" onclick="showGrowth()"><span><small>꾸준한 학습이 상담 자신감으로</small><strong>내 식물의 다음 성장을 확인해보세요</strong></span><img src="assets/rank-plants/rank-plant-2.png" alt="성장 중인 식물"></button>
-    <button class="btn-ghost" onclick="showScreen('s-login')">🔄 다른 계정으로</button>
-  </div>
-
   <!-- ══ 목표 관리 ══ -->
-  <div class="screen" id="s-goal-management"><header class="goal-management-head"><button type="button" onclick="closeGoalManagement()" aria-label="홈으로">‹</button><strong>이번 달 목표 관리</strong></header><iframe class="goal-management-frame" id="goal-management-frame" src="goal-management.html?v=81" title="이번 달 목표관리 모의계산기"></iframe></div>
-
-  <!-- ══ 내 성장 ══ -->
-  <div class="screen" id="s-growth">
-    <div class="page-card" style="margin:12px;padding:0">
-      <div class="growth-header">
-      <div class="growth-title">내 성장 여정</div>
-        <div class="growth-sub">현재 위치와 앞으로의 목표를 확인해보세요</div>
-      </div>
-    </div>
-    <div class="growth-current section-card">
-      <div class="growth-cur-label">현재 나의 직급</div>
-      <div class="growth-cur-rank" id="g-cur-rank">신입 매니저</div>
-      <div class="growth-cur-pts" id="g-cur-pts">0<span>pts</span></div>
-      <div class="growth-next" id="g-next-txt"></div>
-    </div>
-    <div class="journey-progress-wrap section-card">
-      <div class="journey-progress-label">
-        <span>전체 여정</span>
-        <span id="g-overall-pct">0%</span>
-      </div>
-      <div class="journey-progress"><div class="journey-progress-fill" id="g-overall-bar" style="width:0%"></div></div>
-    </div>
-    <div class="journey-wrap" id="g-journey"></div>
-    <button class="btn-main" onclick="showDashboard()">🏠 홈으로</button>
-  </div>
+  <div class="screen" id="s-goal-management"><header class="goal-management-head"><button type="button" onclick="closeGoalManagement()" aria-label="홈으로">홈</button><strong>이번 달 목표 관리</strong></header><iframe class="goal-management-frame" id="goal-management-frame" src="goal-management.html?v=84" title="이번 달 목표관리 모의계산기"></iframe></div>
 
   <!-- ══ 롤플레잉 룰렛 ══ -->
   <div class="screen" id="s-roulette">
     <div class="roulette-nav">
-      <button class="roulette-back" onclick="showDashboard()" aria-label="홈으로">←</button>
+      <button class="roulette-back" onclick="showDashboard()" aria-label="홈으로">홈</button>
       <div class="roulette-head-title">롤플레잉 룰렛</div>
       <button class="roulette-help" type="button" onclick="openRpHelpVideo()" aria-label="팀별 롤플레잉 진행 도움 영상 열기">▶ 도움영상</button>
     </div>
@@ -1437,14 +1385,8 @@ body{padding-bottom:0}
     <button class="btn-main" id="btn-rv-next" onclick="nextReview()">✓ 확인했어요! 다음</button>
   </div>
 
-<div class="screen cm-content-screen" id="s-counseling-cards"><div class="cm-head"><button onclick="showDashboard()" aria-label="홈으로">←</button><strong>상담 핵심카드</strong><span></span></div><div class="cm-wrap"><div class="cm-switch cm-switch-three"><button class="on" data-cm-panel="cards">상담카드</button><button data-cm-panel="objections">거절극복</button><button data-cm-panel="resources">상담자료</button></div><div id="cm-card-panel"><button class="cm-selection-summary" id="cm-card-selection-summary" type="button" aria-expanded="false"></button><div class="cm-picker" id="cm-card-picker"><div class="cm-label"><span>STEP 1</span> 고객 학년</div><div class="cm-chips" id="cm-grades"></div><div class="cm-label"><span>STEP 2</span> 관심 과목·고민</div><div class="cm-subjects" id="cm-subjects"></div></div><div class="cm-card-scroll" tabindex="0" role="region" aria-label="상담카드 내용"><article class="cm-card cm-card-compact" id="cm-card"></article></div></div><div id="cm-objection-panel" style="display:none"><button class="cm-selection-summary" id="cm-ob-selection-summary" type="button" aria-expanded="false"></button><div class="cm-picker" id="cm-ob-picker"><div class="cm-label"><span>상황 선택</span> 고객의 거절 유형</div><div class="cm-obj-grid" id="cm-objections"></div></div><div class="cm-card-scroll" tabindex="0" role="region" aria-label="거절극복 내용"><article class="cm-card cm-card-compact" id="cm-ob-card"></article></div></div><div id="cm-resource-panel" style="display:none"><div class="cm-resource-heading"><strong>현장 상담자료</strong><p>상담할 때 바로 펼쳐보는 학년별 브로슈어예요.</p></div><div class="cm-brochure-list"><a class="cm-brochure-card" href="pdf-viewer.html?file=brochures%2Felementary-counseling-brochure.pdf&amp;title=%EC%B4%88%EB%93%B1%20%EC%83%81%EB%8B%B4%20%EB%B8%8C%EB%A1%9C%EC%8A%88%EC%96%B4&amp;return=counseling-resources" onclick="cmRememberArchiveReturn('counseling-resources')"><span class="cm-brochure-icon">📘</span><span><strong>초등 상담 브로슈어</strong><small>초등 상담 흐름과 상품 정보를 한 권으로 확인</small></span><b>열기</b></a><div class="cm-brochure-card is-disabled"><span class="cm-brochure-icon">📗</span><span><strong>중등 상담 브로슈어</strong><small>자료를 받으면 바로 추가할 수 있어요.</small></span><b>준비 중</b></div></div></div></div></div><div class="screen cm-content-screen" id="s-education"><div class="cm-head"><button onclick="showDashboard()" aria-label="홈으로">←</button><strong>교육 자료</strong><span></span></div><div class="cm-wrap"><div class="cm-archive-intro"><span class="resource-mark">📚</span><span><strong>교육 자료</strong><p>상담력 인사이트와 우수사례 영상을 한곳에서 확인하세요.</p></span></div><nav class="education-tabs" aria-label="교육 자료 종류"><button class="on" type="button" data-education-tab="insight">상담력 인사이트</button><button type="button" data-education-tab="best">우수사례</button></nav><section class="education-panel" id="education-insight-panel"><div class="education-summary"><strong>월별 상담 자료</strong><small id="education-insight-count"></small></div><div class="cm-archive-list" id="cm-archive-list"></div></section><section class="education-panel" id="education-best-panel" hidden><div class="education-summary"><strong>현장 우수사례</strong><small id="education-best-count"></small></div><div class="best-practice-list" id="best-practice-list"></div></section></div></div>
-<nav class="bottom-nav" id="bottom-nav" aria-label="주요 메뉴">
-  <button data-screen="s-dashboard" onclick="showDashboard()"><span>🏠</span><b>홈</b></button>
-  <button data-screen="s-growth" onclick="showGrowth()"><span>🌱</span><b>성장여정</b></button>
-  <button class="nav-quiz" onclick="showCounselKing()"><span>🎮</span><b>퀴즈</b></button>
-  <button data-action="rank" onclick="showRankModal()"><span>🏆</span><b>랭킹</b></button>
-  <button data-action="my" onclick="showMyProfile()"><span>👤</span><b>마이</b></button>
-</nav>
+<div class="screen cm-content-screen" id="s-counseling-cards"><div class="cm-head"><button onclick="showDashboard()" aria-label="홈으로">홈</button><strong>학년별 추천</strong><span></span></div><div class="cm-wrap"><div class="cm-switch cm-switch-three"><button class="on" data-cm-panel="cards">상담카드</button><button data-cm-panel="objections">거절극복</button><button data-cm-panel="resources">상담자료</button></div><div id="cm-card-panel"><button class="cm-selection-summary" id="cm-card-selection-summary" type="button" aria-expanded="false" aria-controls="cm-card-picker"></button><button class="card-focus-toggle" id="card-focus-toggle" type="button" aria-pressed="false">카드만 보기</button><div class="cm-picker" id="cm-card-picker" hidden><label>학년<select id="cm-grades"></select></label><label>과목<select id="cm-subjects"></select></label></div><div class="cm-card-scroll" tabindex="0" role="region" aria-label="상담카드 내용"><article class="cm-card cm-card-compact" id="cm-card"></article></div></div><div id="cm-objection-panel" style="display:none"><button class="cm-selection-summary" id="cm-ob-selection-summary" type="button" aria-expanded="false" aria-controls="cm-ob-picker"></button><div class="cm-picker" id="cm-ob-picker" hidden><label>거절 상황<select id="cm-objections"></select></label></div><div class="cm-card-scroll" tabindex="0" role="region" aria-label="거절극복 내용"><article class="cm-card cm-card-compact" id="cm-ob-card"></article></div></div><div id="cm-resource-panel" style="display:none"><div class="cm-resource-heading"><strong>현장 상담자료</strong><p>상담할 때 바로 펼쳐보는 학년별 브로슈어예요.</p></div><div class="cm-brochure-list"><a class="cm-brochure-card" href="pdf-viewer.html?file=brochures%2Felementary-counseling-brochure.pdf&amp;title=%EC%B4%88%EB%93%B1%20%EC%83%81%EB%8B%B4%20%EB%B8%8C%EB%A1%9C%EC%8A%88%EC%96%B4&amp;return=counseling-resources" onclick="cmRememberArchiveReturn('counseling-resources')"><span class="cm-brochure-icon">📘</span><span><strong>초등 상담 브로슈어</strong><small>초등 상담 흐름과 상품 정보를 한 권으로 확인</small></span><b>열기</b></a><div class="cm-brochure-card is-disabled"><span class="cm-brochure-icon">📗</span><span><strong>중등 상담 브로슈어</strong><small>자료를 받으면 바로 추가할 수 있어요.</small></span><b>준비 중</b></div></div></div></div></div><div class="screen cm-content-screen" id="s-education"><div class="cm-head"><button onclick="showDashboard()" aria-label="홈으로">←</button><strong>교육 자료</strong><span></span></div><div class="cm-wrap"><div class="cm-archive-intro"><span class="resource-mark">📚</span><span><strong>교육 자료</strong><p>상담력 인사이트와 우수사례 영상을 한곳에서 확인하세요.</p></span></div><nav class="education-tabs" aria-label="교육 자료 종류"><button class="on" type="button" data-education-tab="insight">상담력 인사이트</button><button type="button" data-education-tab="best">우수사례</button></nav><section class="education-panel" id="education-insight-panel"><div class="education-summary"><strong>월별 상담 자료</strong><small id="education-insight-count"></small></div><div class="cm-archive-list" id="cm-archive-list"></div></section><section class="education-panel" id="education-best-panel" hidden><div class="education-summary"><strong>현장 우수사례</strong><small id="education-best-count"></small></div><div class="best-practice-list" id="best-practice-list"></div></section></div></div>
+
 </div><!-- /wrap -->
 
 <div class="loading-overlay" id="loading">
@@ -1468,7 +1410,7 @@ body{padding-bottom:0}
     <div class="rank-modal-handle"></div>
     <div class="rank-modal-header">
       <div class="rank-modal-title">이달의 랭킹</div>
-      <div class="rank-modal-close" onclick="closeRankModal()">✕</div>
+      <button class="rank-modal-close" type="button" onclick="closeRankModal()" aria-label="랭킹 닫기">✕</button>
     </div>
     <div class="rank-my-box">
       <div class="rank-my-label">나의 순위</div>
@@ -1922,24 +1864,12 @@ function isConsonant(h){ return /^[ㄱ-ㅎ\s]+$/.test((h||'').trim()); }
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const nav=document.getElementById('bottom-nav');
-  const navScreens=['s-dashboard','s-growth','s-counseling-cards','s-education','s-roulette'];
-  if(nav){
-    nav.classList.toggle('show',navScreens.includes(id));
-    nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));
-  }
   window.scrollTo(0,0);
 }
-const GOAL_STORAGE_KEY='counsel-master-monthly-goals-v1';
-function goalWon(value){return Math.round(Number(value)||0).toLocaleString('ko-KR')+'원'}
-function goalMonthKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
-function currentGoalRecord(){try{const history=JSON.parse(localStorage.getItem(GOAL_STORAGE_KEY)||'{}'),key=goalMonthKey();if(history[key])return history[key];const previousKey=Object.keys(history).filter(x=>x<key).sort().pop(),previous=previousKey&&history[previousKey];if(previous)return{goalMoney:previous.goalMoney,fee:300000,targets:previous.targets,actual:{app:0,run:0,pay:0},mix:previous.mix};}catch(e){}return{goalMoney:3000000,fee:300000,targets:{app:179,run:46,pay:9},actual:{app:0,run:0,pay:0},mix:[22,70,8]}}
-function renderGoalSummary(){const item=currentGoalRecord(),target=Math.max(1,Number(item.goalMoney)||3000000),fee=Math.max(0,Number(item.fee)||0),rate=Math.min(100,Math.round(fee/target*100)),remain=Math.max(0,target-fee),targets=item.targets||{app:179,run:46,pay:9},actual=item.actual||{app:0,run:0,pay:0},month=new Date().getMonth()+1,pct=(value,total)=>Math.min(100,Math.round((Number(value)||0)/Math.max(1,Number(total)||1)*100));document.getElementById('goal-home-month').textContent=month+'월 목표 수수료';document.getElementById('goal-home-target').textContent=goalWon(target);document.getElementById('goal-home-current').textContent=goalWon(fee);document.getElementById('goal-home-remain').textContent=goalWon(remain);document.getElementById('goal-home-remain-copy').textContent='목표까지 '+goalWon(remain)+' 남았어요!';document.getElementById('goal-home-rate').textContent=rate+'%';document.getElementById('goal-home-bar').style.width=rate+'%';document.getElementById('goal-home-progress').setAttribute('aria-valuenow',rate);['app','run','pay'].forEach(key=>{const value=Number(actual[key])||0,total=Number(targets[key])||0,p=pct(value,total);document.getElementById('goal-home-'+key).textContent=total;document.getElementById('goal-home-'+key+'-status').textContent=value+' / '+total;document.getElementById('goal-home-'+key+'-percent').textContent=p+'%';document.getElementById('goal-home-'+key+'-bar').style.width=p+'%'});const appPct=pct(actual.app,targets.app),runPct=pct(actual.run,targets.run),week=Math.min(5,Math.ceil(new Date().getDate()/7));document.getElementById('goal-home-priority-copy').textContent=week<=2?(appPct<65?'2주차까지 신청 목표의 60~70%를 먼저 확보해 보세요.':'신청 흐름이 좋아요. 진행 연결을 시작해 보세요.'):week===3?(runPct<80?'마감 전주예요. 진행 목표 80%까지 연결해 보세요.':'진행 흐름이 안정적이에요. 실제 결제를 확인해 보세요.'):'미진행 고객을 다시 연결하고 실제 결제를 확인해 보세요.';const name=document.getElementById('d-name')?.textContent?.trim();if(name)document.getElementById('goal-home-manager').textContent=name;const rank=document.getElementById('d-rank')?.textContent?.trim();if(rank)document.getElementById('goal-home-rank').textContent=rank;const plant=document.querySelector('#s-dashboard .profile-plant');if(plant?.src)document.getElementById('goal-home-plant').src=plant.src}
-function bindGoalHomeMenus(){const frame=document.getElementById('goal-management-frame'),doc=frame?.contentDocument;if(!doc)return;const rank=getRank(totalPts),growth=rankGrowth(totalPts),sourcePlant=document.querySelector('#d-mascot img');const manager=doc.querySelector('.master-greeting em'),level=doc.querySelector('.master-level'),chip=doc.querySelector('.master-level-chip'),plant=doc.querySelector('.master-plant');if(manager)manager.textContent=(userName||'')+' 매니저님';if(level)level.textContent=rank.title;if(chip)chip.textContent='LEVEL '+growth.stage;if(plant&&sourcePlant?.src)plant.src=sourcePlant.src}
-function showGoalHome(){const screen=document.getElementById('s-goal-management'),frame=document.getElementById('goal-management-frame');screen.classList.add('goal-home-mode');showScreen('s-goal-management');const open=()=>{frame?.contentDocument?.querySelector('[data-master-go="home"]')?.click();bindGoalHomeMenus()};if(frame?.contentDocument?.readyState==='complete')open();else frame?.addEventListener('load',open,{once:true})}
-function openGoalManagement(mode='detail'){const screen=document.getElementById('s-goal-management'),frame=document.getElementById('goal-management-frame');screen.classList.remove('goal-home-mode');showScreen('s-goal-management');const open=()=>{frame?.contentDocument?.querySelector(`[data-master-go="${mode}"]`)?.click();bindGoalHomeMenus()};if(frame?.contentDocument?.readyState==='complete')open();else frame?.addEventListener('load',open,{once:true})}
-function closeGoalManagement(){renderGoalSummary();showGoalHome()}
-function navigateFromGoalHome(action){const screen=document.getElementById('s-goal-management');screen?.classList.remove('goal-home-mode');const actions={quiz:()=>showCounselKing(),cards:()=>showCounselingCards(),education:()=>showEducationArchive(),home:()=>showGoalHome(),growth:()=>showGrowth(),rank:()=>showRankModal(),more:()=>showScreen('s-dashboard')};actions[action]?.()}
+function showGoalHome(){const screen=document.getElementById('s-goal-management'),frame=document.getElementById('goal-management-frame');screen.classList.add('goal-home-mode');showScreen('s-goal-management');const open=()=>{frame?.contentDocument?.querySelector('[data-master-go="home"]')?.click()};if(frame?.contentDocument?.readyState==='complete')open();else frame?.addEventListener('load',open,{once:true})}
+function openGoalManagement(mode='detail'){const screen=document.getElementById('s-goal-management'),frame=document.getElementById('goal-management-frame');screen.classList.remove('goal-home-mode');showScreen('s-goal-management');const open=()=>{frame?.contentDocument?.querySelector(`[data-master-go="${mode}"]`)?.click()};if(frame?.contentDocument?.readyState==='complete')open();else frame?.addEventListener('load',open,{once:true})}
+function closeGoalManagement(){showGoalHome()}
+function navigateFromGoalHome(action){const screen=document.getElementById('s-goal-management');screen?.classList.remove('goal-home-mode');const actions={quiz:()=>showCounselKing(),cards:()=>showCounselingCards(),education:()=>showEducationArchive(),home:()=>showGoalHome()};actions[action]?.()}
 window.addEventListener('message',event=>{const frame=document.getElementById('goal-management-frame');if(event.source!==frame?.contentWindow||event.data?.type!=='counsel-master-navigation')return;navigateFromGoalHome(event.data.action)});
 function setHomeLearning(index){document.querySelectorAll('[data-learning-slide]').forEach((slide,i)=>slide.hidden=i!==index);document.querySelectorAll('.learning-dots button').forEach((dot,i)=>dot.classList.toggle('is-active',i===index))}
 async function openHomeEducation(tab){await showEducationArchive();if(tab==='best')cmSelectEducationTab('best');else cmSelectEducationTab('insight')}
@@ -1950,7 +1880,6 @@ const FEATURE_GUIDE_ITEMS=[
   {key:'education',icon:'📚',title:'교육 자료',summary:'인사이트·우수사례·브로슈어',copy:'월별 상담력 인사이트, 현장 우수사례 영상, 초등·중등 브로슈어를 한곳에서 확인할 수 있어요.'},
   {key:'roulette',icon:'🎰',title:'롤플레잉',summary:'팀 미팅용 RP 주제 추첨',copy:'팀 미팅이나 롤플레잉 연습에서 상담 주제를 무작위로 뽑을 때 사용해요. START 후 STOP을 눌러 주제를 정할 수 있어요.'},
   {key:'ranking',icon:'🏆',title:'랭킹',summary:'월간 TOP 5와 내 순위',copy:'이번 달 퀴즈 점수 TOP 5와 내 순위를 확인해 학습 현황을 가볍게 비교할 수 있어요.'},
-  {key:'growth',icon:'🌱',title:'성장여정',summary:'현재 직급과 다음 성장 단계',copy:'누적 포인트에 따른 현재 직급과 다음 단계까지 남은 포인트를 확인하는 공간이에요.'}
 ];
 let featureGuideCoachDismissed=false;
 function featureGuideSnoozed(){try{return Number(localStorage.getItem(FEATURE_GUIDE_SNOOZE_KEY)||0)>Date.now()}catch(e){return false}}
@@ -1964,8 +1893,7 @@ function openFeatureGuide(){hideFeatureGuideCoach();renderFeatureGuideList();sho
 function closeFeatureGuide(){const overlay=document.getElementById('feature-guide-overlay');overlay.classList.remove('show');overlay.setAttribute('aria-hidden','true')}
 function showFeatureGuideList(){document.getElementById('feature-guide-list').style.display='grid';document.getElementById('feature-guide-detail').classList.remove('show')}
 function showFeatureGuideDetail(key){const item=FEATURE_GUIDE_ITEMS.find(x=>x.key===key);if(!item)return;document.getElementById('feature-guide-list').style.display='none';document.getElementById('feature-guide-detail-icon').textContent=item.icon;document.getElementById('feature-guide-detail-title').textContent=item.title;document.getElementById('feature-guide-detail-copy').textContent=item.copy;document.getElementById('feature-guide-detail').classList.add('show');document.getElementById('feature-guide-start').onclick=()=>startFeatureGuideItem(key)}
-function startFeatureGuideItem(key){closeFeatureGuide();if(key==='quiz')startQuiz();else if(key==='cards')showCounselingCards();else if(key==='education')showEducationArchive();else if(key==='roulette')showRoulette();else if(key==='ranking')showRankModal();else if(key==='growth')showGrowth()}
-async function showMyProfile(){await showDashboard();document.querySelectorAll('#bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.action==='my'));const card=document.querySelector('#s-dashboard .dash-header');card?.classList.add('profile-focus');setTimeout(()=>card?.classList.remove('profile-focus'),900)}
+function startFeatureGuideItem(key){closeFeatureGuide();if(key==='quiz')startQuiz();else if(key==='cards')showCounselingCards();else if(key==='education')showEducationArchive();else if(key==='roulette')showRoulette();else if(key==='ranking')showRankModal();}
 function showLoading(m='불러오는 중...'){ document.getElementById('loading-msg').textContent=m; document.getElementById('loading').classList.add('show'); }
 function hideLoading(){ document.getElementById('loading').classList.remove('show'); }
 
@@ -2025,7 +1953,7 @@ async function loginUser(){
   updateRememberedLogin(userName,userPhone);
   todayAttempts=loadTodayAttempts(userPhone);
   hideLoading();
-  btn.disabled=false; btn.textContent='🚀 내 기록 불러오기';
+  btn.disabled=false; btn.textContent='로그인';
   prevRank=getRank(totalPts);
   showDashboard();
 }
@@ -2033,142 +1961,8 @@ async function loginUser(){
 /* ═══════════════════════════════
    대시보드
 ═══════════════════════════════ */
-async function showDashboard(){
-  renderGoalSummary();
-  const rank=getRank(totalPts);
-  const g=calcGauge(totalPts);
-  document.getElementById('d-name').innerHTML=`<span>${userName}</span> <span class="mgr-title">${GT.manager_title||'매니저'}</span>`;
-  const homeGrowth=rankGrowth(totalPts);
-  document.getElementById('d-mascot').className='cm-premium-mascot profile-avatar';
-  document.getElementById('d-mascot').innerHTML=plantImageMarkup(totalPts,'profile-plant')+`<span class="profile-level">LEVEL ${homeGrowth.stage}</span>`;
-  document.getElementById('d-mascot').setAttribute('aria-label',rank.title+' 식물 성장 '+homeGrowth.stage+'단계');
-  document.getElementById('d-char').innerHTML=makeChar(totalPts,100,'happy');
-  document.getElementById('d-rank-txt').textContent=rank.title;
-  document.getElementById('d-pts').innerHTML=`${totalPts.toLocaleString()}<span>pts</span>`;
-  document.getElementById('d-gauge').style.width=g.pct+'%';
-  document.getElementById('d-gauge-left').textContent=g.left;
-  document.getElementById('d-gauge-right').textContent=g.right;
-  document.getElementById('d-next-txt').innerHTML=g.nextTxt;
-  const rankIndex=RANKS.findIndex(x=>x.title===rank.title),nextRank=RANKS[Math.min(rankIndex+1,RANKS.length-1)];
-  document.getElementById('d-growth-current').textContent=rank.title;
-  document.getElementById('d-growth-next').textContent=rankIndex===RANKS.length-1?'최고 단계 달성':nextRank.title;
-  // 메인 목표 화면을 먼저 확정해 이전 대시보드가 잠깐 노출되지 않게 한다.
-  showGoalHome();
-  // 공지사항
-  const notice=await sbNotice();
-  if(notice&&notice.value){
-    document.getElementById('notice-text').textContent=notice.value;
-    const d=new Date(notice.updated_at);
-    document.getElementById('notice-sub').textContent=d.toLocaleDateString('ko-KR');
-    document.getElementById('notice-banner').style.display='block';
-  }
-  // TOP5
-  renderTop5Dashboard();
-  // 오답노트 버튼
-  const wrongs=loadWrongNote(userPhone);
-  document.getElementById('dash-review-count').textContent=`${wrongs.length}문제`;
-  document.getElementById('btn-dash-review').classList.toggle('has-items',wrongs.length>0);
-  const mission=document.getElementById('mission-progress');
-  if(mission)mission.textContent=dailyLimit>0?`오늘 ${todayAttempts}/${dailyLimit}문제 완료`:`오늘 ${todayAttempts}문제 완료`;
-}
+function showDashboard(){showGoalHome()}
 
-async function renderTop5Dashboard(){
-  const list=document.getElementById('d-top5');
-  if(!list)return;
-  try{
-    const all=await sbMonthlyRanking();
-    if(!all.length){
-      list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px">이번 달 참여자가 없어요 😊</div>';
-      return;
-    }
-    const medals=['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟'];
-    const top10=all.slice(0,10);
-    const myIdx=all.findIndex(u=>u.phone===userPhone);
-    const inTop10=myIdx>=0&&myIdx<10;
-
-    let html=top10.map((u,i)=>{
-      const r=getRank(u.pts);
-      const isMe=u.phone===userPhone;
-      return `<div class="top5-row${isMe?' top5-me':''}">
-        <span class="top5-rank">${medals[i]}</span>
-        <span class="top5-name">${u.name}</span>
-        <span class="top5-rank-tag">${plantImageMarkup(u.pts,'rank-tiny')}</span>
-        <span class="top5-pts">${u.pts.toLocaleString()}</span>
-        ${isMe?`<span style="font-family:'Jua',sans-serif;font-size:12px;color:var(--primary);background:var(--primary-light);padding:2px 8px;border-radius:99px;margin-left:4px;white-space:nowrap">${i+1}위 📍</span>`:''}
-      </div>`;
-    }).join('');
-
-    // 내가 TOP10 밖이면 구분선 + 내 순위 블록
-    if(!inTop10){
-      html+=`<div style="border-top:1px dashed #FFD699;margin-top:6px;padding-top:6px">`;
-      if(myIdx>=0){
-        const me=all[myIdx]; const mr=getRank(me.pts);
-        html+=`<div class="top5-row top5-me" style="border-radius:10px;padding:8px 6px">
-          <span class="top5-rank" style="font-size:13px;color:var(--primary)">${myIdx+1}위</span>
-          <span class="top5-name">${me.name}</span>
-          <span class="top5-rank-tag">${plantImageMarkup(me.pts,'rank-tiny')}</span>
-          <span class="top5-pts">${me.pts.toLocaleString()}</span>
-          <span style="font-family:'Jua',sans-serif;font-size:12px;color:var(--primary);background:var(--primary-light);padding:2px 8px;border-radius:99px;margin-left:4px;white-space:nowrap">📍 내 순위</span>
-        </div>`;
-      } else {
-        html+=`<div style="text-align:center;font-size:12px;color:var(--muted);padding:6px">이번 달 아직 미참여 — 퀴즈를 풀면 순위에 올라요!</div>`;
-      }
-      html+=`</div>`;
-    }
-
-    list.innerHTML=html;
-  }catch(e){ list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:13px">랭킹 불러오기 실패</div>'; }
-}
-
-/* ═══════════════════════════════
-   성장 화면
-═══════════════════════════════ */
-function showGrowth(){
-  const rank=getRank(totalPts);
-  const g=calcGauge(totalPts);
-  document.querySelector('.growth-current')?.style.setProperty('--growth-image',`url("${rankMascotSrc(totalPts)}")`);
-  document.getElementById('g-cur-rank').textContent=rank.title;
-  document.getElementById('g-cur-pts').innerHTML=`${totalPts.toLocaleString()}<span>pts</span>`;
-  document.getElementById('g-next-txt').innerHTML=rank.min===10000?'최고 등급을 달성했어요!':g.nextTxt;
-  // 전체 진행률 (0~10000)
-  const overallPct=Math.min(100,Math.round(totalPts/10000*100));
-  document.getElementById('g-overall-bar').style.width=overallPct+'%';
-  document.getElementById('g-overall-pct').textContent=overallPct+'%';
-  // 여정 단계
-  const journey=document.getElementById('g-journey');
-  journey.innerHTML=[...RANKS].reverse().map(r=>{
-    const isCurrent=r.title===rank.title;
-    const isDone=totalPts>r.max;
-    const isLocked=totalPts<r.min&&!isCurrent;
-    let cls='journey-step';
-    if(isCurrent) cls+=' current';
-    else if(isDone) cls+=' done';
-    else cls+=' locked';
-    let statusTag='';
-    if(isCurrent) statusTag='<span class="step-status current-tag">현재</span>';
-    else if(isDone) statusTag='<span class="step-status done-tag">✓ 완료</span>';
-    else statusTag='<span class="step-status lock-tag">잠금</span>';
-    return `<div class="${cls}">
-      <div class="step-char">${makeChar(r.min,52)}</div>
-      <div class="step-info">
-        <div class="step-rank">${r.title}</div>
-        <div class="step-pts-range">${r.min===10000?'10,000pts 이상':`${r.min.toLocaleString()}pts ~ ${r.max.toLocaleString()}pts`}</div>
-      </div>
-      ${statusTag}
-    </div>`;
-  }).join('');
-  // 템플릿 리터럴 버그 수정
-  document.querySelectorAll('.step-pts-range').forEach((el,i)=>{
-    const r=[...RANKS].reverse()[i];
-    el.textContent=r.min===10000?`${r.min.toLocaleString()}pts 이상`:
-      `${r.min.toLocaleString()} ~ ${r.max.toLocaleString()}pts`;
-  });
-  showScreen('s-growth');
-}
-
-/* ═══════════════════════════════
-   퀴즈 시작
-═══════════════════════════════ */
 async function startQuiz(){
   todayAttempts=loadTodayAttempts(userPhone);
   if(dailyLimit>0&&todayAttempts>=dailyLimit){
@@ -2734,12 +2528,41 @@ function cmReadable(text,kind='text'){
 const CM_STEP_ICONS={question:'❓',empathy:'💬',contents:'📚',recommend:'💡',answer:'💡'};
 function cmStep(n,title,body,kind='text'){return '<section class="cm-step cm-step-'+kind+'"><div class="cm-step-label"><span class="cm-num">'+n+'</span><b><span class="cm-step-icon">'+(CM_STEP_ICONS[kind]||'')+'</span>'+title+'</b></div><div class="cm-step-body">'+body+'</div></section>'}
 let cmCardPickerOpen=false,cmObPickerOpen=false;
-function cmSetPicker(kind,open){const card=kind==='card',picker=document.getElementById(card?'cm-card-picker':'cm-ob-picker'),summary=document.getElementById(card?'cm-card-selection-summary':'cm-ob-selection-summary');if(card)cmCardPickerOpen=open;else cmObPickerOpen=open;picker.classList.toggle('open',open);summary.setAttribute('aria-expanded',String(open));summary.classList.toggle('open',open)}
+document.getElementById("card-focus-toggle").onclick=function(){const screen=document.getElementById("s-counseling-cards");const active=screen.classList.toggle("card-focus");this.setAttribute("aria-pressed",String(active));this.textContent=active?"전체 화면으로":"카드만 보기";if(active){cmSetPicker("card",false);document.querySelector(":is(#cm-card,#cm-ob-card) .card-brief-extra")?.removeAttribute("open");document.querySelector("#cm-card-panel .cm-card-scroll").scrollTop=0}};
+function cmSetPicker(kind,open){const card=kind==='card',picker=document.getElementById(card?'cm-card-picker':'cm-ob-picker'),summary=document.getElementById(card?'cm-card-selection-summary':'cm-ob-selection-summary');if(card){cmCardPickerOpen=open;picker.hidden=!open}else{cmObPickerOpen=open;picker.hidden=!open}picker.classList.toggle('open',open);summary.setAttribute('aria-expanded',String(open));summary.classList.toggle('open',open)}
 function cmEnableMiddleBrochure(){const card=document.querySelector('#cm-resource-panel .cm-brochure-card.is-disabled');if(!card)return;card.classList.remove('is-disabled');card.setAttribute('role','link');card.setAttribute('tabindex','0');card.querySelector('small').textContent='중등 상담 흐름과 상품 정보를 한 권으로 확인';card.querySelector('b').textContent='열기';const open=()=>{cmRememberArchiveReturn('counseling-resources');location.href='pdf-viewer.html?file=brochures%2Fmiddle-counseling-brochure.pdf&title='+encodeURIComponent('중등 상담 브로슈어')+'&return=counseling-resources'};card.onclick=open;card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}}}
 function cmShowPanel(panel){document.querySelectorAll('[data-cm-panel]').forEach(x=>x.classList.toggle('on',x.dataset.cmPanel===panel));document.getElementById('cm-card-panel').style.display=panel==='cards'?'block':'none';document.getElementById('cm-objection-panel').style.display=panel==='objections'?'block':'none';document.getElementById('cm-resource-panel').style.display=panel==='resources'?'block':'none';if(panel==='resources')cmEnableMiddleBrochure()}
-async function showCounselingCards(panel='cards'){cmData=await cmSetting('counseling_cards_v1',CM_FALLBACK);const defaultCard=cmData.cards.find(x=>x.grade==='초1~2')||cmData.cards[0];cmGrade=defaultCard?.grade||'';cmCard=defaultCard;cmOb=cmData.objections[0];showScreen('s-counseling-cards');cmRenderCards();cmRenderObjections();cmShowPanel(panel);cmSetPicker('card',false);cmSetPicker('objection',false)}
-function cmRenderCards(){const grades=[...new Set(cmData.cards.map(x=>x.grade))],ge=document.getElementById('cm-grades');ge.innerHTML=grades.map(g=>'<button class="cm-chip '+(g===cmGrade?'on':'')+'">'+cmEsc(g)+'</button>').join('');[...ge.children].forEach((b,i)=>b.onclick=()=>{cmGrade=grades[i];cmCard=cmData.cards.find(x=>x.grade===cmGrade);cmRenderCards();cmSetPicker('card',true)});const list=cmData.cards.filter(x=>x.grade===cmGrade),se=document.getElementById('cm-subjects');if(!cmCard||cmCard.grade!==cmGrade)cmCard=list[0];se.innerHTML=list.map(x=>'<button class="cm-subject '+(x.id===cmCard.id?'on':'')+'">'+cmEsc(x.subject)+'</button>').join('');[...se.children].forEach((b,i)=>b.onclick=()=>{cmCard=list[i];cmRenderCards();cmSetPicker('card',false)});if(!cmCard)return;const t=cmTheme(cmCard.grade),el=document.getElementById('cm-card'),summary=document.getElementById('cm-card-selection-summary');summary.innerHTML='<span><small>학년·과목 선택</small><strong>'+cmEsc(cmCard.grade)+' · '+cmEsc(cmCard.subject)+'</strong></span><b><i>↻</i> 다시 선택</b>';summary.onclick=()=>cmSetPicker('card',!cmCardPickerOpen);el.parentElement.scrollTop=0;el.style.setProperty('--age',t.c);el.style.setProperty('--soft',t.s);el.innerHTML='<div class="cm-card-head"><div class="cm-title"><span class="cm-mascot">'+cmSubjectIcon(cmCard.subject)+'</span><span><strong>'+cmEsc(cmCard.grade)+' · '+cmEsc(cmCard.subject)+'</strong><small>'+t.l+' 맞춤 상담 가이드</small></span></div></div>'+cmStep(1,'질문하기',cmReadable(cmCard.question,'question'),'question')+cmStep(2,'공감하기',cmReadable(cmCard.empathy),'empathy')+cmStep(3,'추천 콘텐츠','<span class="cm-tags cm-content-links">'+cmCard.contents.map(x=>'<span><span>'+cmEsc(x)+'</span></span>').join('')+'</span>','contents')+cmStep(4,'추천 멘트','<div class="cm-quote"><small>이렇게 말씀해보세요</small>'+cmReadable(cmCard.recommend,'recommend')+'</div>','recommend')}
-function cmRenderObjections(){const list=cmData.objections,grid=document.getElementById('cm-objections');if(!cmOb)cmOb=list[0];grid.innerHTML=list.map(x=>'<button class="cm-obj '+(x.id===cmOb.id?'on':'')+'">'+cmEsc(x.type)+'</button>').join('');[...grid.children].forEach((b,i)=>b.onclick=()=>{cmOb=list[i];cmRenderObjections();cmSetPicker('objection',false)});if(!cmOb)return;const el=document.getElementById('cm-ob-card'),contents=cmContentList(cmOb.content),summary=document.getElementById('cm-ob-selection-summary');summary.innerHTML='<span><small>선택한 거절 유형</small><strong>'+cmEsc(cmOb.type)+'</strong></span><b>변경 <i>⌄</i></b>';summary.onclick=()=>cmSetPicker('objection',!cmObPickerOpen);el.parentElement.scrollTop=0;el.style.setProperty('--age','#16876b');el.style.setProperty('--soft','#e8f8f2');el.innerHTML='<div class="cm-card-head"><div class="cm-title"><span class="cm-mascot">🛡️</span><span><strong>“'+cmEsc(cmOb.type)+'”</strong><small>상황별 빠른 상담 스크립트</small></span></div></div>'+cmStep(1,'먼저 공감',cmReadable(cmOb.empathy),'empathy')+cmStep(2,'확인 질문',cmReadable(cmOb.question,'question'),'question')+cmStep(3,'추천 콘텐츠','<span class="cm-tags cm-content-links">'+contents.map(x=>'<span><span>'+cmEsc(x)+'</span></span>').join('')+'</span>','contents')+cmStep(4,'응대 멘트','<div class="cm-quote"><small>이렇게 말씀해보세요</small>'+cmReadable(cmOb.answer,'answer')+'</div>','answer')}
+async function showCounselingCards(panel='cards'){const focus=document.getElementById('card-focus-toggle');if(focus.getAttribute('aria-pressed')==='true')focus.click();cmData=await cmSetting('counseling_cards_v1',CM_FALLBACK);const defaultCard=cmData.cards.find(x=>x.grade==='초1~2')||cmData.cards[0];cmGrade=defaultCard?.grade||'';cmCard=defaultCard;cmOb=cmData.objections[0];showScreen('s-counseling-cards');cmRenderCards();cmRenderObjections();cmShowPanel(panel);cmSetPicker('card',false);cmSetPicker('objection',false)}
+function cmRenderCards(){
+ const grades=[...new Set(cmData.cards.map(card=>card.grade))];
+ const gradeSelect=document.getElementById('cm-grades');
+ const subjectSelect=document.getElementById('cm-subjects');
+ const list=cmData.cards.filter(card=>card.grade===cmGrade);
+ if(!list.includes(cmCard))cmCard=list[0];
+ gradeSelect.replaceChildren(...grades.map(grade=>new Option(grade,grade,false,grade===cmGrade)));
+ subjectSelect.replaceChildren(...list.map((card,index)=>new Option(card.subject,String(index),false,card===cmCard)));
+ gradeSelect.onchange=()=>{cmGrade=gradeSelect.value;cmRenderCards()};
+ subjectSelect.onchange=()=>{cmCard=list[Number(subjectSelect.value)];cmRenderCards();cmSetPicker('card',false);document.getElementById('cm-card-selection-summary').focus()};
+ if(!cmCard)return;const el=document.getElementById('cm-card'),summary=document.getElementById('cm-card-selection-summary');summary.innerHTML='<span><small>학년·과목 선택</small><strong>'+cmEsc(cmCard.grade)+' · '+cmEsc(cmCard.subject)+'</strong></span><b>변경 <i aria-hidden="true">⌄</i></b>';summary.onclick=()=>cmSetPicker('card',!cmCardPickerOpen);el.parentElement.scrollTop=0;const stage=(name,label,body)=>'<section class="card-stage"><h3>'+name+'</h3><div class="card-stage-label">'+label+'</div><div class="card-stage-body">'+body+'</div></section>';el.innerHTML='<header class="card-brief-header"><h2>'+cmEsc(cmCard.grade)+' · '+cmEsc(cmCard.subject)+'</h2></header>'+stage('니즈 파악','질문하기',cmReadable(cmCard.question,'question'))+stage('필요성 안내','공감하기',cmReadable(cmCard.empathy))+stage('추천콘텐츠','', '<ul class="card-brief-list">'+cmCard.contents.map(x=>'<li>'+cmEsc(x)+'</li>').join('')+'</ul>')+'<details class="card-brief-extra"><summary>추천 멘트</summary><div>'+cmReadable(cmCard.recommend,'recommend')+'</div></details>';}
+function cmRenderObjections(){
+ const list=cmData.objections;
+ const select=document.getElementById('cm-objections');
+ const el=document.getElementById('cm-ob-card');
+ const summary=document.getElementById('cm-ob-selection-summary');
+ if(!list.includes(cmOb))cmOb=list[0];
+ summary.hidden=!cmOb;
+ if(!cmOb){el.textContent='등록된 거절극복 카드가 없어요.';return}
+ select.replaceChildren(...list.map((item,index)=>new Option(item.type,String(index),false,item===cmOb)));
+ select.onchange=()=>{cmOb=list[Number(select.value)];cmRenderObjections();cmSetPicker('objection',false);summary.focus()};
+ summary.innerHTML='<span><small>거절 상황</small><strong>'+cmEsc(cmOb.type)+'</strong></span><b>변경 <i aria-hidden="true">⌄</i></b>';
+ summary.onclick=()=>cmSetPicker('objection',!cmObPickerOpen);
+ el.parentElement.scrollTop=0;
+ const contents=cmContentList(cmOb.content);
+ el.innerHTML='<header class="card-brief-header"><h2>'+cmEsc(cmOb.type)+'</h2></header>'
+ +'<section class="card-stage"><h3>공감과 수용</h3><div class="card-stage-body">'+cmReadable(cmOb.empathy)+'</div></section>'
+ +'<section class="card-stage"><h3>관점 전환</h3><div class="card-stage-body">'+cmReadable(cmOb.answer,'answer')+'</div></section>'
+ +(contents.length?'<details class="card-brief-extra"><summary>참고 콘텐츠</summary><ul class="card-brief-list">'+contents.map(x=>'<li>'+cmEsc(x)+'</li>').join('')+'</ul></details>':'');
+}
 document.querySelectorAll('[data-cm-panel]').forEach(b=>b.onclick=()=>cmShowPanel(b.dataset.cmPanel))
 const CM_ARCHIVE_RETURN_KEY='counseling_master_archive_return_v1';
 let cmArchiveRestoreBusy=false;
@@ -2753,6 +2576,7 @@ async function cmRestoreArchiveReturn(){
   let saved=null;
   try{saved=JSON.parse(sessionStorage.getItem(CM_ARCHIVE_RETURN_KEY)||'null')}catch(e){}
   if(!forced&&!saved)return;
+  if(!forced&&new URLSearchParams(location.search).get("page")==="education")return;
   cmArchiveRestoreBusy=true;
   try{
     sessionStorage.removeItem(CM_ARCHIVE_RETURN_KEY);
@@ -2765,6 +2589,7 @@ async function cmRestoreArchiveReturn(){
         await loginUser();
       }
     }
+    if(forcedTarget==='education'&&!userPhone){await showEducationArchive();return;}
     if(userName&&userPhone){
       const target=forcedTarget||(saved?.screen==='roulette'?'roulette':saved?.screen==='counseling-card'?'counseling-card':saved?.screen==='counseling-resources'?'counseling-card':'education');
       if(target==='roulette')await showRoulette();else if(target==='counseling-card'){await showCounselingCards('cards');if(saved?.cardId){const restored=cmData.cards.find(x=>x.id===saved.cardId);if(restored){cmGrade=restored.grade;cmCard=restored;cmRenderCards();cmSetPicker('card',false)}}}else await showEducationArchive();
@@ -2776,12 +2601,30 @@ function syncStableAppHeight(){document.documentElement.style.setProperty('--app
 syncStableAppHeight();
 addEventListener('orientationchange',()=>setTimeout(syncStableAppHeight,250));
 function cmUsesMobileViewer(){return matchMedia('(max-width:768px)').matches||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)}
-function cmRenderEducation(){const rows=cmEdu.filter(x=>x.active!==false).sort((a,b)=>(a.sort_order||99)-(b.sort_order||99));document.getElementById('education-insight-count').textContent=rows.length+'개 자료';document.getElementById('cm-archive-list').innerHTML=rows.map(x=>{const [y,m]=x.id.split('-'),viewer='pdf-viewer.html?file='+encodeURIComponent(x.file)+'&title='+encodeURIComponent(x.title),videoViewer='video-viewer.html?url='+encodeURIComponent(x.video||'')+'&title='+encodeURIComponent(x.title),mobileViewer=cmUsesMobileViewer(),pdfHref=mobileViewer?viewer:x.file,pdfTarget=mobileViewer?'':' target="_blank" rel="noopener"',videoHref=mobileViewer?videoViewer:x.video,videoTarget=mobileViewer?'':' target="_blank" rel="noopener"';return '<article class="cm-archive"><span class="cm-date">'+y+'<strong>'+Number(m)+'월</strong></span><span><h3>'+cmEsc(x.title)+'</h3><div class="cm-meta">상담력 인사이트 · PDF '+cmEsc(x.pages)+'p</div><div class="cm-actions"><a class="cm-pdf" href="'+cmEsc(pdfHref)+'"'+pdfTarget+' onclick="cmRememberArchiveReturn()">자료 읽기</a>'+(x.video?'<a class="cm-video" href="'+cmEsc(videoHref)+'"'+videoTarget+' onclick="cmRememberArchiveReturn()">영상 보기</a>':'')+'</div></span></article>'}).join('')||'<div class="empty-state">등록된 상담력 인사이트가 없습니다.</div>'}
+function cmRenderEducation(){const rows=cmEdu.filter(x=>x.active!==false).sort((a,b)=>(a.sort_order||99)-(b.sort_order||99));document.getElementById('education-insight-count').textContent=rows.length+'개 자료';document.getElementById('cm-archive-list').innerHTML=rows.map(x=>{const [y,m]=x.id.split('-'),viewer='pdf-viewer.html?file='+encodeURIComponent(x.file)+'&title='+encodeURIComponent(x.title),videoViewer='video-viewer.html?url='+encodeURIComponent(x.video||'')+'&title='+encodeURIComponent(x.title),mobileViewer=cmUsesMobileViewer(),pdfHref=mobileViewer?viewer:x.file,pdfTarget=mobileViewer?'':' target="_blank" rel="noopener"',videoHref=mobileViewer?videoViewer:x.video,videoTarget=mobileViewer?'':' target="_blank" rel="noopener"';return '<article class="cm-archive" id="insight-'+cmEsc(x.id)+'"><span class="cm-date">'+y+'<strong>'+Number(m)+'월</strong></span><span><h3>'+cmEsc(x.title)+'</h3><div class="cm-meta">상담력 인사이트 · PDF '+cmEsc(x.pages)+'p</div><div class="cm-actions"><a class="cm-pdf" href="'+cmEsc(pdfHref)+'"'+pdfTarget+' onclick="cmRememberArchiveReturn()">자료 읽기</a>'+(x.video?'<a class="cm-video" href="'+cmEsc(videoHref)+'"'+videoTarget+' onclick="cmRememberArchiveReturn()">영상 보기</a>':'')+'<button class="archive-share archive-item-share" type="button" aria-label="인사이트 공유" title="공유" data-share-insight="'+cmEsc(x.id)+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m-4 4 4-4 4 4M7 10H5v11h14V10h-2"/></svg></button></div></span></article>'}).join('')||'<div class="empty-state">등록된 상담력 인사이트가 없습니다.</div>'}
 function cmYoutubeId(url){const m=String(url||'').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);return m?m[1]:''}
 function cmRenderBestPractices(){const rows=cmBest.filter(x=>x.active!==false).sort((a,b)=>(a.sort_order||99)-(b.sort_order||99));document.getElementById('education-best-count').textContent=rows.length+'개 영상';document.getElementById('best-practice-list').innerHTML=rows.map(x=>{const id=cmYoutubeId(x.video);if(!id)return '';const mobile=cmUsesMobileViewer(),href=mobile?'video-viewer.html?url='+encodeURIComponent(x.video)+'&title='+encodeURIComponent(x.title):x.video,target=mobile?'':' target="_blank" rel="noopener"';return '<article class="best-practice-card"><a class="best-practice-link" href="'+cmEsc(href)+'"'+target+' onclick="cmRememberArchiveReturn()" aria-label="'+cmEsc(x.title)+' 재생"><span class="best-practice-thumb"><img src="https://i.ytimg.com/vi/'+id+'/hqdefault.jpg" alt="'+cmEsc(x.title)+' 영상 썸네일" loading="lazy"></span><strong class="best-practice-title">'+cmEsc(x.title)+'</strong></a></article>'}).join('')||'<div class="empty-state">등록된 우수사례가 없습니다.</div>'}
 function cmSelectEducationTab(tab){document.querySelectorAll('[data-education-tab]').forEach(b=>b.classList.toggle('on',b.dataset.educationTab===tab));document.getElementById('education-insight-panel').hidden=tab!=='insight';document.getElementById('education-best-panel').hidden=tab!=='best'}
-function cmRenderBrochureShelf(){const nav=document.querySelector('#s-education .education-tabs');if(!nav||document.querySelector('#s-education .education-brochures'))return;const section=document.createElement('section');section.className='education-brochures';section.innerHTML='<div class="education-brochures-head"><strong>현장 상담 브로슈어</strong><small>학년별 자료</small></div><div class="education-brochure-grid"><a class="education-brochure-card" href="pdf-viewer.html?file=brochures%2Felementary-counseling-brochure.pdf&title='+encodeURIComponent('초등 상담 브로슈어')+'&return=education" onclick="cmRememberArchiveReturn(\'education\')"><span>📘</span><strong>초등 상담<br>브로슈어</strong><small>16페이지</small><b>자료 보기 ›</b></a><a class="education-brochure-card middle" href="pdf-viewer.html?file=brochures%2Fmiddle-counseling-brochure.pdf&title='+encodeURIComponent('중등 상담 브로슈어')+'&return=education" onclick="cmRememberArchiveReturn(\'education\')"><span>📗</span><strong>중등 상담<br>브로슈어</strong><small>12페이지</small><b>자료 보기 ›</b></a></div>';nav.before(section)}
-async function showEducationArchive(){[cmEdu,cmBest]=await Promise.all([cmSetting('education_archive_v1',CM_EDU_FALLBACK),cmSetting('best_practices_v1',CM_BEST_FALLBACK)]);showScreen('s-education');cmRenderBrochureShelf();document.querySelectorAll('[data-education-tab]').forEach(b=>b.onclick=()=>cmSelectEducationTab(b.dataset.educationTab));cmSelectEducationTab('insight');cmRenderEducation();cmRenderBestPractices()}
+function cmRenderBrochureShelf(){const nav=document.querySelector('#s-education .education-tabs');if(!nav||document.querySelector('#s-education .education-brochures'))return;const section=document.createElement('section');section.className='education-brochures';section.innerHTML='<div class="education-brochures-head"><strong>현장 상담 브로슈어</strong><small>학년별 자료</small></div><div class="education-brochure-grid"><a class="education-brochure-card" href="pdf-viewer.html?file=brochures%2Felementary-counseling-brochure.pdf&title='+encodeURIComponent('초등 상담 브로슈어')+'&return=education" onclick="cmRememberArchiveReturn(\'education\')"><span>📘</span><strong>초등 상담<br>브로슈어</strong><small>16페이지</small><b>자료 보기 ›</b></a><a class="education-brochure-card middle" href="pdf-viewer.html?file=brochures%2Fmiddle-counseling-brochure.pdf&title='+encodeURIComponent('중등 상담 브로슈어')+'&return=education" onclick="cmRememberArchiveReturn(\'education\')"><span>📗</span><strong>중등 상담<br>브로슈어</strong><small>12페이지</small><b>자료 보기 ›</b></a></div>';nav.closest(".cm-wrap").append(section);const head=document.querySelector("#s-education .cm-head");const home=head?.querySelector("button");if(home){home.textContent="홈";home.onclick=openArchiveHome}if(head){const share=document.createElement("button");share.type="button";share.className="archive-share";share.setAttribute("aria-label","교육자료 공유");share.title="공유";share.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m-4 4 4-4 4 4M7 10H5v11h14V10h-2"/></svg>';share.onclick=()=>shareArchive();head.lastElementChild.replaceWith(share)}nav.closest(".cm-wrap").addEventListener("click",e=>{const share=e.target.closest("[data-share-insight]");if(share)shareArchive(share.dataset.shareInsight)})}
+async function showEducationArchive(tab="insight",item=""){[cmEdu,cmBest]=await Promise.all([cmSetting('education_archive_v1',CM_EDU_FALLBACK),cmSetting('best_practices_v1',CM_BEST_FALLBACK)]);showScreen('s-education');cmRenderBrochureShelf();document.querySelectorAll('[data-education-tab]').forEach(b=>b.onclick=()=>cmSelectEducationTab(b.dataset.educationTab));cmSelectEducationTab(tab);cmRenderEducation();cmRenderBestPractices();if(item)document.getElementById('insight-'+item)?.scrollIntoView({block:'center'});}
+
+function openArchiveHome(){
+  if(userName&&userPhone){showGoalHome();return}
+  showScreen('s-login');
+}
+async function shareArchive(item=''){
+  const url=new URL('https://cje1520-collab.github.io/-/');
+  url.searchParams.set('page','education');
+  url.searchParams.set('tab',document.querySelector('[data-education-tab].on')?.dataset.educationTab||'insight');
+  if(item)url.searchParams.set('insight',item);
+  if(navigator.share&&location.protocol==='https:'){try{await navigator.share({title:'상담마스터 교육자료',url:url.href});return}catch(e){if(e.name==='AbortError')return}}
+  try{await navigator.clipboard.writeText(url.href);showShareToast('공유 링크를 복사했어요')}catch(e){const dialog=document.getElementById('archive-share-dialog');const field=dialog.querySelector('input');field.value=url.href;dialog.showModal();field.select()}
+}
+const archiveRequest=new URLSearchParams(location.search);
+if(archiveRequest.get('page')==='education'){
+  const item=archiveRequest.get('insight')||'';
+  showEducationArchive(!item&&archiveRequest.get('tab')==='best'?'best':'insight',item);
+}
 </script>
-<script src="mission-entry.js?v=80"></script></body>
+<dialog id="archive-share-dialog" style="max-width:min(92vw,420px);border:1px solid #ded6eb;border-radius:14px;padding:18px;color:#211b2d"><form method="dialog"><label>교육자료 공유 주소<input type="url" readonly style="display:block;width:100%;margin:8px 0;padding:8px;font:inherit"></label><button type="submit">닫기</button></form></dialog><script src="mission-entry.js?v=85"></script></body>
 </html>
