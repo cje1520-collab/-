@@ -14,7 +14,7 @@ if('serviceWorker' in navigator){
     swReloading=true;
     location.reload();
   });
-  navigator.serviceWorker.register('./sw.js?v=88',{updateViaCache:'none'}).then(reg=>{
+  navigator.serviceWorker.register('./sw.js?v=89',{updateViaCache:'none'}).then(reg=>{
     const checkUpdate=()=>reg.update().catch(()=>{});
     checkUpdate();
     setInterval(checkUpdate,5*60*1000);
@@ -1255,7 +1255,7 @@ body{padding-bottom:0}
 
   <!-- ══ 대시보드 ══ -->
   <!-- ══ 목표 관리 ══ -->
-  <div class="screen" id="s-goal-management"><header class="goal-management-head"><button type="button" onclick="closeGoalManagement()" aria-label="홈으로">홈</button><strong>이번 달 목표 관리</strong></header><iframe class="goal-management-frame" id="goal-management-frame" src="goal-management.html?v=84" title="이번 달 목표관리 모의계산기"></iframe></div>
+  <div class="screen" id="s-goal-management"><header class="goal-management-head"><button type="button" onclick="closeGoalManagement()" aria-label="홈으로">홈</button><strong>이번 달 목표 관리</strong></header><iframe class="goal-management-frame" id="goal-management-frame" src="goal-management.html?v=89" title="이번 달 목표관리 모의계산기"></iframe></div>
 
   <!-- ══ 롤플레잉 룰렛 ══ -->
   <div class="screen" id="s-roulette">
@@ -1868,7 +1868,7 @@ function showScreen(id){
 function showGoalHome(){const screen=document.getElementById('s-goal-management'),frame=document.getElementById('goal-management-frame');screen.classList.add('goal-home-mode');showScreen('s-goal-management');const open=()=>{frame?.contentDocument?.querySelector('[data-master-go="home"]')?.click()};if(frame?.contentDocument?.readyState==='complete')open();else frame?.addEventListener('load',open,{once:true})}
 function openGoalManagement(mode='detail'){const screen=document.getElementById('s-goal-management'),frame=document.getElementById('goal-management-frame');screen.classList.remove('goal-home-mode');showScreen('s-goal-management');const open=()=>{frame?.contentDocument?.querySelector(`[data-master-go="${mode}"]`)?.click()};if(frame?.contentDocument?.readyState==='complete')open();else frame?.addEventListener('load',open,{once:true})}
 function closeGoalManagement(){showGoalHome()}
-function navigateFromGoalHome(action){const screen=document.getElementById('s-goal-management');screen?.classList.remove('goal-home-mode');const actions={quiz:()=>showCounselKing(),cards:()=>showCounselingCards(),education:()=>showEducationArchive(),home:()=>showGoalHome()};actions[action]?.()}
+function navigateFromGoalHome(action){const screen=document.getElementById('s-goal-management');screen?.classList.remove('goal-home-mode');const actions={quiz:()=>showCounselKing(),cards:()=>showCounselingCards(),education:()=>showEducationArchive(),home:()=>showGoalHome(),share:()=>shareArchive(true)};actions[action]?.()}
 window.addEventListener('message',event=>{const frame=document.getElementById('goal-management-frame');if(event.source!==frame?.contentWindow||event.data?.type!=='counsel-master-navigation')return;navigateFromGoalHome(event.data.action)});
 function setHomeLearning(index){document.querySelectorAll('[data-learning-slide]').forEach((slide,i)=>slide.hidden=i!==index);document.querySelectorAll('.learning-dots button').forEach((dot,i)=>dot.classList.toggle('is-active',i===index))}
 async function openHomeEducation(tab){await showEducationArchive();if(tab==='best')cmSelectEducationTab('best');else cmSelectEducationTab('insight')}
@@ -2611,12 +2611,15 @@ function openArchiveHome(){
   if(userName&&userPhone){showGoalHome();return}
   showScreen('s-login');
 }
-async function shareArchive(){
+async function shareArchive(home=false){
   const url=new URL('https://cje1520-collab.github.io/-/');
-  url.searchParams.set('page','education');
-  url.searchParams.set('tab',document.querySelector('[data-education-tab].on')?.dataset.educationTab||'insight');
-  if(navigator.share&&location.protocol==='https:'){try{await navigator.share({title:'상담마스터 교육자료',url:url.href});return}catch(e){if(e.name==='AbortError')return}}
-  try{await navigator.clipboard.writeText(url.href);showShareToast('공유 링크를 복사했어요')}catch(e){const dialog=document.getElementById('archive-share-dialog');const field=dialog.querySelector('input');field.value=url.href;dialog.showModal();field.select()}
+  const title=home?'상담마스터':'상담마스터 교육자료';
+  if(!home){
+    url.searchParams.set('page','education');
+    url.searchParams.set('tab',document.querySelector('[data-education-tab].on')?.dataset.educationTab||'insight');
+  }
+  if(navigator.share&&location.protocol==='https:'){try{await navigator.share({title,url:url.href});return}catch(e){if(e.name==='AbortError')return}}
+  try{await navigator.clipboard.writeText(url.href);showShareToast('공유 링크를 복사했어요')}catch(e){const dialog=document.getElementById('archive-share-dialog');const field=dialog.querySelector('input');field.value=url.href;document.getElementById('archive-share-label').textContent=title+' 공유 주소';dialog.showModal();field.select()}
 }
 const archiveRequest=new URLSearchParams(location.search);
 if(archiveRequest.get('page')==='education'){
@@ -2624,5 +2627,5 @@ if(archiveRequest.get('page')==='education'){
   showEducationArchive(!item&&archiveRequest.get('tab')==='best'?'best':'insight',item);
 }
 </script>
-<dialog id="archive-share-dialog" style="max-width:min(92vw,420px);border:1px solid #ded6eb;border-radius:14px;padding:18px;color:#211b2d"><form method="dialog"><label>교육자료 공유 주소<input type="url" readonly style="display:block;width:100%;margin:8px 0;padding:8px;font:inherit"></label><button type="submit">닫기</button></form></dialog><script src="mission-entry.js?v=85"></script></body>
+<dialog id="archive-share-dialog" style="max-width:min(92vw,420px);border:1px solid #ded6eb;border-radius:14px;padding:18px;color:#211b2d"><form method="dialog"><label><span id="archive-share-label">교육자료 공유 주소</span><input type="url" readonly style="display:block;width:100%;margin:8px 0;padding:8px;font:inherit"></label><button type="submit">닫기</button></form></dialog><script src="mission-entry.js?v=85"></script></body>
 </html>
